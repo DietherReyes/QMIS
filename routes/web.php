@@ -15,9 +15,7 @@ Route::get('/', function () {
     return view('CSM');
 });
 
-Route::get('/system_management/account_management', function () {
-    return view('SYSMG_accounts');
-});
+Route::get('/system_management/account_management', 'UsersController@getUsers');
 
 Route::get('/system_management/functional_units', function () {
     return view('SYSMG_functional_units');
