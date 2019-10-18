@@ -1,20 +1,26 @@
 <!DOCTYPE html>
-<html >
-    <head>
-        
-        <meta charset="utf-8">
-        <title>QMIS</title>
+<html lang="{{ app()->getLocale() }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Styles -->
-        <link href='/css/app.css' rel="stylesheet">
-        <!-- Scripts -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    </head>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <body>
-        @include('include.navbar')
-        
+    <title>{{ config('app.name', 'QMIS') }}</title>
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        @include('include.navbar');
 
         @yield('content')
-    </body>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+</body>
 </html>
