@@ -10,7 +10,7 @@ class UsersController extends Controller
     //Get all users
     public function getUsers(){
         $users = User::all();
-        return view('SYSMG_accounts')->with('users',$users);
+        return $users;
     }
 
 }
