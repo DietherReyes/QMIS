@@ -11,16 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('CSM');
-});
+Route::get('/', 'HomeController@home');
+Route::get('/csm', 'PagesController@csm');
+Route::get('/sysmg/accounts', 'PagesController@sysmg_accounts');
+Route::get('/sysmg/units', 'PagesController@sysmg_units');
+Route::get('/sysmg/signatories', 'PagesController@sysmg_signatories');
 
-Route::get('/system_management/account_management', 'UsersController@getUsers');
 
-Route::get('/system_management/functional_units', function () {
-    return view('SYSMG_functional_units');
-});
+Auth::routes();
 
-Route::get('/system_management/signatories', function () {
-    return view('SYSMG_signatories');
-});
+
