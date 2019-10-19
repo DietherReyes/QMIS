@@ -13,16 +13,20 @@
 
 
             <h1 class="page-header">FUNCTIONAL UNITS</h1>
-           
-                {!! Form::open(['action' => 'FunctionalUnitsController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
+
+            <div class="container">
+                    {!! Form::open(['action' => 'FunctionalUnitsController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
                     <div class="form-group">
-                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:755px'])}}
+                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:720px'])}}
                     </div>
                     {{Form::submit('SEARCH', ['class'=>'btn btn-primary'])}}
                     <a href="/sysmg/units" class="btn btn-primary btn-md">
                         <span class="glyphicon glyphicon-refresh"></span> Refresh
                     </a>
                 {!! Form::close() !!}
+            </div>
+           
+                
             
 
             @if(count($functional_units) > 0)
