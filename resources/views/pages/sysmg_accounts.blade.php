@@ -4,8 +4,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        @include('SYSMG.sidebar')
-        @include('SYSMG.account_management')
+        @include('include.sidebar')
+        @include('accounts.index')
     </div>
 </div>
 

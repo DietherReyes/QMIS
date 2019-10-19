@@ -4,8 +4,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        @include('SYSMG.sidebar')
-        @include('SYSMG.signatories')
+        @include('include.sidebar')
+        @include('signatories.index')
     </div>
 </div>
 
