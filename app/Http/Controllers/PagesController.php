@@ -22,11 +22,7 @@ class PagesController extends Controller
         $users = User::all();
         return view('pages.sysmg_accounts')->with('users',$users);
     }
-
-    public function sysmg_units(){
-        return view('pages.sysmg_units');
-    }
-
+    
     public function sysmg_signatories(){
         return view('pages.sysmg_signatories');
     }
