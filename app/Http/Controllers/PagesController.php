@@ -17,13 +17,4 @@ class PagesController extends Controller
         return view('pages.csm');
     }
 
-    public function sysmg_accounts(){
-        
-        $users = User::all();
-        return view('pages.sysmg_accounts')->with('users',$users);
-    }
-    
-    public function sysmg_signatories(){
-        return view('pages.sysmg_signatories');
-    }
 }
