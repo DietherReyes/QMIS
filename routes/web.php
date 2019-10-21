@@ -18,7 +18,6 @@ Route::get('/sysmg/signatories', 'PagesController@sysmg_signatories');
 
 
 Route::resource('/sysmg/accounts', 'UsersController');
-
 Route::get('/sysmg/accounts/create/employee', 'UsersController@create_employee');
 Route::get('/sysmg/accounts/create/manager', 'UsersController@create_manager');
 Route::get('/sysmg/accounts/create/admin', 'UsersController@create_admin');
@@ -30,6 +29,9 @@ Route::post('/sysmg/accounts/search', 'UsersController@search');
 
 Route::resource('/sysmg/units', 'FunctionalUnitsController');
 Route::post('/sysmg/units/search', 'FunctionalUnitsController@search');
+
+Route::resource('/sysmg/signatories', 'SignatoriesController');
+Route::post('/sysmg/signatories/search', 'SignatoriesController@search');
 
 Auth::routes();
 
