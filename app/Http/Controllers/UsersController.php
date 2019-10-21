@@ -387,4 +387,23 @@ class UsersController extends Controller
         $users = User::where('name', 'like', '%'.$request->search_term.'%')->paginate(10);
         return view('accounts.index')->with('users', $users);
     }
+
+    public function change_password($id){
+        $user = User::find($id);
+        return view('accounts.change_pass')->with('user', $user);
+    }
+
+    public function update_password(Request $request, $id){
+        $this->validate($request, [
+            'password' => 'required|confirmed'
+        ]);
+
+        $user = User::find($id);
+        User::where('id',$id)->update(array(
+            'password' => Hash::make($request->password)
+        ));
+        return redirect('/sysmg/accounts/'.$id);
+        
+        
+    }
 }

@@ -85,9 +85,10 @@ class ProfilesController extends Controller
             User::where('id',$id)->update(array(
                 'password' => Hash::make($request->password)
             ));
+            return redirect('/profiles/'.$id);
         }
 
-        return redirect('/profiles/'.$id);
+        return redirect('/profiles/'.$id.'/change_pass');
         
     }
 }
