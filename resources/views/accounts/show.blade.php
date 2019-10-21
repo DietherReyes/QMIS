@@ -3,12 +3,11 @@
 @section('content')
 
      @include('include.sidebar')
-     <div class="col-md-2" style="float:right">
-
-        <a class="btn btn-success btn-md"  href="/sysmg/accounts/{{$user->id}}/edit">EDIT</a>
-        <a class="btn btn-primary btn-md"  href="/sysmg/accounts/">BACK</a>
+    <a class="btn btn-success btn-md"  href="/sysmg/accounts/{{$user->id}}/change_pass">CHANGE PASSWORD</a>
+    <a class="btn btn-success btn-md"  href="/sysmg/accounts/{{$user->id}}/edit">EDIT</a>
+    <a class="btn btn-primary btn-md"  href="/sysmg/accounts/">BACK</a>
         
-     </div>
+     
      
      <div class="col-md-8  main">
         
