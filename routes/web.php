@@ -16,6 +16,15 @@ Route::get('/csm', 'PagesController@csm');
 Route::get('/sysmg/signatories', 'PagesController@sysmg_signatories');
 
 
+Route::get('/profiles/{id}', 'ProfilesController@show');
+Route::get('/profiles/{id}/edit', 'ProfilesController@edit');
+
+Route::put('/profiles/{id}', 'ProfilesController@update');
+
+Route::get('/profiles/{id}/change_pass', 'ProfilesController@change_password');
+Route::put('/profiles/{id}/change_pass', 'ProfilesController@update_password');
+
+
 
 Route::resource('/sysmg/accounts', 'UsersController');
 Route::get('/sysmg/accounts/create/employee', 'UsersController@create_employee');
