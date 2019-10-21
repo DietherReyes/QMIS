@@ -27,6 +27,7 @@ Route::put('/profiles/{id}/change_pass', 'ProfilesController@update_password');
 
 
 Route::resource('/sysmg/accounts', 'UsersController');
+
 Route::get('/sysmg/accounts/create/employee', 'UsersController@create_employee');
 Route::get('/sysmg/accounts/create/manager', 'UsersController@create_manager');
 Route::get('/sysmg/accounts/create/admin', 'UsersController@create_admin');
@@ -34,6 +35,9 @@ Route::post('/sysmg/accounts/create/employee', 'UsersController@store_employee')
 Route::post('/sysmg/accounts/create/manager', 'UsersController@store_manager');
 Route::post('/sysmg/accounts/create/admin', 'UsersController@store_admin');
 Route::post('/sysmg/accounts/search', 'UsersController@search');
+
+Route::get('/sysmg/accounts/{id}/change_pass', 'UsersController@change_password');
+Route::put('/sysmg/accounts/{id}/change_pass', 'UsersController@update_password');
 
 
 Route::resource('/sysmg/units', 'FunctionalUnitsController');
