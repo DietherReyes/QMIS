@@ -47,11 +47,13 @@ class FunctionalUnitsController extends Controller
         ]);
 
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-        $checkbox_values = array_map('intval', $request->permission);
-        foreach($checkbox_values as $value){
+        if($request->permission !== null){
+            $checkbox_values = array_map('intval', $request->permission);
+            foreach($checkbox_values as $value){
 
-            $temp_permission[$value] = "1";
-
+                $temp_permission[$value] = "1";
+    
+            }
         }
         $temp_permission = implode(',',$temp_permission);
 
@@ -106,12 +108,16 @@ class FunctionalUnitsController extends Controller
         ]);
 
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-        $checkbox_values = array_map('intval', $request->permission);
-        foreach($checkbox_values as $value){
+        
+        if($request->permission !== null){
+            foreach($checkbox_values as $value){
+                $checkbox_values = array_map('intval', $request->permission);
 
-            $temp_permission[$value] = "1";
-
+                $temp_permission[$value] = "1";
+    
+            }
         }
+        
         $temp_permission = implode(',',$temp_permission);
 
         $functional_unit = FunctionalUnit::find($id);

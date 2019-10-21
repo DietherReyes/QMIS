@@ -21,8 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('role');
             $table->string('permission');
             $table->integer('isActivated')->default('1');
-            $table->string('username');
+            $table->string('username')->unique();;
             $table->string('password');
+            $table->string('profile_photo');
             $table->rememberToken();
             $table->timestamps();
         });

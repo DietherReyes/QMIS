@@ -13,9 +13,20 @@
 
 Route::get('/', 'HomeController@home');
 Route::get('/csm', 'PagesController@csm');
-Route::get('/sysmg/accounts', 'PagesController@sysmg_accounts');
-//Route::get('/sysmg/units', 'PagesController@sysmg_units');
 Route::get('/sysmg/signatories', 'PagesController@sysmg_signatories');
+
+
+
+Route::resource('/sysmg/accounts', 'UsersController');
+
+Route::get('/sysmg/accounts/create/employee', 'UsersController@create_employee');
+Route::get('/sysmg/accounts/create/manager', 'UsersController@create_manager');
+Route::get('/sysmg/accounts/create/admin', 'UsersController@create_admin');
+Route::post('/sysmg/accounts/create/employee', 'UsersController@store_employee');
+Route::post('/sysmg/accounts/create/manager', 'UsersController@store_manager');
+Route::post('/sysmg/accounts/create/admin', 'UsersController@store_admin');
+Route::post('/sysmg/accounts/search', 'UsersController@search');
+
 
 Route::resource('/sysmg/units', 'FunctionalUnitsController');
 Route::post('/sysmg/units/search', 'FunctionalUnitsController@search');
