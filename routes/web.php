@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('/unauthorized', 'PagesController@unauthorized');
+
 Route::get('/', 'HomeController@home');
 Route::get('/csm', 'PagesController@csm');
 Route::get('/sysmg/signatories', 'PagesController@sysmg_signatories');
