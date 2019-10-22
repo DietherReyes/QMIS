@@ -17,4 +17,8 @@ class PagesController extends Controller
         return view('pages.csm');
     }
 
+    public function unauthorized(){
+        return view('pages.unauthorized');
+    }
+
 }
