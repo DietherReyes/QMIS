@@ -7,26 +7,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Illuminate\Support\Facades\Storage;
+use Auth;
 
 class ProfilesController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
     }
+    
 
 
     public function show($id){
+        
         $user = User::find($id);
+        if(Auth::id() !== $user->id ){    
+            return redirect('/unauthorized');
+        }
         $user->permission = explode(',', $user->permission); //splitting the permission array
         return view('profile.show')->with('user', $user);
     }
 
     public function edit($id){
         $user = User::find($id);
+        if(Auth::id() !== $user->id ){    
+            return redirect('/unauthorized');
+        }
         return view('profile.edit')->with('user', $user);
     }
 
     public function update(Request $request, $id){
+
         $this->validate($request, [
             'profile_photo' => 'image|nullable',
             'name' => 'required',
@@ -69,6 +79,9 @@ class ProfilesController extends Controller
 
     public function change_password($id){
         $user = User::find($id);
+        if(Auth::id() !== $user->id ){    
+            return redirect('/unauthorized');
+        }
         return view('profile.change_pass')->with('user', $user);
     }
 
