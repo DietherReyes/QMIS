@@ -3,14 +3,18 @@
 @section('content')
 
 <div class="container">
-
-    
-    <a class="btn btn-success btn-md"  href="/profiles/{{$user->id}}/edit">EDIT</a>
-    <a class="btn btn-success btn-md"  href="/profiles/{{$user->id}}/change_pass">CHANGE PASSWORD</a>
-    
-
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">My Profile </li>
+    </ol>
+        
+    <div style="float:right">
+        <a class="btn btn-success btn-md"  href="/profiles/{{$user->id}}/edit">EDIT</a>
+        <a class="btn btn-success btn-md"  href="/profiles/{{$user->id}}/change_pass">CHANGE PASSWORD</a>
+    </div>
+        
+    <h1 class="page-header"> {{$user->name}} </h1>
     <ul class="list-group">
-        <h1 class="page-header"> Profile </h1>
         <img style="width:150px;" src="/storage/profile_photos/{{$user->profile_photo}}">
         
         @if ($user->isActivated === 1)

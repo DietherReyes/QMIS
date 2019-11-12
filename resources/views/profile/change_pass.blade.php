@@ -2,18 +2,18 @@
 
 @section('content')
 
-<div class="container-fluid">
-    <div class="row">
-
-        
-
-        <div class="col-md-2" style="float:right">
+<div class="container">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/profiles/{{$user->id}}">My Profile</a> </li>
+            <li class="active"> Change Password</li>
+        </ol>
+            
+        <div style="float:right">
             <a class="btn btn-primary btn-md"  href="/profiles/{{$user->id}}">BACK</a>
         </div>
-
-        <div class="col-md-8  main">
-                <h1 class="page-header">PROFILE</h1>
-                <h3>CHANGE PASSWORD</h3>
+            
+        <h1 class="page-header">Change Password </h1>
                 {!! Form::open(['action' => ['ProfilesController@update_password', $user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
                     <div class="form-group">
@@ -36,9 +36,7 @@
                     {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
 
                 {!! Form::close() !!}
-        </div>
-    
-    </div>
+       
 </div>
 
 @endsection

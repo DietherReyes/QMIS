@@ -5,15 +5,21 @@
 <div class="container-fluid">
     <div class="row">
 
-        @include('include.sidebar')
+        @include('include.units_sidebar')
 
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/units">BACK</a>
-        </div>
+       
 
-        <div class="col-md-8  main">
-                <h1 class="page-header">FUNCTIONAL UNITS</h1>
-                <h3>EDIT FUNCTIONAL UNIT</h3>
+        <div class="col-md-9  main">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li> <a href="/sysmg/units"> Functional Units</a></li>
+                <li class="active"> Edit Functional Unit</li>
+            </ol>
+            <div style="float:right">
+                <a class="btn btn-primary btn-md"  href="/sysmg/units">BACK</a>
+            </div>
+            <h1 class="page-header">Edit {{$functional_unit->name}}</h1>
+                
 
                 {!! Form::open(['action' => ['FunctionalUnitsController@update', $functional_unit->id], 'method' => 'POST']) !!}
 
