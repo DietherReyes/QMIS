@@ -2,18 +2,23 @@
 
 @section('content')
 
-     @include('include.sidebar')
-     <div class="col-md-2" style="float:right">
-        <a class="btn btn-success btn-md"  href="/sysmg/units/{{$functional_unit->id}}/edit">EDIT</a>
-        <a class="btn btn-primary btn-md"  href="/sysmg/units">BACK</a>
-        
-     </div>
+@include('include.units_sidebar')
      
-     <div class="col-md-8  main">
+     
+     <div class="col-md-9  main">
         
         
-        <h1 class="page-header"> FUNCTIONAL UNITS </h1>
-        <h3>FUNCTIONAL UNIT INFORMATION</h3>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li> <a href="/sysmg/units"> Functional Units</a></li>
+            <li class="active"> View Functional Unit</li>
+        </ol>
+        <div style="float:right">
+                <a class="btn btn-success btn-md"  href="/sysmg/units/{{$functional_unit->id}}/edit">EDIT</a>
+                <a class="btn btn-primary btn-md"  href="/sysmg/units">BACK</a>
+        </div>
+
+        <h1 class="page-header">{{$functional_unit->name}}</h1>
         
         <ul class="list-group">
             <h5>Abbreviation</h5>

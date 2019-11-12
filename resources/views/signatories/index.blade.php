@@ -4,21 +4,24 @@
 
 <div class="container-fluid">
     <div class="row">
-        @include('include.sidebar')
+        @include('include.signatories_sidebar')
 
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/signatories/create">ADD</a>
-        </div>
+        
 
         <div class="col-md-9  main">
-
-
-            <h1 class="page-header">SIGNATORIES</h1>
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active"> Signatories</li>
+            </ol>
+            <div style="float:right">
+                <a class="btn btn-primary btn-md"  href="/sysmg/signatories/create">ADD</a>
+            </div>
+            <h1 class="page-header">Signatories</h1>
 
             <div class="container">
                     {!! Form::open(['action' => 'SignatoriesController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
                     <div class="form-group">
-                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:720px'])}}
+                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:745px'])}}
                     </div>
                     {{Form::submit('SEARCH', ['class'=>'btn btn-primary'])}}
                     <a href="/sysmg/signatories" class="btn btn-primary btn-md">
@@ -47,7 +50,10 @@
                 </div>
                 {{$signatories->links()}}
             @else
-                <p>No signatories found</p>
+                <img class="center" src="/storage/assets/nothing_found.png">
+                <div id="notfound" >
+                    <h1  >No Results Found</h1>
+                </div>
             @endif
         </div>
     </div>    

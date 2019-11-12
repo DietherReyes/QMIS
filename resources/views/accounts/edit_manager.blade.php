@@ -3,7 +3,7 @@
 @section('content')
 
 
-<script language="JavaScript">
+<script type="application/javascript"> 
    
         // Check column of checkboxes
         function selectAll(val){                      
@@ -18,15 +18,20 @@
         function updatePermission(name,functional_units){
             functional_units.forEach(unit => {
                 if(unit.name === name){
+                    console.log(unit.permission);
                     for(var i = 0; i < unit.permission.length; i++){
+                        
                         var checkboxes = document.getElementsByName('permission[' + i + ']');
                         if(unit.permission[i] === '1'){
                             checkboxes[0].checked = true;
+                            console.log(true);
                         }else{
                             checkboxes[0].checked = false;
+                            console.log(false);
                         }
                         
                     }
+                    return;
                 }
             });
         }
@@ -36,15 +41,22 @@
 <div class="container-fluid">
     <div class="row">
 
-        @include('include.sidebar')
+        @include('include.account_sidebar')
 
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/accounts">BACK</a>
-        </div>
+    
+        <div class="col-md-9  main">
+                <ol class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/sysmg/accounts">User Account Management</a></li>
+                        <li class="active"> Edit Manager </li>
+                </ol>
 
-        <div class="col-md-8  main">
-                <h1 class="page-header">USER ACCOUNTS</h1>
-                <h3>ADD MANAGER</h3>
+                <div style="float:right">
+                    <a class="btn btn-primary btn-md"  href="/sysmg/accounts">BACK</a>
+                </div>
+
+                <h1 class="page-header">Edit {{ $user->name}}</h1>
+
                 <img style="width:150px;" src="/storage/profile_photos/{{$user->profile_photo}}">
 
                 {!! Form::open(['action' => ['UsersController@update', $user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
@@ -71,7 +83,7 @@
 
                     <div class="form-group">
                         {{Form::label('functional_unit', 'Functional Unit')}}
-                        {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control'])}}
+                        {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control', 'onChange' => "updatePermission(this.value,$functional_units)"])}}
                     </div> 
 
                     <div class="form-group">

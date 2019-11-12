@@ -4,20 +4,24 @@
 
 <div class="container-fluid">
     <div class="row">
-        @include('include.sidebar')
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/units/create">ADD</a>
-        </div>
+        @include('include.units_sidebar')
+       
         
-        <div class="col-md-8  main">
+        <div class="col-md-9  main">
+            <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                <li class="active">Functional Units</li>
+            </ol>
+            <div style="float:right">
+                <a class="btn btn-primary btn-md"  href="/sysmg/units/create">ADD</a>
+            </div>
 
-
-            <h1 class="page-header">FUNCTIONAL UNITS</h1>
+            <h1 class="page-header">Functional Units</h1>
 
             <div class="container">
                     {!! Form::open(['action' => 'FunctionalUnitsController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
                     <div class="form-group">
-                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:720px'])}}
+                        {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:745px'])}}
                     </div>
                     {{Form::submit('SEARCH', ['class'=>'btn btn-primary'])}}
                     <a href="/sysmg/units" class="btn btn-primary btn-md">
@@ -60,7 +64,10 @@
                 {{$functional_units->links()}}
         
             @else
-                <p>No Functional Units</p>
+                <img class="center" src="/storage/assets/nothing_found.png">
+                <div id="notfound" >
+                    <h1  >No Results Found</h1>
+                </div>
             @endif
         </div>
     </div>    

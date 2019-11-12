@@ -2,19 +2,23 @@
 
 @section('content')
 
-     @include('include.sidebar')
+@include('include.signatories_sidebar')
      
-     <div class="col-md-2" style="float:right">
-        <a class="btn btn-success btn-md"  href="/sysmg/signatories/{{$signatory->id}}/edit">EDIT</a>
-        <a class="btn btn-primary btn-md"  href="/sysmg/signatories">BACK</a>
-        
-     </div>
      
-     <div class="col-md-8  main">
+     <div class="col-md-9  main">
         
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/sysmg/signatories">Signatories</a></li>
+            <li class="active"> View Signatory </li>
+        </ol>
         
-        <h1 class="page-header"> SIGNATORIES </h1>
-        <h3>SIGNATORY INFORMATION</h3>
+        <div style="float:right">
+                <a class="btn btn-success btn-md"  href="/sysmg/signatories/{{$signatory->id}}/edit">EDIT</a>
+                <a class="btn btn-primary btn-md"  href="/sysmg/signatories">BACK</a>
+        </div>
+        
+        <h1 class="page-header"> {{$signatory->name}} </h1>
         
         <img style="width:150px;" src="/storage/signature_photos/{{$signatory->signature_photo}}">
         <ul class="list-group">
