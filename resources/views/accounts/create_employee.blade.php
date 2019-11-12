@@ -5,15 +5,24 @@
 <div class="container-fluid">
     <div class="row">
 
-        @include('include.sidebar')
+        @include('include.account_sidebar')
 
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/accounts">BACK</a>
-        </div>
+        
 
-        <div class="col-md-8  main">
-                <h1 class="page-header">USER ACCOUNTS</h1>
-                <h3>ADD EMPLOYEE</h3>
+        <div class="col-md-9  main">
+
+                <ol class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/sysmg/accounts">User Account Management</a></li>
+                        <li class="active"> Add Employee </li>
+                </ol>
+
+                <div style="float:right">
+                    <a class="btn btn-primary btn-md"  href="/sysmg/accounts">BACK</a>
+                </div>
+
+                <h1 class="page-header">Add Employee</h1>
+                
 
                 {!! Form::open(['action' => 'UsersController@store_employee', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 

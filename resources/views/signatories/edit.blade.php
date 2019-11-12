@@ -5,15 +5,20 @@
 <div class="container-fluid">
     <div class="row">
 
-        @include('include.sidebar')
-
-        <div class="col-md-2" style="float:right">
-            <a class="btn btn-primary btn-md"  href="/sysmg/signatories">BACK</a>
-        </div>
-
-        <div class="col-md-8  main">
-                <h1 class="page-header">SIGNATORIES</h1>
-                <h3>EDIT SIGNATORY</h3>
+        @include('include.signatories_sidebar')
+        <div class="col-md-9  main">
+                <<ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/sysmg/signatories">Signatories</a></li>
+                    <li class="active"> Edit Signatory </li>
+                </ol>
+                
+                <div style="float:right">
+                        
+                        <a class="btn btn-primary btn-md"  href="/sysmg/signatories">BACK</a>
+                </div>
+                
+                <h1 class="page-header"> Edit {{$signatory->name}} </h1>
                 <img style="width:150px;" src="/storage/signature_photos/{{$signatory->signature_photo}}">
                 {!! Form::open(['action' => ['SignatoriesController@update', $signatory->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
