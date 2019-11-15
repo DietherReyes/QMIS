@@ -13,10 +13,6 @@ class PagesController extends Controller
         $this->middleware('auth');
     }
 
-    public function csm(){
-        return view('pages.csm');
-    }
-
     public function unauthorized(){
         return view('pages.unauthorized');
     }

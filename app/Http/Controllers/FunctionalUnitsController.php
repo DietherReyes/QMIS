@@ -111,9 +111,8 @@ class FunctionalUnitsController extends Controller
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         
         if($request->permission !== null){
+            $checkbox_values = array_map('intval', $request->permission);
             foreach($checkbox_values as $value){
-                $checkbox_values = array_map('intval', $request->permission);
-
                 $temp_permission[$value] = "1";
     
             }

@@ -28,10 +28,9 @@
                     </ul>
 
                     <ul class="nav navbar-nav">
-                        <li><a href="/csm">CSM</a></li>
-                        @if( Auth::user()->role  === 'admin' )
-                        <li><a href="/sysmg/accounts">System Management</a></li>
-                        @endif
+                        <li><a href="/manrev">MGRV</a></li>
+                        <li><a href="/qmsd">QMSD</a></li>
+                        
                     </ul>
 
                     @endguest
@@ -49,20 +48,24 @@
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li>
-                                            <a href="/profiles/{{Auth::user()->id}}">Profile</a>
-                                    </li>
+
+                                    <li> <a href="/profiles/{{Auth::user()->id}}">Profile</a> </li>
+
+                                    @if( Auth::user()->role  === 'admin' )
+                                    <li><a href="/sysmg/accounts">System Management</a></li>
+                                    @endif
+
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
-
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+
                                 </ul>
                             </li>
                         @endguest

@@ -123,6 +123,24 @@ body {
   text-align: center;
 }
 
+label.file-input {
+  display: block;
+  cursor: pointer;
+  background: #3281c7;
+  width: 150px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: #fff;
+  position: relative;
+  top: 2.5px;
+}
+
+.hidden {
+  position: absolute;
+  left: -99999px;
+}
+
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.

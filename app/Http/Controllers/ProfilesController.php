@@ -24,7 +24,7 @@ class ProfilesController extends Controller
             return redirect('/unauthorized');
         }
         $user->permission = explode(',', $user->permission); //splitting the permission array
-        return view('profile.show')->with('user', $user);
+        return view('profiles.show')->with('user', $user);
     }
 
     public function edit($id){
@@ -32,7 +32,7 @@ class ProfilesController extends Controller
         if(Auth::id() !== $user->id ){    
             return redirect('/unauthorized');
         }
-        return view('profile.edit')->with('user', $user);
+        return view('profiles.edit')->with('user', $user);
     }
 
     public function update(Request $request, $id){
@@ -82,7 +82,7 @@ class ProfilesController extends Controller
         if(Auth::id() !== $user->id ){    
             return redirect('/unauthorized');
         }
-        return view('profile.change_pass')->with('user', $user);
+        return view('profiles.change_pass')->with('user', $user);
     }
 
     public function update_password(Request $request, $id){
