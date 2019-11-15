@@ -52,6 +52,10 @@ Route::get('/manrev/agenda_memo/{id}', 'ManagementReviewsController@download_age
 Route::get('/manrev/all_files/{id}', 'ManagementReviewsController@download_all_files');
 Route::post('/manrev/search', 'ManagementReviewsController@search');
 
+//quality manual documentation
+Route::resource('/qmsd', 'QualityManualDocumentationsController');
+Route::post('/qmsd/search', 'QualityManualDocumentationsController@search');
+Route::get('/qmsd/manual_doc/{id}', 'QualityManualDocumentationsController@manual_doc');
 
 Auth::routes();
 
