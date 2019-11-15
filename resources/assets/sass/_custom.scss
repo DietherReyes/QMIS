@@ -1,3 +1,5 @@
+
+
 /*
  * Base structure
  */
@@ -117,3 +119,27 @@ body {
   }
 
   //end search results
+
+
+
+  // file upload
+  label.file-input {
+    display: block;
+    cursor: pointer;
+    background: #3281c7;
+    width: 150px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    position: relative;
+    top: 2.5px;
+  }
+
+  .hidden {
+    position: absolute;
+    left: -99999px;
+  }
+
+  // end file upload/download
+
