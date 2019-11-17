@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\QualityManualDocumentation;
-
+use Auth;
+use App\User;
 class QualityManualDocumentationsController extends Controller
 {
 
     public function __construct(){
         $this->middleware('auth');
+    }
+
+    private function check_permission(&$isPermitted, $user_id, $permission){
+        $user = User::find(Auth::id());
+        $user->permission = explode(',', $user->permission);
+        if($user->permission[$permission] === '1' || $user->role === 'admin'){
+            $isPermitted = true;
+        }
     }
 
     // save file 
@@ -55,6 +64,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function create()
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 13);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         return view('quality_manual_documentations.create');
     }
 
@@ -101,6 +115,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function show($id)
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 12);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $manual_doc = QualityManualDocumentation::find($id);
         return view('quality_manual_documentations.show')->with('manual_doc', $manual_doc);
     }
@@ -113,6 +132,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function edit($id)
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 14);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $manual_doc = QualityManualDocumentation::find($id);
         return view('quality_manual_documentations.edit')->with('manual_doc', $manual_doc);
     }
@@ -166,6 +190,11 @@ class QualityManualDocumentationsController extends Controller
 
 
     public function manual_doc($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 15);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $manual_doc = QualityManualDocumentation::find($id);
         $path = 'public/quality_manual_documentations/'.$manual_doc->quality_manual_doc;
         return Storage::download($path);

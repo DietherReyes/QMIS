@@ -57,6 +57,10 @@ Route::resource('/qmsd', 'QualityManualDocumentationsController');
 Route::post('/qmsd/search', 'QualityManualDocumentationsController@search');
 Route::get('/qmsd/manual_doc/{id}', 'QualityManualDocumentationsController@manual_doc');
 
+//customer satisfaction measurements
+Route::resource('/csm', 'CustomerSatisfactionMeasurementsController');
+Route::get('/csm/supporting_documents/{id}', 'CustomerSatisfactionMeasurementsController@download_supporting_documents');
+Route::post('/csm/filter', 'CustomerSatisfactionMeasurementsController@filter');
 Auth::routes();
 
 

@@ -28,8 +28,10 @@
                     </ul>
 
                     <ul class="nav navbar-nav">
+                        <li><a href="/csm">CSM</a></li>
                         <li><a href="/manrev">MGRV</a></li>
                         <li><a href="/qmsd">QMSD</a></li>
+                        
                         
                     </ul>
 

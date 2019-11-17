@@ -141,6 +141,11 @@ label.file-input {
   left: -99999px;
 }
 
+.filter-button {
+  position: relative;
+  top: 25px;
+}
+
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
