@@ -20,7 +20,7 @@ class CreateManRevDocsTable extends Migration
             $table->timestamps();
         });
         Schema::table('man_rev_docs', function($table) {
-            $table->foreign('manrev_id')->references('id')->on('management_reviews');
+            $table->foreign('manrev_id')->references('id')->on('management_reviews')->onDelete('cascade');
         });
     }
 
