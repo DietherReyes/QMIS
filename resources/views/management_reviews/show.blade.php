@@ -47,7 +47,7 @@
                 <a class="btn btn-primary btn-md"  href="/manrev">BACK</a>
             </div>
                 
-            <h1 class="page-header"> View Management Review </h1>
+            <h1 class="page-header"> View MGRV </h1>
             
 
             <div class="row">
