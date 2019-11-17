@@ -8,13 +8,13 @@
         @guest
             <p> <a class="btn btn-primary btn-lg" href="{{route('login')}}">LOGIN</a> </p>
         @else
-            <ul>
+            {{-- <ul>
                 <li> <a class="btn btn-primary btn-lg" style="width:300px" href="/csm">CSM</a> </li>
                 @if(Auth::user()->role === 'admin')
                 <li>  <a class="btn btn-primary btn-lg" style="width:300px" href="/sysmg/accounts">SYSTEM MANAGEMENT</a> </li>
                 @endif
             </ul>    
-        <p>     </p>
+         --}}
         @endguest
     </div>
 @endsection
