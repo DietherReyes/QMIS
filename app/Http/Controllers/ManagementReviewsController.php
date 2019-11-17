@@ -9,6 +9,8 @@ use App\ManagementReview;
 use App\ManRevDoc;
 use Illuminate\Support\Facades\Storage;
 use Zipper;
+use Auth;
+use App\User;
 
 
 class ManagementReviewsController extends Controller
@@ -19,7 +21,13 @@ class ManagementReviewsController extends Controller
         $this->middleware('auth');
     }
 
-
+    private function check_permission(&$isPermitted, $user_id, $permission){
+        $user = User::find(Auth::id());
+        $user->permission = explode(',', $user->permission);
+        if($user->permission[$permission] === '1' || $user->role === 'admin'){
+            $isPermitted = true;
+        }
+    }
 
     // save file 
     private function save_file(Request $request, &$fileNameToStore, $name){
@@ -119,6 +127,11 @@ class ManagementReviewsController extends Controller
      */
     public function create()
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 9);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         return view('management_reviews.create');
     }
 
@@ -184,6 +197,11 @@ class ManagementReviewsController extends Controller
      */
     public function show($id)
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 8);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManRevDoc::all()->where('manrev_id',$id);
         
@@ -204,6 +222,11 @@ class ManagementReviewsController extends Controller
      */
     public function edit($id)
     {
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 10);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManRevDoc::all()->where('manrev_id',$id);
         
@@ -290,36 +313,66 @@ class ManagementReviewsController extends Controller
     }
 
     public function download_action_plan($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->action_plan;
         return Storage::download($path);
     }
 
     public function download_attendance($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->attendance;
         return Storage::download($path);
     }
 
     public function download_minutes($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->minutes;
         return Storage::download($path);
     }
 
     public function download_presentation_slide($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->presentation_slide;
         return Storage::download($path);
     }
 
     public function download_agenda_memo($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->agenda_memo;
         return Storage::download($path);
     }
 
     public function download_all_files($id){
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), 11);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         //the directory should be writable
         $management_review = ManagementReview::find($id);
         $directory = 'storage/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/*';
