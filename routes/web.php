@@ -56,6 +56,11 @@ Route::post('/manrev/search', 'ManagementReviewsController@search');
 Route::resource('/qmsd', 'QualityManualDocumentationsController');
 Route::post('/qmsd/search', 'QualityManualDocumentationsController@search');
 Route::get('/qmsd/manual_doc/{id}', 'QualityManualDocumentationsController@manual_doc');
+Route::get('/qmsd/sections/idx', 'QualityManualDocumentationsController@get_sections');
+Route::post('qmsd/sections/idx', 'QualityManualDocumentationsController@add_section');
+Route::post('qmsd/sections/idx/search', 'QualityManualDocumentationsController@search_section');
+Route::get('/qmsd/sections/{id}/edit', 'QualityManualDocumentationsController@edit_section');
+Route::put('/qmsd/sections/{id}/update', 'QualityManualDocumentationsController@update_section');
 
 //customer satisfaction measurements
 Route::resource('/csm', 'CustomerSatisfactionMeasurementsController');
