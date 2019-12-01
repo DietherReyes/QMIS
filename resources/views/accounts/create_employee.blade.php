@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+<script type="application/javascript"> 
+   
+    // upload name for single file
+    function uploadName(input_id , textarea_id){
+        var input = document.getElementById(input_id);
+        var textarea = document.getElementById(textarea_id);
+        var file_name = input.files[0].name;
+        textarea.value = file_name;
+    }
 
+</script>
 <div class="container-fluid">
     <div class="row">
 
@@ -26,39 +36,65 @@
 
                 {!! Form::open(['action' => 'UsersController@store_employee', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
-                    <div class="form-group">
-                        {{Form::label('profile_photo', 'Profile Photo (.jpg)')}}
-                        {{Form::file('profile_photo')}}
-                    </div>
+                <div class="row">
+                        <div class="col-md-12">
 
-                    <div class="form-group">
-                        {{Form::label('name', 'Name')}}
-                        {{Form::text('name', '', ['class' => 'form-control'])}}
-                    </div>
+                            <div class="form-group">
+                                {{Form::label('name', 'Name')}}
+                                {{Form::text('name', '', ['class' => 'form-control'])}}
+                            </div> 
+        
+                            <div class="form-group">
+                                {{Form::label('position', 'Position')}}
+                                {{Form::text('position','', ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('position', 'Position')}}
-                        {{Form::text('position', '', ['class' => 'form-control'])}}
-                    </div>
+                          
+                            <div class="form-group">
+                                {{Form::label('functional_unit', 'Functional Unit')}}
+                                {{Form::select('functional_unit', $data, '', ['class' => 'form-control'])}}
+                            </div> 
+        
+                            <div class="form-group">
+                                    {{Form::label('role', 'Role')}}
+                                    {{Form::select('role', array('admin' => 'Administrator', 'manager' => 'Manager','employee' => 'Employee'), '', ['class' => 'form-control'])}}
+                            </div> 
+                            <div class="form-group">
+                                    {{Form::label('status', 'Account Status')}}
+                                    {{Form::select('isActivated', array('1' => 'Activated', '0' => 'Deactivated'), '', ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('functional_unit', 'Functional Unit')}}
-                        {{Form::select('functional_unit', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select functional unit'])}}
-                    </div>
 
-                    <div class="form-group">
-                        {{Form::label('username', 'Username')}}
-                        {{Form::text('username', '', ['class' => 'form-control'])}}
-                    </div>
+                            <div class="form-group">
+                                {{Form::label('username', 'Username')}}
+                                {{Form::text('username', '', ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('password','Password')}}
-                        <input type="password" class="form-control" name="password">
-                    </div>
+                            <div class="form-group">
+                                    {{Form::label('password','Password')}}
+                                    <input type="password" class="form-control" name="password">
+                            </div>
+        
+                            <div class="form-group">
+                                {{Form::label('password_confirmation','Confirm Password')}}
+                                <input type="password" class="form-control" name="password_confirmation">
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('password_confirmation','Confirm Password')}}
-                        <input type="password" class="form-control" name="password_confirmation">
+                            <div class="form-group">
+                                {{Form::label('profile_photo', 'Profile Photo(.jpg)')}}
+                                {{Form::file('profile_photo', [ 'class' => 'hidden', 'id' => 'profile_photo' ,'onChange' => 'uploadName(this.id, \'profile_photo_text\')'])}}
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        {{Form::text('profile_photo_text', '', ['class' => 'form-control', 'id' => 'profile_photo_text', 'disabled'])}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{Form::label('profile_photo', 'Upload File', ['class' => 'file-input', 'for' => 'profile_photo'])}}
+                                    </div> 
+                                </div>
+                            </div>
+
+                        </div>
+                        
                     </div>
 
 
@@ -125,7 +161,7 @@
                         </div>
                         
                     </div>
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
         </div>

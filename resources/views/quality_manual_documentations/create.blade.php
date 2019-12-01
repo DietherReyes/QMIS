@@ -18,7 +18,7 @@
         <div class="row">
     
             @include('include.add_qmsd_sidebar')
-            <div class="col-md-11  main">
+            <div class="col-md-10  main">
 
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
                 

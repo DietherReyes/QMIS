@@ -110,7 +110,7 @@
                         
                     </div>
 
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
         </div>

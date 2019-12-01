@@ -2,32 +2,6 @@
 @extends('layouts.app')
 
 @section('content')
-<script type="application/javascript">
-   
-    
-    // function download(download){
-    //     $(document).ready(function(){
-    //         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    //         $(".postbutton").click(function(){
-    //             $.ajax({
-    //                 /* the route pointing to the post function */
-    //                 url: '/postajax',
-    //                 type: 'POST',
-    //                 /* send the csrf-token and the input to the controller */
-    //                 data: {_token: CSRF_TOKEN, message:$(".getinfo").val()},
-    //                 dataType: 'JSON',
-    //                 /* remind that 'data' is the response of the AjaxController */
-    //                 success: function (data) { 
-    //                     $(".writeinfo").append(data.msg); 
-    //                 }
-    //             }); 
-    //         });
-    //    }); 
-    // }
-    
-     
-</script>
-
 <div class="container-fluid">
     <div class="row">
         
@@ -71,7 +45,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <a class="btn btn-primary btn-md" href="/manrev/action_plan/{{$management_review->id}}">Download File</a>
-                                    {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
+                                   
                                 </div> 
                             </div>
                         </div>
@@ -84,7 +58,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <a class="btn btn-primary btn-md" href="/manrev/agenda_memo/{{$management_review->id}}">Download File</a>
-                                    {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
+                                    
                                 </div> 
                             </div>
                         </div>
@@ -110,7 +84,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a class="btn btn-primary btn-md" href="/manrev/attendance/{{$management_review->id}}">Download File</a>
-                                {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
+                                
                             </div> 
                         </div>
                     </div>
@@ -123,7 +97,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a class="btn btn-primary btn-md" href="/manrev/minutes/{{$management_review->id}}">Download File</a>
-                                {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
+                                
                             </div> 
                         </div>
                     </div>
@@ -136,7 +110,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a class="btn btn-primary btn-md" href="/manrev/presentation_slide/{{$management_review->id}}">Download File(s)</a>
-                                {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
+                                
                             </div> 
                         </div>
                     </div>

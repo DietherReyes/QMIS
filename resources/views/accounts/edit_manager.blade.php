@@ -4,7 +4,13 @@
 
 
 <script type="application/javascript"> 
-   
+        // upload name for single file
+        function uploadName(input_id , textarea_id){
+            var input = document.getElementById(input_id);
+            var textarea = document.getElementById(textarea_id);
+            var file_name = input.files[0].name;
+            textarea.value = file_name;
+        }
         // Check column of checkboxes
         function selectAll(val){                      
             checkboxes = document.getElementsByClassName(val);
@@ -57,43 +63,58 @@
 
                 <h1 class="page-header">Edit {{ $user->name}}</h1>
 
-                <img style="width:150px;" src="/storage/profile_photos/{{$user->profile_photo}}">
-
                 {!! Form::open(['action' => ['UsersController@update', $user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
-                    <div class="form-group">
-                        {{Form::label('profile_photo', 'Profile Photo (.jpg)')}}
-                        {{Form::file('profile_photo')}}
-                    </div>
+                <div class="row">
+                        <div class="col-md-9">
 
-                    <div class="form-group">
-                            {{Form::label('status', 'Account Status')}}
-                            {{Form::select('isActivated', array('1' => 'Activated', '0' => 'Deactivated'), $user->isActivated, ['class' => 'form-control'])}}
-                    </div>
+                            <div class="form-group">
+                                {{Form::label('username', 'Username')}}
+                                {{Form::text('username', $user->username, ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('name', 'Name')}}
-                        {{Form::text('name', $user->name, ['class' => 'form-control'])}}
-                    </div> 
+                            <div class="form-group">
+                                {{Form::label('name', 'Name')}}
+                                {{Form::text('name', $user->name, ['class' => 'form-control'])}}
+                            </div> 
+        
+                            <div class="form-group">
+                                {{Form::label('position', 'Position')}}
+                                {{Form::text('position', $user->position, ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('position', 'Position')}}
-                        {{Form::text('position', $user->position, ['class' => 'form-control'])}}
-                    </div>
+                          
+                            <div class="form-group">
+                                {{Form::label('functional_unit', 'Functional Unit')}}
+                                {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control'])}}
+                            </div> 
+        
+                            <div class="form-group">
+                                    {{Form::label('role', 'Role')}}
+                                    {{Form::select('role', array('admin' => 'Administrator', 'manager' => 'Manager','employee' => 'Employee'), $user->role, ['class' => 'form-control'])}}
+                            </div> 
+                            <div class="form-group">
+                                    {{Form::label('status', 'Account Status')}}
+                                    {{Form::select('isActivated', array('1' => 'Activated', '0' => 'Deactivated'), $user->isActivated, ['class' => 'form-control'])}}
+                            </div>
 
-                    <div class="form-group">
-                        {{Form::label('functional_unit', 'Functional Unit')}}
-                        {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control', 'onChange' => "updatePermission(this.value,$functional_units)"])}}
-                    </div> 
+                            <div class="form-group">
+                                {{Form::label('profile_photo', 'Profile Photo(.jpg)')}}
+                                {{Form::file('profile_photo', [ 'class' => 'hidden', 'id' => 'profile_photo' ,'onChange' => 'uploadName(this.id, \'profile_photo_text\')'])}}
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        {{Form::text('profile_photo_text', $user->profile_photo, ['class' => 'form-control', 'id' => 'profile_photo_text', 'disabled'])}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{Form::label('profile_photo', 'Upload File', ['class' => 'file-input', 'for' => 'profile_photo'])}}
+                                    </div> 
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                            {{Form::label('role', 'Role')}}
-                            {{Form::select('role', array('admin' => 'Administrator', 'manager' => 'Manager','employee' => 'Employee'), $user->role, ['class' => 'form-control'])}}
-                    </div> 
-
-                    <div class="form-group">
-                        {{Form::label('username', 'Username')}}
-                        {{Form::text('username', $user->username, ['class' => 'form-control'])}}
+                        </div>
+                        <div class="col-md-3">
+                            <img id="profile-photo" src="/storage/profile_photos/{{$user->profile_photo}}">
+                        </div>
                     </div>
 
 
@@ -164,7 +185,7 @@
                             
                         </div>
                     {{Form::hidden('_method','PUT')}}
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('EDIT', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
         </div>

@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         @include('include.add_section_sidebar');
-        <div class="col-md-11  main">
+        <div class="col-md-10  main">
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
                 <li><a href="/qmsd">Quality Management System Documentation</a></li>
@@ -16,47 +16,49 @@
             </div>
             <h1 class="page-header">Quality Manual Sections</h1>
 
+            
+
             <div class="container">
-                {!! Form::open(['action' => 'QualityManualDocumentationsController@add_section', 'method' => 'POST']) !!}
+                
+                    {!! Form::open(['action' => 'QualityManualDocumentationsController@add_section', 'method' => 'POST']) !!}
                     <div class="row">
                         <div class="col-md-11">
-                            <div class="form-group">
-                                {{Form::label('section_name', 'Section Name')}}
-                                {{Form::text('section_name', '', ['class' => 'form-control', 'placeholder' => 'Section Name'])}}
+                            <div class="input-group">
+                            <input name="section_name" type="text" class="form-control" placeholder="New Section Name">
+                            <span class="input-group-btn">
+                                    {{Form::submit('ADD SECTION', ['class'=>'btn btn-primary'])}}
+                            </span>
                             </div>
                         </div>
-
-                        <div class="col-md-1">
-                            {{Form::submit('ADD', ['class'=>'btn btn-primary filter-button'])}}
-                        </div>
-                        
                     </div>
-                
-                {!! Form::close() !!}
+                    
+                    {!! Form::close() !!}
             </div>
+
+            <br>
+        
 
             <div class="container">
-                    
-                {!! Form::open(['action' => 'QualityManualDocumentationsController@search_section', 'method' => 'POST']) !!}
+                
+                    {!! Form::open(['action' => 'QualityManualDocumentationsController@search_section', 'method' => 'POST']) !!}
                     <div class="row">
-                        <div class="col-md-10">
-                            <div class="form-group">
-                                {{Form::label('search_term', 'Search')}}
-                                {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search'])}}
+                        <div class="col-md-11">
+                            <div class="input-group">
+                            <input name="search_term" type="text" class="form-control" placeholder="Search">
+                            <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-md">
+                                            <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                    </button>
+                                    <a href="/qmsd/sections/idx" class="btn btn-primary btn-md">
+                                        <span class="glyphicon glyphicon-refresh"></span> REFRESH
+                                    </a>
+                            </span>
                             </div>
                         </div>
-
-                        <div class="col-md-2">
-                            {{Form::submit('SEARCH', ['class'=>'btn btn-primary filter-button'])}}
-                            <a href="/qmsd/sections/idx" class="btn btn-primary btn-md filter-button">
-                                <span class="glyphicon glyphicon-refresh"></span>
-                            </a>
-                        </div>
-                        
                     </div>
-                
-                {!! Form::close() !!}
-            </div>
+                    
+                    {!! Form::close() !!}
+                </div>
            
                 
             

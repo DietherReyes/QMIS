@@ -20,15 +20,26 @@
                     
                 <h1 class="page-header"> Management Review </h1>
             
+
                 <div class="container">
-                    {!! Form::open(['action' => 'ManagementReviewsController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
-                        <div class="form-group">
-                            {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:850px'])}}
+                
+                    {!! Form::open(['action' => 'ManagementReviewsController@search', 'method' => 'POST']) !!}
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                            <input name="search_term" type="text" class="form-control" placeholder="Search">
+                            <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-md">
+                                            <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                    </button>
+                                    <a href="/manrev" class="btn btn-primary btn-md">
+                                        <span class="glyphicon glyphicon-refresh"></span> REFRESH
+                                    </a>
+                            </span>
+                            </div>
                         </div>
-                    {{Form::submit('SEARCH', ['class'=>'btn btn-primary'])}}
-                        <a href="/manrev" class="btn btn-primary btn-md">
-                            <span class="glyphicon glyphicon-refresh"></span> Refresh
-                        </a>
+                    </div>
+                    
                     {!! Form::close() !!}
                 </div>
             

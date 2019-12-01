@@ -146,6 +146,17 @@ label.file-input {
   top: 25px;
 }
 
+.submit-btn {
+  float: right;
+}
+
+#profile-photo {
+  position: relative;
+  top: 30px;
+  left: 40px;
+  width: 150px;
+}
+
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
