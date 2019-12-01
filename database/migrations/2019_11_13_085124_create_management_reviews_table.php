@@ -20,10 +20,9 @@ class CreateManagementReviewsTable extends Migration
             $table->date('date');
             $table->string('minutes');
             $table->string('action_plan');
-            $table->string('attendance');
+            $table->string('attendance_sheet');
             $table->string('agenda_memo');
-            $table->string('presentation_slide');
-            $table->string('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->timestamps();
         });
     }
