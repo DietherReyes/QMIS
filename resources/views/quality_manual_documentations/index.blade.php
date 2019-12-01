@@ -25,17 +25,24 @@
                 
                         {!! Form::open(['action' => 'QualityManualDocumentationsController@search', 'method' => 'POST']) !!}
                         <div class="row">
-                            <div class="col-md-11">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    
+                                    {{Form::select('type', $data, $data['QM'] , ['class' => 'form-control'])}}
+                                </div>
+                            </div>
+                            <div class="col-md-8">
                                 <div class="input-group">
-                                <input name="search_term" type="text" class="form-control" placeholder="Search">
-                                <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary btn-md">
-                                                <span class="glyphicon glyphicon-search"> </span> SEARCH
-                                        </button>
-                                        <a href="/qmsd" class="btn btn-primary btn-md">
-                                            <span class="glyphicon glyphicon-refresh"></span> REFRESH
-                                        </a>
-                                </span>
+                                    
+                                    <input name="search_term" type="text" class="form-control" placeholder="Search">
+                                    <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary btn-md">
+                                                    <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                            </button>
+                                            <a href="/qmsd" class="btn btn-primary btn-md">
+                                                <span class="glyphicon glyphicon-refresh"></span> REFRESH
+                                            </a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -56,6 +63,7 @@
                                 <th>Document Code</th>
                                 <th>Subject</th>
                                 <th>Page Number</th>
+                                <th>Revision Number</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -66,6 +74,7 @@
                                     <td>{{$manual_docs[$i]->document_code}}</td>
                                     <td>{{$manual_docs[$i]->subject}}</td>
                                     <td>{{$manual_docs[$i]->page_number}}</td>
+                                    <td>{{$manual_docs[$i]->revision_number}}</td>
                                     <td> 
                                         <a class="btn btn-primary btn-sm"  href="/qmsd/{{$manual_docs[$i]->id}}">VIEW</a> 
                                         <a class="btn btn-success btn-sm"  href="/qmsd/{{$manual_docs[$i]->id}}/edit">EDIT</a> 
