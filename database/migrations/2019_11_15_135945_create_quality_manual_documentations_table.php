@@ -16,9 +16,10 @@ class CreateQualityManualDocumentationsTable extends Migration
         Schema::create('quality_manual_documentations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('document_code');
-            $table->string('revision_no');
-            $table->date('date');
-            $table->string('division');
+            $table->integer('revision_number');
+            $table->integer('page_number');
+            $table->date('effectivity_date');
+            $table->string('section');
             $table->string('subject');
             $table->string('quality_manual_doc');
             $table->timestamps();
