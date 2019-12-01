@@ -20,17 +20,28 @@
                     
                 <h1 class="page-header"> Quality Managment System Documentation </h1>
             
+               
                 <div class="container">
-                    {!! Form::open(['action' => 'QualityManualDocumentationsController@search', 'method' => 'POST', 'class' => 'form-inline']) !!}
-                        <div class="form-group">
-                            {{Form::text('search_term', '', ['class' => 'form-control', 'placeholder' => 'Search', 'style' => 'width:850px'])}}
+                
+                        {!! Form::open(['action' => 'QualityManualDocumentationsController@search', 'method' => 'POST']) !!}
+                        <div class="row">
+                            <div class="col-md-11">
+                                <div class="input-group">
+                                <input name="search_term" type="text" class="form-control" placeholder="Search">
+                                <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary btn-md">
+                                                <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                        </button>
+                                        <a href="/qmsd" class="btn btn-primary btn-md">
+                                            <span class="glyphicon glyphicon-refresh"></span> REFRESH
+                                        </a>
+                                </span>
+                                </div>
+                            </div>
                         </div>
-                    {{Form::submit('SEARCH', ['class'=>'btn btn-primary'])}}
-                        <a href="/qmsd" class="btn btn-primary btn-md">
-                            <span class="glyphicon glyphicon-refresh"></span> Refresh
-                        </a>
-                    {!! Form::close() !!}
-                </div>
+                        
+                        {!! Form::close() !!}
+                    </div>
             
                 
             

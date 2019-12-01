@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+<script type="application/javascript"> 
+   
+// upload name for single file
+function uploadName(input_id , textarea_id){
+    var input = document.getElementById(input_id);
+    var textarea = document.getElementById(textarea_id);
+    var file_name = input.files[0].name;
+    textarea.value = file_name;
+}
 
+</script>
 <div class="container-fluid">
     <div class="row">
 
@@ -23,10 +33,6 @@
                 <h1 class="page-header"> Add Signatory</h1>
                 {!! Form::open(['action' => 'SignatoriesController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
-                    <div class="form-group">
-                        {{Form::label('signature_photo', 'Signaure (.png)')}}
-                        {{Form::file('signature_photo')}}
-                    </div>
 
                     <div class="form-group">
                         {{Form::label('name', 'Name')}}
@@ -38,8 +44,21 @@
                         {{Form::text('position', '', ['class' => 'form-control'])}}
                     </div>
 
+                    <div class="form-group">
+                        {{Form::label('signature_photo', 'Signature(.png)')}}
+                        {{Form::file('signature_photo', [ 'class' => 'hidden', 'id' => 'signature_photo' ,'onChange' => 'uploadName(this.id, \'signature_photo_text\')'])}}
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{Form::text('signature_photo_text', '', ['class' => 'form-control', 'id' => 'signature_photo_text', 'disabled'])}}
+                            </div>
+                            <div class="col-md-2">
+                                {{Form::label('signature_photo', 'Upload File', ['class' => 'file-input', 'for' => 'signature_photo'])}}
+                            </div> 
+                        </div>
+                    </div>
 
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+
+                    {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
         </div>

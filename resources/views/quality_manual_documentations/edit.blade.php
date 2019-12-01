@@ -95,7 +95,7 @@
                     </div>
 
                     {{Form::hidden('_method','PUT')}}
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('EDIT', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
                 
