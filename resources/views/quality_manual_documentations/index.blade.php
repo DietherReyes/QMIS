@@ -44,7 +44,7 @@
                                 <th>#</th>
                                 <th>Document Code</th>
                                 <th>Subject</th>
-                                <th>Division</th>
+                                <th>Page Number</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -54,7 +54,7 @@
                                     <td>{{$i + 1}}</td>
                                     <td>{{$manual_docs[$i]->document_code}}</td>
                                     <td>{{$manual_docs[$i]->subject}}</td>
-                                    <td>{{$manual_docs[$i]->division}}</td>
+                                    <td>{{$manual_docs[$i]->page_number}}</td>
                                     <td> 
                                         <a class="btn btn-primary btn-sm"  href="/qmsd/{{$manual_docs[$i]->id}}">VIEW</a> 
                                         <a class="btn btn-success btn-sm"  href="/qmsd/{{$manual_docs[$i]->id}}/edit">EDIT</a> 

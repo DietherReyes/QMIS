@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\QualityManualDocumentation;
 use Auth;
 use App\User;
+use App\QualityDocumentSection;
 class QualityManualDocumentationsController extends Controller
 {
 
@@ -53,6 +54,7 @@ class QualityManualDocumentationsController extends Controller
      */
     public function index()
     {
+        error_log('index');
         $manual_docs = QualityManualDocumentation::orderBy('id')->paginate(10);
         return view('quality_manual_documentations.index')->with('manual_docs', $manual_docs);
     }
@@ -69,7 +71,15 @@ class QualityManualDocumentationsController extends Controller
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
-        return view('quality_manual_documentations.create');
+
+        $sections = QualityDocumentSection::orderBy('section_name')->get();
+        $data = [];
+        foreach($sections as $section){
+            $data[$section->section_name] = $section->section_name;
+        }
+        
+
+        return view('quality_manual_documentations.create')->with('data', $data);
     }
 
     /**
@@ -83,10 +93,11 @@ class QualityManualDocumentationsController extends Controller
         
         $this->validate($request, [
             'document_code' => 'required',
-            'date' => 'required',
+            'section' => 'required',
+            'effectivity_date' => 'required',
             'subject' => 'required',
-            'revision_no' => 'required',
-            'division' => 'required',
+            'revision_number' => 'required',
+            'page_number' => 'required',
             'quality_manual_doc' => 'required|mimes:pdf'
         ]);
         
@@ -95,10 +106,11 @@ class QualityManualDocumentationsController extends Controller
 
         $manual = new QualityManualDocumentation;
         $manual->document_code = $request->document_code;
-        $manual->date = $request->date;
+        $manual->effectivity_date = $request->effectivity_date;
         $manual->subject = $request->subject;
-        $manual->revision_no = $request->revision_no;
-        $manual->division = $request->division;
+        $manual->revision_number = $request->revision_number;
+        $manual->section = $request->section;
+        $manual->page_number = $request->page_number;
         $manual->quality_manual_doc = $quality_manual_doc;
         $manual->save();
         
@@ -138,7 +150,12 @@ class QualityManualDocumentationsController extends Controller
             return view('pages.unauthorized');
         }
         $manual_doc = QualityManualDocumentation::find($id);
-        return view('quality_manual_documentations.edit')->with('manual_doc', $manual_doc);
+        $sections = QualityDocumentSection::orderBy('section_name')->get();
+        $data = [];
+        foreach($sections as $section){
+            $data[$section->section_name] = $section->section_name;
+        }
+        return view('quality_manual_documentations.edit')->with(['manual_doc' => $manual_doc, 'data' => $data]);
     }
 
     /**
@@ -152,10 +169,11 @@ class QualityManualDocumentationsController extends Controller
     {
         $this->validate($request, [
             'document_code' => 'required',
-            'date' => 'required',
+            'section' => 'required',
+            'effectivity_date' => 'required',
             'subject' => 'required',
-            'revision_no' => 'required',
-            'division' => 'required',
+            'revision_number' => 'required',
+            'page_number' => 'required',
             'quality_manual_doc' => 'nullable|mimes:pdf'
         ]);
         
@@ -166,10 +184,11 @@ class QualityManualDocumentationsController extends Controller
 
         QualityManualDocumentation::where('id',$id)->update(array(
             'document_code'      => $request->document_code,
-            'date'               => $request->date,
+            'effectivity_date'   => $request->effectivity_date,
             'subject'            => $request->subject,
-            'revision_no'        => $request->revision_no,
-            'division'           => $request->division,
+            'revision_number'    => $request->revision_number,
+            'page_number'        => $request->page_number,
+            'section'            => $request->section,
             'quality_manual_doc' => $quality_manual_doc
             
         ));
@@ -205,5 +224,66 @@ class QualityManualDocumentationsController extends Controller
     public function search(Request $request){
         $manual_docs = QualityManualDocumentation::where('subject', 'like', '%'.$request->search_term.'%')->paginate(10);
         return view('quality_manual_documentations.index')->with('manual_docs', $manual_docs);
+    }
+
+    //
+    //  Section Functions
+    //
+
+    public function get_sections(){
+
+        $sections = QualityDocumentSection::orderBy('section_name')->paginate(10);
+        return view('quality_manual_documentations.section_index')->with('sections', $sections);
+    }
+
+    public function search_section(Request $request){
+        $sections = QualityDocumentSection::where('section_name', 'like', '%'.$request->search_term.'%')->orderBy('section_name')->paginate(10);
+        return view('quality_manual_documentations.section_index')->with('sections', $sections);
+    }
+
+    public function add_section(Request $request){
+        $this->validate($request, [
+            'section_name' => 'required'
+        ]);
+
+        $section = new QualityDocumentSection;
+        $section->section_name = $request->section_name;
+        $section->save();
+
+        return redirect('/qmsd/sections/idx');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_section($id)
+    {
+        $section = QualityDocumentSection::find($id);
+        return view('quality_manual_documentations.section_edit')->with('section', $section);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_section(Request $request, $id)
+    {
+        $this->validate($request, [
+            'section_name' => 'required',
+        ]);
+        
+       
+
+        QualityDocumentSection::where('id',$id)->update(array(
+            'section_name'      => $request->section_name,
+        ));
+
+        return redirect('/qmsd/sections/idx');
     }
 }

@@ -2,31 +2,6 @@
 @extends('layouts.app')
 
 @section('content')
-<script type="application/javascript">
-   
-    
-    // function download(download){
-    //     $(document).ready(function(){
-    //         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-    //         $(".postbutton").click(function(){
-    //             $.ajax({
-    //                 /* the route pointing to the post function */
-    //                 url: '/postajax',
-    //                 type: 'POST',
-    //                 /* send the csrf-token and the input to the controller */
-    //                 data: {_token: CSRF_TOKEN, message:$(".getinfo").val()},
-    //                 dataType: 'JSON',
-    //                 /* remind that 'data' is the response of the AjaxController */
-    //                 success: function (data) { 
-    //                     $(".writeinfo").append(data.msg); 
-    //                 }
-    //             }); 
-    //         });
-    //    }); 
-    // }
-    
-     
-</script>
 
 <div class="container-fluid">
     <div class="row">
@@ -46,7 +21,7 @@
                 <a class="btn btn-primary btn-md"  href="/qmsd">BACK</a>
             </div>
                 
-            <h1 class="page-header"> View Management Review </h1>
+            <h1 class="page-header"> View QMSD</h1>
             
 
             <div class="row">
@@ -61,8 +36,8 @@
                         <h5>Subject</h5>
                         <li class="list-group-item">{{$manual_doc->subject}}</li>
 
-                        <h5>Date</h5>
-                        <li class="list-group-item">{{$manual_doc->date}}</li>
+                        <h5>Effectivity Date</h5>
+                        <li class="list-group-item">{{$manual_doc->effectivity_date}}</li>
 
                     </ul>
              
@@ -72,32 +47,33 @@
 
                     <ul class="list-group">
 
-                        <h5>Division</h5>
-                        <li class="list-group-item">{{$manual_doc->division}}</li>
+                        <h5>Section</h5>
+                        <li class="list-group-item">{{$manual_doc->section}}</li>
 
                         <h5>Revision Number</h5>
-                        <li class="list-group-item">{{$manual_doc->revision_no}}</li>
+                        <li class="list-group-item">{{$manual_doc->revision_number}}</li>
 
+                        <h5>Page Number</h5>
+                        <li class="list-group-item">{{$manual_doc->page_number}}</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-12">
                         <h5>Quality Mandual Document</h5>
                         <div>
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <li class="list-group-item">{{$manual_doc->quality_manual_doc}}</li>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-2">
                                     <a class="btn btn-primary btn-md" href="/qmsd/manual_doc/{{$manual_doc->id}}">Download File</a>
-                                    {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
                                 </div> 
                             </div>
                         </div>
-
-                    </ul>
-
-                    
-
-                   
-
                 </div>
+    
+
+               
             </div>
 
         </div>
