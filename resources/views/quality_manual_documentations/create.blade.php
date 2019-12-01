@@ -15,11 +15,10 @@
 </script>
 
 <div class="container-fluid">
-    <div class="row">
-        
-        <div class="col-md-1"></div>
-
-        <div class="col-md-10 main">
+        <div class="row">
+    
+            @include('include.add_qmsd_sidebar')
+            <div class="col-md-11  main">
 
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
@@ -47,10 +46,10 @@
                                 {{Form::label('subject', 'Subject')}}
                                 {{Form::text('subject', '', ['class' => 'form-control'])}}
                             </div>
-
+                            
                             <div class="form-group">
-                                {{Form::label('date', 'Date')}}
-                                {{ Form::date('date', new \DateTime(), ['class' => 'form-control']) }}
+                                {{Form::label('effectivity_date', 'Effectivity Date')}}
+                                {{ Form::date('effectivity_date', new \DateTime(), ['class' => 'form-control']) }}
                             </div>
 
                             
@@ -58,31 +57,40 @@
                         </div>
 
                         <div class="col-md-6">
+
                             <div class="form-group">
-                                {{Form::label('division', 'Division')}}
-                                {{Form::text('division', '', ['class' => 'form-control'])}}
+                                {{Form::label('section', 'Section Name')}}
+                                {{Form::select('section', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select section name'])}}
                             </div>
 
                             <div class="form-group">
-                                {{Form::label('revision_no', 'Revision Number')}}
-                                {{Form::text('revision_no', '', ['class' => 'form-control'])}}
+                                {{Form::label('revision_number', 'Revision Number')}}
+                                {{Form::text('revision_number', '', ['class' => 'form-control'])}}
                             </div>
 
                             <div class="form-group">
-                                {{Form::label('quality_manual_doc', 'Quality Manual Document')}}
-                                {{Form::file('quality_manual_doc', [ 'class' => 'hidden', 'id' => 'quality_manual_doc' ,'onChange' => 'uploadName(this.id, \'quality_manual_doc_text\')'])}}
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{Form::text('quality_manual_doc_text', '', ['class' => 'form-control', 'id' => 'quality_manual_doc_text', 'disabled'])}}
-                                    </div>
-                                    <div class="col-md-4">
-                                        {{Form::label('quality_manual_doc', 'Upload File', ['class' => 'file-input', 'for' => 'quality_manual_doc'])}}
-                                    </div> 
-                                </div>
+                                {{Form::label('page_number', 'Page Number')}}
+                                {{Form::text('page_number', '', ['class' => 'form-control'])}}
                             </div>
+
+                            
+
+                            
                 
                         </div>
 
+                    </div>
+                    <div class="form-group">
+                        {{Form::label('quality_manual_doc', 'Quality Manual Document')}}
+                        {{Form::file('quality_manual_doc', [ 'class' => 'hidden', 'id' => 'quality_manual_doc' ,'onChange' => 'uploadName(this.id, \'quality_manual_doc_text\')'])}}
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{Form::text('quality_manual_doc_text', '', ['class' => 'form-control', 'id' => 'quality_manual_doc_text', 'disabled'])}}
+                            </div>
+                            <div class="col-md-2">
+                                {{Form::label('quality_manual_doc', 'Upload File', ['class' => 'file-input', 'for' => 'quality_manual_doc'])}}
+                            </div> 
+                        </div>
                     </div>
 
                     {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
@@ -91,7 +99,7 @@
                 
 
         </div>
-        <div class="col-md-1"> </div>
+       
     </div>
 </div>
 
