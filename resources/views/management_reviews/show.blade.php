@@ -102,11 +102,11 @@
                         <li class="list-group-item">{{$management_review->venue}}</li>
                     </ul>
 
-                    <h5>Attendance</h5>
+                    <h5>Attendance Sheet</h5>
                     <div>
                         <div class="row">
                             <div class="col-md-8">
-                                <li class="list-group-item">{{$management_review->attendance}}</li>
+                                <li class="list-group-item">{{$management_review->attendance_sheet}}</li>
                             </div>
                             <div class="col-md-4">
                                 <a class="btn btn-primary btn-md" href="/manrev/attendance/{{$management_review->id}}">Download File</a>
@@ -132,10 +132,10 @@
                     <div>
                         <div class="row">
                             <div class="col-md-8">
-                                <li class="list-group-item">{{$management_review->presentation_slide}}</li>
+                                <li class="list-group-item">{{$management_review->slides}}</li>
                             </div>
                             <div class="col-md-4">
-                                <a class="btn btn-primary btn-md" href="/manrev/presentation_slide/{{$management_review->id}}">Download File</a>
+                                <a class="btn btn-primary btn-md" href="/manrev/presentation_slide/{{$management_review->id}}">Download File(s)</a>
                                 {{-- <label class="file-input" onclick="download('{{ route('dl_action_plan', $management_review->id)}}')">Download File</label> --}}
                             </div> 
                         </div>

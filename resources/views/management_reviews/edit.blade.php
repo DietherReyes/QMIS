@@ -98,14 +98,14 @@
                             </div>
 
                             <div class="form-group">
-                                {{Form::label('attendance', 'Attendance')}}
-                                {{Form::file('attendance', [ 'class' => 'hidden', 'id' => 'attendance' ,'onChange' => 'uploadName(this.id, \'attendance_text\')'])}}
+                                {{Form::label('attendance_sheet', 'Attendance Sheet')}}
+                                {{Form::file('attendance_sheet', [ 'class' => 'hidden', 'id' => 'attendance_sheet' ,'onChange' => 'uploadName(this.id, \'attendance_sheet_text\')'])}}
                                 <div class="row">
                                     <div class="col-md-8">
-                                        {{Form::text('attendance_text', $management_review->attendance, ['class' => 'form-control', 'id' => 'attendance_text', 'disabled'])}}
+                                        {{Form::text('attendance_sheet_text', $management_review->attendance_sheet, ['class' => 'form-control', 'id' => 'attendance_sheet_text', 'disabled'])}}
                                     </div>
                                     <div class="col-md-4">
-                                        {{Form::label('attendance', 'Upload File', ['class' => 'file-input', 'for' => 'attendance'])}}
+                                        {{Form::label('attendance_sheet', 'Upload File', ['class' => 'file-input', 'for' => 'attendance_sheet'])}}
                                     </div> 
                                 </div>
                             </div>
@@ -124,17 +124,17 @@
                             </div>
                         
                             <div class="form-group">
-                                {{Form::label('presentation_slide', 'Presentation Slides')}}
-                                {{Form::file('presentation_slide', [ 'class' => 'hidden', 'id' => 'presentation_slide' ,'onChange' => 'uploadName(this.id, \'presentation_slides_text\')'])}}
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{Form::text('presentation_slides_text', $management_review->presentation_slide, ['class' => 'form-control', 'id' => 'presentation_slides_text', 'disabled'])}}
+                                    {{Form::label('presentation_slides', 'Presentation Slides')}}
+                                    {{Form::file('presentation_slides[]', [ 'class' => 'hidden', 'multiple' => 'multiple', 'id' => 'presentation_slides' ,'onChange' => 'uploadNames(this.id, \'presentation_slides_text\')'])}}
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            {{Form::text('presentation_slides_text', $management_review->slides, ['class' => 'form-control', 'id' => 'presentation_slides_text', 'disabled'])}}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{Form::label('presentation_slides', 'Upload File(s)', ['class' => 'file-input', 'for' => 'presentation_slides'])}}
+                                        </div> 
                                     </div>
-                                    <div class="col-md-4">
-                                        {{Form::label('presentation_slide', 'Upload File', ['class' => 'file-input', 'for' => 'presentation_slide'])}}
-                                    </div> 
                                 </div>
-                            </div>
                 
                         </div>
 
