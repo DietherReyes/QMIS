@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ManRevDoc extends Model
+class ManagementReviewDocument extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class ManRevDoc extends Model
      * @var array
      */
     protected $fillable = [
-        'file_name', 'manrev_id'
+        'file_name', 'type','manrev_id'
     ];
 
     public function other_files()
