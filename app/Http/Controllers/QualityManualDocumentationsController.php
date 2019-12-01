@@ -54,9 +54,14 @@ class QualityManualDocumentationsController extends Controller
      */
     public function index()
     {
-        error_log('index');
-        $manual_docs = QualityManualDocumentation::orderBy('id')->paginate(10);
-        return view('quality_manual_documentations.index')->with('manual_docs', $manual_docs);
+        $data = [
+            'QM' => 'Quality Manual',
+            'PM' => 'Procedures Manual',
+            'WI' => 'Work Instruction',
+            'FM' => 'Forms Manual',
+        ]; 
+        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', 'QM%')->orderBy('document_code')->orderBy('revision_number')->orderBy('page_number')->paginate(10);
+        return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
     }
 
     /**
@@ -220,10 +225,21 @@ class QualityManualDocumentationsController extends Controller
     }
 
 
-    //search user
+    //search qmsd
     public function search(Request $request){
-        $manual_docs = QualityManualDocumentation::where('subject', 'like', '%'.$request->search_term.'%')->paginate(10);
-        return view('quality_manual_documentations.index')->with('manual_docs', $manual_docs);
+        $data = [
+            'QM' => 'Quality Manual',
+            'PM' => 'Procedures Manual',
+            'WI' => 'Work Instruction',
+            'FM' => 'Forms Manual',
+        ]; 
+        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', $request->type.'%')
+                                                   ->where('subject', 'LIKE', '%'.$request->search_term.'%')
+                                                   ->orderBy('document_code')
+                                                   ->orderBy('revision_number')
+                                                   ->orderBy('page_number')
+                                                   ->paginate(10);
+        return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
     }
 
     //
