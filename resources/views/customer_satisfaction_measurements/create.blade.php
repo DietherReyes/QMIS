@@ -21,6 +21,43 @@
 
 </script>
 
+<script type="application/javascript"> 
+   
+    $(document).ready(function(){
+
+
+
+        $("#add_address").click(function(e){
+            event.preventDefault();
+            $("#addresses").append('<div id="address">' +
+                                        '<div class="col-md-5"> {{Form::label("address", "City or Province")}} {{Form::text("address[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("address_count", "Number of Customers")}} {{Form::text("address_count[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete_address">DELETE </button> </div>' +  
+                                    '</div>');
+
+           
+            
+        });
+
+        $("#add_service").click(function(e){
+            event.preventDefault();
+            $("#services").append('<div id="service">' +
+                                        '<div class="col-md-5"> {{Form::label("service", "Service Offered")}} {{Form::text("service[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("service_count", "Number of Customers")}} {{Form::text("service_count[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete_address">DELETE </button> </div>' +  
+                                    '</div>');
+            
+        });
+
+        $("body").on("click", "#delete_address", function(e){
+            event.preventDefault();
+            $(this).parent('div').parent('div').remove();
+        });
+        
+
+    });
+</script>
+
 <div class="container-fluid">
     <div class="row">
         
@@ -84,11 +121,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Customer Classification</h3>
-                        </div>
-                        <div class="col-md-6"> 
-                                
+                        <div class="col-md-12"> 
+                                <h3 class="page-header">Customer Classification</h3>
                         </div>
                     </div>
 
@@ -141,14 +175,62 @@
 
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float:right">
+                                    <button class="btn btn-primary btn-md" id="add_address"> ADD </button>
+                            </div>
+                            <h3 class="page-header">Customer Address</h3>
+                        </div>
+                    </div>
+
+                    <div id="addresses" class="row">
+                         
+                            <div id="address">
+                                <div class="col-md-5">
+                                    {{Form::label('address', 'City or Province')}}
+                                    {{Form::text('address[]', '', ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-5">
+                                    {{Form::label('address_count', 'Number of Customers')}}
+                                    {{Form::text('address_count[]', '', ['class' => 'form-control'])}}
+                                </div>    
+                            </div>
+                        
+                    </div>
+
+                    <br>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Customer Rating</h3>
+                        <div class="col-md-12">
+                            <div style="float:right">
+                                    <button class="btn btn-primary btn-md" id="add_service"> ADD </button>
+                            </div>
+                            <h3 class="page-header">Services Offerred</h3>
                         </div>
-                        <div class="col-md-6"> 
-                                
-                        </div>
+                    </div>
+
+                    <div id="services" class="row">
+                            
+                            <div id="service">
+                                <div class="col-md-5">
+                                    {{Form::label('service', 'Service Offerred')}}
+                                    {{Form::text('service[]', '', ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-5">
+                                    {{Form::label('service_count', 'Number of Customers')}}
+                                    {{Form::text('service_count[]', '', ['class' => 'form-control'])}}
+                                </div>    
+                            </div>
+                        
+                    </div>
+
+                    <br>
+                    
+                    <div class="row">
+                            <div class="col-md-12"> 
+                                    <h3 class="page-header">Customer Rating</h3>
+                            </div>
                     </div>
 
                     <div class="row">
@@ -180,12 +262,9 @@
                         </div>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Overall Rating</h3>
-                        </div>
-                        <div class="col-md-6"> 
-                                
-                        </div>
+                            <div class="col-md-12"> 
+                                    <h3 class="page-header">Overall Rating</h3>
+                            </div>
                     </div>
     
                     <div class="row">
@@ -243,7 +322,7 @@
                         
                     
 
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
                 
