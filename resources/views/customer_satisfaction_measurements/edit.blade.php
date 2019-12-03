@@ -4,7 +4,6 @@
 
 <script type="application/javascript"> 
    
-
     // upload names for multiple files
     function uploadNames(input_id , textarea_id){
         var input = document.getElementById(input_id);
@@ -19,6 +18,42 @@
         textarea.value = file_name;
     }
 
+</script>
+
+
+
+<script type="application/javascript"> 
+   
+    $(document).ready(function(){
+
+
+
+        $("#add_address").click(function(e){
+            event.preventDefault();
+            $("#addresses").append('<div id="address">' +
+                                        '<div class="col-md-5"> {{Form::label("address", "City or Province")}} {{Form::text("address[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("address_count", "Number of Customers")}} {{Form::text("address_count[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete_address">DELETE </button> </div>' +  
+                                    '</div>');
+        });
+
+        $("#add_service").click(function(e){
+            event.preventDefault();
+            $("#services").append('<div id="service">' +
+                                        '<div class="col-md-5"> {{Form::label("service", "Service Offered")}} {{Form::text("service[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("service_count", "Number of Customers")}} {{Form::text("service_count[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete_address">DELETE </button> </div>' +  
+                                    '</div>');
+            
+        });
+
+        $("body").on("click", "#delete_address", function(e){
+            event.preventDefault();
+            $(this).parent('div').parent('div').remove();
+        });
+        
+
+    });
 </script>
 
 <div class="container-fluid">
@@ -84,11 +119,8 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Customer Classification</h3>
-                        </div>
-                        <div class="col-md-6"> 
-                                
+                        <div class="col-md-12">
+                            <h3 class="page-header">Customer Classification</h3>
                         </div>
                     </div>
 
@@ -141,13 +173,75 @@
 
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float:right">
+                                    <button class="btn btn-primary btn-md" id="add_address"> ADD </button>
+                            </div>
+                            <h3 class="page-header">Customer Address</h3>
+                        </div>
+                    </div>
+
+                    <div id="addresses" class="row">
+
+                        @for($i = 0; $i < count($customer_addresses); $i++)
+                            <div id="address">
+                                <div class="col-md-5">
+                                    {{Form::label('address', 'City or Province')}}
+                                    {{Form::text('address[]', $customer_addresses[$i]->address, ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-5">
+                                    {{Form::label('address_count', 'Number of Customers')}}
+                                    {{Form::text('address_count[]', $customer_addresses[$i]->count, ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-2"> 
+                                    <button class="btn btn-danger btn-md delete-address" id="delete_address">
+                                        DELETE 
+                                    </button> 
+                                </div>    
+                            </div>
+                        @endfor
+
+                    </div>
+
+                    <br>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Customer Rating</h3>
+                        <div class="col-md-12">
+                            <div style="float:right">
+                                    <button class="btn btn-primary btn-md" id="add_service"> ADD </button>
+                            </div>
+                            <h3 class="page-header">Services Offerred</h3>
                         </div>
-                        <div class="col-md-6"> 
-                                
+                    </div>
+
+                    <div id="services" class="row">
+                        @for($i = 0; $i < count($customer_services_offered); $i++)
+                            <div id="service">
+                                <div class="col-md-5">
+                                    {{Form::label('service', 'Service Offerred')}}
+                                    {{Form::text('service[]', $customer_services_offered[$i]->service_name, ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-5">
+                                    {{Form::label('service_count', 'Number of Customers')}}
+                                    {{Form::text('service_count[]', $customer_services_offered[$i]->count, ['class' => 'form-control'])}}
+                                </div>
+                                <div class="col-md-2"> 
+                                    <button class="btn btn-danger btn-md delete-address" id="delete_address">
+                                        DELETE 
+                                    </button> 
+                                </div>    
+                            </div>
+                        @endfor  
+                        
+                    </div>
+
+                    <br>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="page-header">Customer Rating</h3>
                         </div>
                     </div>
 
@@ -179,14 +273,11 @@
 
                         </div>
 
-                    <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Overall Rating</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="page-header">Overall Rating</h3>
+                            </div>
                         </div>
-                        <div class="col-md-6"> 
-                                
-                        </div>
-                    </div>
     
                     <div class="row">
 
@@ -243,7 +334,7 @@
                         
                     
                     {{Form::hidden('_method','PUT')}}
-                    {{Form::submit('Submit', ['class'=>'btn btn-primary'])}}
+                    {{Form::submit('EDIT', ['class'=>'btn btn-primary submit-btn'])}}
 
                 {!! Form::close() !!}
                 
