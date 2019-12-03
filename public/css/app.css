@@ -157,6 +157,11 @@ label.file-input {
   width: 150px;
 }
 
+.delete-address {
+  position: relative;
+  top: 25px;
+}
+
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
