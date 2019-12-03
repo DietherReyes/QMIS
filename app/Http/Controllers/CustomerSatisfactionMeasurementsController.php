@@ -8,6 +8,8 @@ use App\CustomerClassification;
 use App\CustomerOverallRating;
 use App\CustomerRating;
 use App\CustomerSatisfactionDocuments;
+use App\CustomerAddress;
+use App\CustomerServicesOffered;
 use App\FunctionalUnit;
 use App\User;
 use Illuminate\Support\Facades\Storage;
@@ -50,7 +52,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $customer_classification->student               = $classification['student'];
         $customer_classification->government_employee   = $classification['government_employee'];
         $customer_classification->internal              = $classification['internal'];
-        $customer_classification->business              = $classification['student'];
+        $customer_classification->business              = $classification['business'];
         $customer_classification->homemaker             = $classification['homemaker'];
         $customer_classification->entrepreneur          = $classification['entrepreneur'];
         $customer_classification->private_organization  = $classification['private_organization'];
@@ -75,6 +77,38 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'others_specify'        => $classification['others_specify'],
             'csm_id'                => $csm_id
         )); 
+    }
+
+    private function save_addresses($request, $csm_id){
+        $deletedRows = CustomerAddress::where('csm_id', $csm_id)->delete();
+
+        $addresses = $request->address;
+        $count = $request->address_count;
+        for($i = 0; $i < count($addresses); $i++){
+            $address = new CustomerAddress;
+            $address->address = $addresses[$i];
+            $address->count = $count[$i];
+            $address->csm_id = $csm_id;
+            $address->save();
+        }
+
+
+    }
+
+    private function save_services($request, $csm_id){
+        $deletedRows = CustomerServicesOffered::where('csm_id', $csm_id)->delete();
+        $services = $request->service;
+        $count = $request->address_count;
+        
+        for($i = 0; $i < count($services); $i++){
+            $service = new CustomerServicesOffered;
+            $service->service_name = $services[$i];
+            $service->count = $count[$i];
+            $service->csm_id = $csm_id;
+            $service->save();
+        }
+
+
     }
 
     private function save_customer_rating($request, $csm_id){
@@ -214,7 +248,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+
         $this->validate($request, [
             'functional_unit' => 'required',
             'year' => 'required',
@@ -223,6 +257,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'total_male' => 'required',
             'total_female' => 'required',
             'customer_classification' => 'required',
+            'address' => 'required',
+            'address_count' => 'required',
+            'service' => 'required',
+            'service_count' => 'required',
             'customer_rating' => 'required',
             'response_delivery' => 'required',
             'work_quality' => 'required',
@@ -247,6 +285,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $this->save_customer_classification($request, $csm_id);
         $this->save_customer_rating($request, $csm_id);
         $this->save_overall_rating($request, $csm_id);
+        $this->save_addresses($request, $csm_id);
+        $this->save_services($request, $csm_id);
         if($request->hasFile('other_files')){
             $this->save_customer_satisfction_documents($request, $csm_id);
         }
@@ -268,20 +308,28 @@ class CustomerSatisfactionMeasurementsController extends Controller
             return view('pages.unauthorized');
         }
         $customer_satisfaction_measurement = CustomerSatisfactionMeasurement::find($id);
-        $customer_satisfaction_documents = CustomerSatisfactionDocuments::all()->where('csm_id',$id);
-        $customer_rating = CustomerRating::all()->where('csm_id',$id);
-        $customer_classification = CustomerClassification::all()->where('csm_id',$id);
-        $customer_overall_rating = CustomerOverallRating::all()->where('csm_id',$id);
+        $customer_satisfaction_documents = CustomerSatisfactionDocuments::where('csm_id',$id)->get();
+        $customer_rating = CustomerRating::where('csm_id',$id)->get()[0];
+        $customer_classification = CustomerClassification::where('csm_id',$id)->get()[0];
+        $customer_overall_rating = CustomerOverallRating::where('csm_id',$id)->get()[0];
+        $customer_addresses = CustomerAddress::where('csm_id', $id)->get();
+        $customer_services_offered = CustomerServicesOffered::where('csm_id', $id)->get();
+        
+        $this->get_data($data);
         $other_files = '';
         foreach($customer_satisfaction_documents as $file){
             $other_files = $other_files.$file->file_name.', ';
         }
+        
         $customer_satisfaction_measurement->other_files = $other_files;
         return view('customer_satisfaction_measurements.show')->with([
                 'csm' => $customer_satisfaction_measurement,
-                'customer_classification' => $customer_classification[0],
-                'customer_overall_rating' => $customer_overall_rating[0],
-                'customer_rating'         => $customer_rating[0]
+                'customer_classification'   => $customer_classification,
+                'customer_overall_rating'   => $customer_overall_rating,
+                'customer_rating'           => $customer_rating,
+                'customer_addresses'        => $customer_addresses,
+                'customer_services_offered' => $customer_services_offered, 
+                
             ]);
     }
 
@@ -299,10 +347,12 @@ class CustomerSatisfactionMeasurementsController extends Controller
             return view('pages.unauthorized');
         }
         $customer_satisfaction_measurement = CustomerSatisfactionMeasurement::find($id);
-        $customer_satisfaction_documents = CustomerSatisfactionDocuments::all()->where('csm_id',$id);
-        $customer_rating = CustomerRating::all()->where('csm_id',$id);
-        $customer_classification = CustomerClassification::all()->where('csm_id',$id);
-        $customer_overall_rating = CustomerOverallRating::all()->where('csm_id',$id);
+        $customer_satisfaction_documents = CustomerSatisfactionDocuments::where('csm_id',$id)->get();
+        $customer_rating = CustomerRating::where('csm_id',$id)->get()[0];
+        $customer_classification = CustomerClassification::where('csm_id',$id)->get()[0];
+        $customer_overall_rating = CustomerOverallRating::where('csm_id',$id)->get()[0];
+        $customer_addresses = CustomerAddress::where('csm_id', $id)->get();
+        $customer_services_offered = CustomerServicesOffered::where('csm_id', $id)->get();
         $quarter = [
             '1' => '1',
             '2' => '2',
@@ -316,15 +366,16 @@ class CustomerSatisfactionMeasurementsController extends Controller
             $other_files = $other_files.$file->file_name.', ';
         }
         
-    
         $customer_satisfaction_measurement->other_files = $other_files;
         return view('customer_satisfaction_measurements.edit')->with([
                 'csm' => $customer_satisfaction_measurement,
-                'customer_classification' => $customer_classification[0],
-                'customer_overall_rating' => $customer_overall_rating[0],
-                'customer_rating'         => $customer_rating[0],
-                'data'                    => $data,
-                'quarter'                 => $quarter
+                'customer_classification'   => $customer_classification,
+                'customer_overall_rating'   => $customer_overall_rating,
+                'customer_rating'           => $customer_rating,
+                'customer_addresses'        => $customer_addresses,
+                'customer_services_offered' => $customer_services_offered, 
+                'data'                      => $data,
+                'quarter'                   => $quarter
             ]);
     }
 
@@ -345,6 +396,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'total_male' => 'required',
             'total_female' => 'required',
             'customer_classification' => 'required',
+            'address' => 'required',
+            'address_count' => 'required',
+            'service' => 'required',
+            'service_count' => 'required',
             'customer_rating' => 'required',
             'response_delivery' => 'required',
             'work_quality' => 'required',
@@ -381,6 +436,9 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $this->update_customer_rating($request, $id);
         
         $this->update_overall_rating($request, $id);
+        $this->save_addresses($request, $id);
+        $this->save_services($request, $id);
+
         if($request->hasFile('other_files')){
             $this->save_customer_satisfction_documents($request, $id);
         }
