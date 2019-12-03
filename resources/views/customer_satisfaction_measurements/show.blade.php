@@ -67,13 +67,10 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6"> 
-                            <h3>Customer Classification</h3>
+                        <div class="col-md-12">
+                            <h3 class="page-header">Customer Classification</h3>
+                        </div>
                     </div>
-                    <div class="col-md-6"> 
-                            
-                    </div>
-                </div>
 
                 <div class="row">
 
@@ -127,13 +124,74 @@
 
                 </div>
 
+                <div class="row">
+                        <div class="col-md-12">
+                           
+                            <h3 class="page-header">Customer Address</h3>
+                        </div>
+                    </div>
+
+                    <div id="addresses" class="row">
+
+                        @for($i = 0; $i < count($customer_addresses); $i++)
+                            <div id="address">
+                                <div class="col-md-6">
+                                        <ul class="list-group">
+
+                                            <h5>Internal</h5>
+                                            <li class="list-group-item">{{$customer_addresses[$i]->address}}</li>
+                
+                                        </ul> 
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <h5>Number of Customers</h5>
+                                        <li class="list-group-item">{{$customer_addresses[$i]->count}}</li>
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                        @endfor
+
+                    </div>
+
+                    <br>
 
                     <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Customer Rating</h3>
+                        <div class="col-md-12">
+                          
+                            <h3 class="page-header">Services Offerred</h3>
                         </div>
-                        <div class="col-md-6"> 
-                                
+                    </div>
+
+                    <div id="services" class="row">
+                        @for($i = 0; $i < count($customer_services_offered); $i++)
+                            <div id="service">
+                                    <div class="col-md-6">
+                                            <ul class="list-group">
+    
+                                                <h5>Internal</h5>
+                                                <li class="list-group-item">{{$customer_services_offered[$i]->service_name}}</li>
+                    
+                                            </ul> 
+                                    </div>
+                                    <div class="col-md-6">
+                                            <ul class="list-group">
+                                                <h5>Number of Customers</h5>
+                                                <li class="list-group-item">{{$customer_services_offered[$i]->count}}</li>
+                                            </ul>
+                                    </div>
+                            </div>
+                        @endfor  
+                        
+                    </div>
+
+                    <br>
+
+
+                <div class="row">
+                        <div class="col-md-12">
+                            <h3 class="page-header">Customer Rating</h3>
                         </div>
                     </div>
 
@@ -165,14 +223,11 @@
 
                         </div>
 
-                    <div class="row">
-                        <div class="col-md-6"> 
-                                <h3>Overall Rating</h3>
-                        </div>
-                        <div class="col-md-6"> 
-                                
-                        </div>
-                    </div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="page-header">Overall Rating</h3>
+                                </div>
+                            </div>
     
                     <div class="row">
 
