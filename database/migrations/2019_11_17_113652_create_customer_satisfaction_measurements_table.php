@@ -21,7 +21,7 @@ class CreateCustomerSatisfactionMeasurementsTable extends Migration
             $table->integer('total_customer');
             $table->integer('total_male');
             $table->integer('total_female');
-            $table->string('comments')->nullable();
+            $table->mediumText('comments')->nullable();
             $table->timestamps();
         });
     }
