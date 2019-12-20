@@ -12,9 +12,11 @@ use App\CustomerAddress;
 use App\CustomerServicesOffered;
 use App\FunctionalUnit;
 use App\User;
+use App\Charts\CustomerSatisfactionChart;
 use Illuminate\Support\Facades\Storage;
 use Zipper;
 use Auth;
+
 
 class CustomerSatisfactionMeasurementsController extends Controller
 {
@@ -33,14 +35,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
     //gets dropdown data
     private function get_data(&$data){
-        $functional_units = FunctionalUnit::all();
+        $functional_units = FunctionalUnit::orderBy('name', 'ASC')->get();
         foreach($functional_units as $functional_unit){
             $data[$functional_unit->name] = $functional_unit->name;
         }
     }
 
     private function get_year(&$year){
-        $csm_years = CustomerSatisfactionMeasurement::orderBy('year', 'ASC')->pluck('year');
+        $csm_years = CustomerSatisfactionMeasurement::orderBy('year', 'DESC')->pluck('year');
         foreach($csm_years as $csm_year){
             $year[$csm_year] = $csm_year;
         }
@@ -98,7 +100,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     private function save_services($request, $csm_id){
         $deletedRows = CustomerServicesOffered::where('csm_id', $csm_id)->delete();
         $services = $request->service;
-        $count = $request->address_count;
+        $count = $request->service_count;
         
         for($i = 0; $i < count($services); $i++){
             $service = new CustomerServicesOffered;
@@ -136,7 +138,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $overall_rating->response_delivery = $request->response_delivery;
         $overall_rating->work_quality = $request->work_quality;
         $overall_rating->personnels_quality = $request->personnels_quality;
-        $overall_rating->overall_rating = $request->response_delivery;
+        $overall_rating->overall_rating = $request->overall_rating;
         $overall_rating->csm_id = $csm_id;
         $overall_rating->save();
 
@@ -147,7 +149,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'response_delivery'     => $request->response_delivery,
             'work_quality'          => $request->work_quality,
             'personnels_quality'    => $request->personnels_quality,
-            'overall_rating'        => $request->response_delivery,
+            'overall_rating'        => $request->overall_rating,
             'csm_id'                => $csm_id,
         )); 
     }
@@ -206,7 +208,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         
         $this->get_data($data);
         $this->get_year($year);
-        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('id')->paginate(10);
+        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         return view('customer_satisfaction_measurements.index')->with([
             'csm'       => $customer_satisfaction_measurements,
             'data'      => $data,
@@ -493,41 +495,41 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
         
         if($request->functional_unit === 'all' && $request->year === 'all' && $request->quarter === 'all'){
-            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('id')->paginate(10);
+            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit !== 'all' && $request->year === 'all' && $request->quarter === 'all'){
-            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('functional_unit', $request->functional_unit)->paginate(10);
+            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('functional_unit', $request->functional_unit)->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit !== 'all' && $request->year !== 'all' && $request->quarter === 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where([
                     ['functional_unit', $request->functional_unit],
                     ['year', $request->year]
-                ])->paginate(10);
+                ])->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit !== 'all' && $request->year !== 'all' && $request->quarter !== 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where([
                     ['functional_unit', $request->functional_unit],
                     ['year', $request->year],
                     ['quarter', $request->quarter]
-                ])->paginate(10);
+                ])->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit !== 'all' && $request->year === 'all' && $request->quarter !== 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where([
                     ['functional_unit', $request->functional_unit],
                     ['quarter', $request->quarter]
-                ])->paginate(10);
+                ])->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit === 'all' && $request->year !== 'all' && $request->quarter !== 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where([
                     ['quarter', $request->quarter],
                     ['year', $request->year]
-                ])->paginate(10);
+                ])->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit === 'all' && $request->year !== 'all' && $request->quarter === 'all'){
-            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('year', $request->year)->paginate(10);
+            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('year', $request->year)->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
         if($request->functional_unit === 'all' && $request->year === 'all' && $request->quarter !== 'all'){
-            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('quarter', $request->quarter)->paginate(10);
+            $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::where('quarter', $request->quarter)->orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
         }
 
         return view('customer_satisfaction_measurements.index')->with([
@@ -538,4 +540,288 @@ class CustomerSatisfactionMeasurementsController extends Controller
         ]);
     }
 
+    //graphs
+    private function get_quarters(&$labels, $unit, $unit_year){
+        $csm_quarters = CustomerSatisfactionMeasurement::where([
+            ['functional_unit', $unit->name],
+            ['year', $unit_year]
+        ])->pluck('quarter');
+        foreach($csm_quarters as $quarter){
+            array_push($labels, 'Q'.$quarter); 
+        }
+    }
+
+    private function get_overall_ratings(&$overall_ratings, $csm_ids){
+        foreach($csm_ids as $id){
+            $csm = CustomerOverallRating::find($id);
+            array_push($overall_ratings, $csm->overall_rating);
+        }
+    }
+
+    private function get_customer_ratings(&$customer_ratings, $csm_ids){
+        foreach($csm_ids as $id){
+            $csm = CustomerRating::find($id);
+            $customer_ratings['five_star'] += $csm->five_star;
+            $customer_ratings['four_star'] += $csm->four_star;
+            $customer_ratings['three_below'] += $csm->three_below;
+        }
+    }
+
+
+    private function get_customer_addresses(&$customer_address_names, &$customer_address_count, $csm_ids){
+        $temp = [];
+        foreach($csm_ids as $id){
+            $customer_addresses = CustomerAddress::where('csm_id', $id)->get();
+            foreach($customer_addresses as $address){
+                if(!array_key_exists($address->address, $temp)){
+                    array_push($customer_address_names, $address->address);
+                    $temp[$address->address] = 0;
+                }
+                
+            }
+
+           
+        }
+
+        foreach($csm_ids as $id){
+            $customer_addresses = CustomerAddress::where('csm_id', $id)->get();
+            foreach($customer_addresses as $address){
+                $temp[$address->address] += $address->count;    
+            }
+        }
+        
+        foreach($customer_address_names as $service_name){
+            array_push($customer_address_count, $temp[$service_name]);
+        }
+        
+    }
+
+    private function get_customer_services(&$customer_services_names, &$customer_services_count, $csm_ids){
+        $temp = [];
+        foreach($csm_ids as $id){
+            $customer_services_offered = CustomerServicesOffered::where('csm_id', $id)->get();
+            foreach($customer_services_offered as $service){
+                if(!array_key_exists($service->service_name, $temp)){
+                    array_push($customer_services_names, $service->service_name);
+                    $temp[$service->service_name] = 0;
+                }
+                
+            }
+
+           
+        }
+
+        foreach($csm_ids as $id){
+            $customer_services_offered = CustomerServicesOffered::where('csm_id', $id)->get();
+            foreach($customer_services_offered as $service){
+                $temp[$service->service_name] += $service->count;    
+            }
+        }
+        
+        foreach($customer_services_names as $service_name){
+            array_push($customer_services_count, $temp[$service_name]);
+        }
+        
+    }
+
+
+
+    private function create_overall_ratings_chart(&$overall_ratings_chart, $csm_ids, $unit, $unit_year){
+        $labels = [];
+        $this->get_quarters($labels, $unit, $unit_year);
+        $overall_ratings = [];
+        $this->get_overall_ratings($overall_ratings, $csm_ids);
+
+        $title = $unit->name.' Overall Ratings Year '.$unit_year;
+        $overall_ratings_chart->title($title, 14,'#666',true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+        $overall_ratings_chart->labels($labels);
+        $overall_ratings_chart->dataset(' Overall Ratings Year '.$unit_year, 'line', $overall_ratings)->options([
+            'borderColor' => '#3281c7',
+            'backgroundColor' => '#3281c7',
+            'fill' => 'false',
+            'lineTension' => '.001',
+            'title' => 'allaallaall'
+        ]);
+
+    }
+
+    private function create_customer_ratings_chart(&$customer_ratings_chart, $csm_ids, $unit, $unit_year){
+        
+        $customer_ratings = [
+            'five_star' => 0,
+            'four_star' => 0,
+            'three_below' => 0
+        ];
+
+        $colors = [
+            '#3281c7',
+            '#38a2d9',
+            '#6ed2ec'
+        ];
+        $this->get_customer_ratings($customer_ratings, $csm_ids);
+        $title = $unit->name.' Total Customer Ratings Year '.$unit_year;
+        $customer_ratings_chart->title($title, 14,'#666',true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+        $customer_ratings_chart->labels(['5 Stars', '4 Stars', '3 Stars or Below']);
+        $dataset = $customer_ratings_chart->dataset(' Total Customer Ratings Year '.$unit_year, 'bar', [$customer_ratings['five_star'], $customer_ratings['four_star'], $customer_ratings['three_below']]);
+        $dataset->backgroundColor(collect($colors));
+        $dataset->color(collect($colors));
+    }
+
+    private function create_customer_services_chart(&$customer_services_chart, $csm_ids, $unit, $unit_year){
+        $customer_services_names = [];
+        $customer_services_count = [];
+        $this->get_customer_services($customer_services_names, $customer_services_count, $csm_ids);
+
+        $colors = [
+            '#3281c7',
+            '#3192d1',
+            '#38a2d9',
+            '#46b2e0',
+            '#59c2e6',
+            '#6ed2ec',
+            '#84e1f2',
+            '#9cf0f8',
+            '#b4ffff',
+            '#c3ffff',
+            '#d1ffff',
+            '#dfffff',
+            '#ecffff'
+        ];
+
+        $title = $unit->name.' Services Offered Year '.$unit_year;
+        $customer_services_chart->title($title, 14,'#666',true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+        $customer_services_chart->labels($customer_services_names);
+        $customer_services_chart->displayAxes(false);
+        $dataset = $customer_services_chart->dataset(' Services Offered Year '.$unit_year, 'pie', $customer_services_count);
+        $dataset->backgroundColor(collect($colors));
+        $dataset->color(collect($colors));
+        
+        
+        
+    }
+
+    private function create_customer_addresses_chart(&$customer_addresses_chart, $csm_ids, $unit, $unit_year){
+        $customer_adress_names = [];
+        $customer_adress_count = [];
+        $this->get_customer_addresses($customer_adress_names, $customer_adress_count, $csm_ids);
+        
+        $colors = [
+            '#3281c7',
+            '#3192d1',
+            '#38a2d9',
+            '#46b2e0',
+            '#59c2e6',
+            '#6ed2ec',
+            '#84e1f2',
+            '#9cf0f8',
+            '#b4ffff',
+            '#c3ffff',
+            '#d1ffff',
+            '#dfffff',
+            '#ecffff'
+        ];
+        $title = $unit->name.' Customer Addresses Year '.$unit_year;
+        $customer_addresses_chart->title($title, 14,'#666',true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+        $customer_addresses_chart->labels($customer_adress_names);
+        $customer_addresses_chart->displayAxes(false);
+        $dataset =  $customer_addresses_chart->dataset(' Customer Addresses Year '.$unit_year, 'pie', $customer_adress_count);
+        $dataset->backgroundColor(collect($colors));
+        $dataset->color(collect($colors));
+    }
+
+
+    public function graphs(){
+
+        $data = [];
+        $years = [];
+        $this->get_data($data);
+        $this->get_year($years);
+
+        $unit = FunctionalUnit::orderBy('name', 'ASC')->get()[0];
+        $unit_year = CustomerSatisfactionMeasurement::orderBy('year', 'DESC')->pluck('year');
+        if(count($unit_year) == 0){
+            return 'Insufficent Records';
+        }else{
+            $unit_year = $unit_year[0];
+        }
+
+        $csm_ids = CustomerSatisfactionMeasurement::where([
+            ['functional_unit', $unit->name],
+            ['year', $unit_year]
+        ])->orderBy('quarter' , 'ASC')->pluck('id');
+
+        
+
+        $overall_ratings_chart = new CustomerSatisfactionChart;
+        $this->create_overall_ratings_chart($overall_ratings_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_ratings_chart = new CustomerSatisfactionChart;
+        $this->create_customer_ratings_chart($customer_ratings_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_services_chart = new CustomerSatisfactionChart;
+        $this->create_customer_services_chart($customer_services_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_addresses_chart = new CustomerSatisfactionChart;
+        $this->create_customer_addresses_chart($customer_addresses_chart, $csm_ids, $unit, $unit_year);
+
+
+        return view('customer_satisfaction_measurements.graphs')->with([
+            'data' => $data,
+            'years' => $years,
+            'unit_name' => $unit->name,
+            'unit_year' => $unit_year,
+            'overall_ratings_chart' => $overall_ratings_chart,
+            'customer_ratings_chart' => $customer_ratings_chart,
+            'customer_services_chart' => $customer_services_chart,
+            'customer_addresses_chart' => $customer_addresses_chart
+            
+        ]);
+    }
+
+
+    public function search_graphs(Request $request){
+
+        $data = [];
+        $years = [];
+        $this->get_data($data);
+        $this->get_year($years);
+
+        $unit = FunctionalUnit::where('name', $request->functional_unit)->get()[0];
+        $unit_year = $request->year;
+        $csm_ids = CustomerSatisfactionMeasurement::where([
+            ['functional_unit', $unit->name],
+            ['year', $unit_year]
+        ])->orderBy('quarter' , 'ASC')->pluck('id');
+
+        
+
+        $overall_ratings_chart = new CustomerSatisfactionChart;
+        $this->create_overall_ratings_chart($overall_ratings_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_ratings_chart = new CustomerSatisfactionChart;
+        $this->create_customer_ratings_chart($customer_ratings_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_services_chart = new CustomerSatisfactionChart;
+        $this->create_customer_services_chart($customer_services_chart, $csm_ids, $unit, $unit_year);
+
+        $customer_addresses_chart = new CustomerSatisfactionChart;
+        $this->create_customer_addresses_chart($customer_addresses_chart, $csm_ids, $unit, $unit_year);
+
+
+        return view('customer_satisfaction_measurements.graphs')->with([
+            'data' => $data,
+            'years' => $years,
+            'unit_name' => $unit->name,
+            'unit_year' => $unit_year,
+            'overall_ratings_chart' => $overall_ratings_chart,
+            'customer_ratings_chart' => $customer_ratings_chart,
+            'customer_services_chart' => $customer_services_chart,
+            'customer_addresses_chart' => $customer_addresses_chart
+            
+        ]);
+    }
+
+    
+
 }
+
