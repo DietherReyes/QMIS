@@ -15,6 +15,10 @@
     
     <!-- load jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- chart js script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+    {{-- <script src="./node_modules/chart.js/dist/Chart.min.js"></script> --}}
 </head>
 <body>
     <div id="app">
@@ -25,5 +29,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    
 </body>
 </html>

@@ -15,10 +15,10 @@ class CreateCustomerOverallRatingsTable extends Migration
     {
         Schema::create('customer_overall_ratings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('response_delivery');
-            $table->integer('work_quality');
-            $table->integer('personnels_quality');
-            $table->integer('overall_rating');
+            $table->decimal('response_delivery');
+            $table->decimal('work_quality');
+            $table->decimal('personnels_quality');
+            $table->decimal('overall_rating');
             $table->integer('csm_id')->unsigned();
             $table->timestamps();
         });
