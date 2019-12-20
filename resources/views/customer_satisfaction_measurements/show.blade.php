@@ -138,7 +138,7 @@
                                 <div class="col-md-6">
                                         <ul class="list-group">
 
-                                            <h5>Internal</h5>
+                                            <h5>City or Province</h5>
                                             <li class="list-group-item">{{$customer_addresses[$i]->address}}</li>
                 
                                         </ul> 
@@ -170,7 +170,7 @@
                                     <div class="col-md-6">
                                             <ul class="list-group">
     
-                                                <h5>Internal</h5>
+                                                <h5>Service Offered</h5>
                                                 <li class="list-group-item">{{$customer_services_offered[$i]->service_name}}</li>
                     
                                             </ul> 

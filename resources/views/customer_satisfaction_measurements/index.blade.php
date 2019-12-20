@@ -15,6 +15,7 @@
                 </ol>
                     
                 <div style="float:right">
+                    <a class="btn btn-primary btn-md"  href="/csm/statistics/idx">STATISTICS</a>
                     <a class="btn btn-primary btn-md"  href="/csm/create">ADD</a>
                 </div>
                     
@@ -23,32 +24,36 @@
                 <div class="container">
                     {!! Form::open(['action' => 'CustomerSatisfactionMeasurementsController@filter', 'method' => 'POST']) !!}
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     {{Form::label('functional_unit', 'Functional Unit')}}
                                     {{Form::select('functional_unit', $data, $data['all'] , ['class' => 'form-control'])}}
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     {{Form::label('year', 'CSM Year')}}
                                     {{Form::select('year', $year, $year['all'] , ['class' => 'form-control'])}}
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     {{Form::label('quarter', 'Quarter')}}
                                     {{Form::select('quarter', $quarter, $quarter['all'], ['class' => 'form-control'])}}
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                {{Form::submit('SEARCH', ['class'=>'btn btn-primary filter-button'])}}
-                                <a href="/csm" class="btn btn-primary btn-md filter-button">
-                                    <span class="glyphicon glyphicon-refresh"></span> Refresh
-                                </a>
+                            <div class="col-md-2">
+                                    <span class="input-group-btn filter-button">
+                                            <button type="submit" class="btn btn-primary btn-md">
+                                                    <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                            </button>
+                                            <a href="/csm" class="btn btn-primary btn-md">
+                                                <span class="glyphicon glyphicon-refresh"></span> REFRESH
+                                            </a>
+                                    </span>
                             </div>
                             
                         </div>
