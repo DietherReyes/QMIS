@@ -66,6 +66,8 @@ Route::put('/qmsd/sections/{id}/update', 'QualityManualDocumentationsController@
 Route::resource('/csm', 'CustomerSatisfactionMeasurementsController');
 Route::get('/csm/supporting_documents/{id}', 'CustomerSatisfactionMeasurementsController@download_supporting_documents');
 Route::post('/csm/filter', 'CustomerSatisfactionMeasurementsController@filter');
+Route::get('/csm/statistics/idx', 'CustomerSatisfactionMeasurementsController@graphs');
+Route::post('/csm/statistics/idx', 'CustomerSatisfactionMeasurementsController@search_graphs');
 Auth::routes();
 
 
