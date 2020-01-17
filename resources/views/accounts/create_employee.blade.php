@@ -140,17 +140,17 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QOA</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 4, false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 3, false ,['class' => 'view'])}}</td>
                                                     
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">MR</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 8, false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 6, false ,['class' => 'view'])}}</td>
                                                     
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QMSD</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 12, false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 9, false ,['class' => 'view'])}}</td>
                                                     
                                             
                                                 </tr>

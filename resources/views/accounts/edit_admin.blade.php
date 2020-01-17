@@ -104,7 +104,7 @@
                                                         <th style="text-align:center">View</th>
                                                         <th style="text-align:center">Add</th>
                                                         <th style="text-align:center">Edit</th>
-                                                        <th style="text-align:center">Generate</th>
+                                                        {{-- <th style="text-align:center">Generate</th> --}}
                                                 </tr>
                                             </thead>
                                             
@@ -112,25 +112,25 @@
 
                                                 <tr>
                                                     <td style="text-align:center">CSM</td>
-                                                    @for ($i = 0; $i <= 3; $i++)
+                                                    @for ($i = 0; $i <= 2; $i++)
                                                         <td style="text-align:center"><span class="glyphicon glyphicon-ok" style="color:green"> </td>
                                                     @endfor
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QOA</td>
-                                                    @for ($i = 4; $i <= 7; $i++)
+                                                    @for ($i = 3; $i <= 5; $i++)
                                                         <td style="text-align:center"><span class="glyphicon glyphicon-ok" style="color:green"> </td>
                                                     @endfor
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">MR</td>
-                                                    @for ($i = 8; $i <= 11; $i++)
+                                                    @for ($i = 6; $i <= 8; $i++)
                                                         <td style="text-align:center"><span class="glyphicon glyphicon-ok" style="color:green"> </td>
                                                     @endfor
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QMSD</td>
-                                                    @for ($i = 12; $i <= 15; $i++)
+                                                    @for ($i = 9; $i <= 11; $i++)
                                                         <td style="text-align:center"><span class="glyphicon glyphicon-ok" style="color:green"> </td>
                                                     @endfor
                                                 </tr>

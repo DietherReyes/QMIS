@@ -135,17 +135,17 @@
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QOA</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 4, ($user->permission[4] === '1') ? true : false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 3, ($user->permission[3] === '1') ? true : false ,['class' => 'view'])}}</td>
                                                     
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">MR</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 8, ($user->permission[8] === '1') ? true : false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 6, ($user->permission[6] === '1') ? true : false ,['class' => 'view'])}}</td>
                                                     
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align:center">QMSD</td>
-                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 12, ($user->permission[12] === '1') ? true : false ,['class' => 'view'])}}</td>
+                                                    <td style="text-align:center">{{Form::checkbox('permission[]', 9, ($user->permission[9] === '1') ? true : false ,['class' => 'view'])}}</td>
                                                     
                                             
                                                 </tr>
