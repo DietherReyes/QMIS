@@ -335,7 +335,7 @@ class UsersController extends Controller
 
         //if admin account is downgraded to employee
         if($request->role === 'employee' && $user->role === 'admin'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,1,0,0,1,0,0,1,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
@@ -349,14 +349,14 @@ class UsersController extends Controller
 
         //if manager account is downgraded to employee
         if($request->role === 'employee' && $user->role === 'manager'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,1,0,0,1,0,0,1,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
 
         //if employee account is upgraded to manager
         if($request->role === 'manager' && $user->role === 'employee'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,1,0,0,1,0,0,1,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
         }
 
