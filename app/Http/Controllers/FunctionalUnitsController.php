@@ -47,7 +47,7 @@ class FunctionalUnitsController extends Controller
             'name' => 'required'
         ]);
 
-        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         if($request->permission !== null){
             $checkbox_values = array_map('intval', $request->permission);
             foreach($checkbox_values as $value){
@@ -108,7 +108,7 @@ class FunctionalUnitsController extends Controller
             'name' => 'required'
         ]);
 
-        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         
         if($request->permission !== null){
             $checkbox_values = array_map('intval', $request->permission);

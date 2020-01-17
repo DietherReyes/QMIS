@@ -131,7 +131,7 @@
                                                         <th style="text-align:center">View</th>
                                                         <th style="text-align:center">Add</th>
                                                         <th style="text-align:center">Edit</th>
-                                                        <th style="text-align:center">Generate</th>
+                                                        {{-- <th style="text-align:center">Generate</th> --}}
                                                     </tr>
                                                 </thead>
                                                 
@@ -144,7 +144,7 @@
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('view')"> <span class="glyphicon glyphicon-ok">  </button></td>
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('add')"> <span class="glyphicon glyphicon-ok"> </button></td>
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('edit')"> <span class="glyphicon glyphicon-ok"> </button></td>
-                                                        <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('generate')"> <span class="glyphicon glyphicon-ok"> </button></td>
+                                                        {{-- <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('generate')"> <span class="glyphicon glyphicon-ok"> </button></td> --}}
                                         
                                                     </tr>
                                                     <tr>
@@ -152,29 +152,29 @@
                                                         <td style="text-align:center">{{Form::checkbox('permission[0]', 0, ($user->permission[0] === '1') ? true : false ,['class' => 'view'])}}</td>
                                                         <td style="text-align:center">{{Form::checkbox('permission[1]', 1, ($user->permission[1] === '1') ? true : false ,['class' => 'add'])}}</td>
                                                         <td style="text-align:center">{{Form::checkbox('permission[2]', 2, ($user->permission[2] === '1') ? true : false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[3]', 3, ($user->permission[3] === '1') ? true : false ,['class' => 'generate'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[3]', 3, ($user->permission[3] === '1') ? true : false ,['class' => 'generate'])}}</td> --}}
                                                         
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">QOA</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[4]', 4, ($user->permission[4] === '1') ? true : false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[5]', 5, ($user->permission[5] === '1') ? true : false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[6]', 6, ($user->permission[6] === '1') ? true : false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[7]', 7, ($user->permission[7] === '1') ? true : false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[3]', 3, ($user->permission[3] === '1') ? true : false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[4]', 4, ($user->permission[4] === '1') ? true : false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[5]', 5, ($user->permission[5] === '1') ? true : false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[7]', 7, ($user->permission[7] === '1') ? true : false ,['class' => 'generate'])}}</td> --}}
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">MR</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[8]', 8, ($user->permission[8] === '1')   ? true : false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[9]', 9, ($user->permission[9] === '1')   ? true : false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[10]', 10, ($user->permission[10] === '1') ? true : false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[11]', 11, ($user->permission[11] === '1') ? true : false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[6]', 6, ($user->permission[6] === '1')   ? true : false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[7]', 7, ($user->permission[7] === '1')   ? true : false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[8]', 8, ($user->permission[8] === '1') ? true : false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[11]', 11, ($user->permission[11] === '1') ? true : false ,['class' => 'generate'])}}</td> --}}
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">QMSD</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[12]', 12, ($user->permission[12] === '1') ? true : false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[13]', 13, ($user->permission[13] === '1') ? true : false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[14]', 14, ($user->permission[14] === '1') ? true : false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[15]', 15, ($user->permission[15] === '1') ? true : false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[9]', 9, ($user->permission[9] === '1') ? true : false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[10]', 10, ($user->permission[10] === '1') ? true : false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[11]', 11, ($user->permission[11] === '1') ? true : false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[15]', 15, ($user->permission[15] === '1') ? true : false ,['class' => 'generate'])}}</td> --}}
                                                 
                                                     </tr>
                                                 </tbody>

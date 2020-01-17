@@ -145,7 +145,7 @@
                                                         <th style="text-align:center">View</th>
                                                         <th style="text-align:center">Add</th>
                                                         <th style="text-align:center">Edit</th>
-                                                        <th style="text-align:center">Generate</th>
+                                                        {{-- <th style="text-align:center">Generate</th> --}}
                                                     </tr>
                                                 </thead>
                                                 
@@ -158,7 +158,7 @@
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('view')"> <span class="glyphicon glyphicon-ok">  </button></td>
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('add')"> <span class="glyphicon glyphicon-ok"> </button></td>
                                                         <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('edit')"> <span class="glyphicon glyphicon-ok"> </button></td>
-                                                        <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('generate')"> <span class="glyphicon glyphicon-ok"> </button></td>
+                                                        {{-- <td style="text-align:center" > <button type="button" class="btn btn-sm btn-success" onclick="selectAll('generate')"> <span class="glyphicon glyphicon-ok"> </button></td> --}}
                                         
                                                     </tr>
                                                     <tr>
@@ -166,29 +166,29 @@
                                                         <td style="text-align:center">{{Form::checkbox('permission[0]', 0, false ,['class' => 'view'])}}</td>
                                                         <td style="text-align:center">{{Form::checkbox('permission[1]', 1, false ,['class' => 'add'])}}</td>
                                                         <td style="text-align:center">{{Form::checkbox('permission[2]', 2, false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[3]', 3, false ,['class' => 'generate'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[3]', 3, false ,['class' => 'generate'])}}</td> --}}
                                                         
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">QOA</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[4]', 4, false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[5]', 5, false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[6]', 6, false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[7]', 7, false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[3]', 3, false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[4]', 4, false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[5]', 5, false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[7]', 7, false ,['class' => 'generate'])}}</td> --}}
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">MR</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[8]', 8, false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[9]', 9, false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[10]', 10, false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[11]', 11, false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[6]', 6, false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[7]', 7, false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[8]', 8, false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[11]', 11, false ,['class' => 'generate'])}}</td> --}}
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:center">QMSD</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[12]', 12, false ,['class' => 'view'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[13]', 13, false ,['class' => 'add'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[14]', 14, false ,['class' => 'edit'])}}</td>
-                                                        <td style="text-align:center">{{Form::checkbox('permission[15]', 15, false ,['class' => 'generate'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[9]', 9, false ,['class' => 'view'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[10]', 10, false ,['class' => 'add'])}}</td>
+                                                        <td style="text-align:center">{{Form::checkbox('permission[11]', 11, false ,['class' => 'edit'])}}</td>
+                                                        {{-- <td style="text-align:center">{{Form::checkbox('permission[15]', 15, false ,['class' => 'generate'])}}</td> --}}
                                                 
                                                     </tr>
                                                 </tbody>

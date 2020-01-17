@@ -204,7 +204,7 @@ class UsersController extends Controller
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
     
-        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         $this->process_permission_array($request, $temp_permission);
         
         $this->save_user($request, 'employee', $temp_permission, $fileNameToStore);
@@ -227,7 +227,7 @@ class UsersController extends Controller
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
     
-        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         $this->process_permission_array($request, $temp_permission);
         
         $this->save_user($request, 'manager', $temp_permission, $fileNameToStore);
@@ -250,7 +250,7 @@ class UsersController extends Controller
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
             
-        $this->save_user($request, 'admin', '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore);
+        $this->save_user($request, 'admin', '1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore);
         
         return redirect('sysmg/accounts/');
     }
@@ -328,41 +328,41 @@ class UsersController extends Controller
         
         //if the user account is uograded to admin account
         if($request->role === 'admin'){
-            $this->update_user($request, $request->role, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
 
         //if admin account is downgraded to employee
         if($request->role === 'employee' && $user->role === 'admin'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
 
         //if admin account is downgraded to manager
         if($request->role === 'manager' && $user->role === 'admin'){
-            $this->update_user($request, $request->role, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
 
         //if manager account is downgraded to employee
         if($request->role === 'employee' && $user->role === 'manager'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
 
         }
 
         //if employee account is upgraded to manager
         if($request->role === 'manager' && $user->role === 'employee'){
-            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
+            $this->update_user($request, $request->role, '1,0,0,0,1,0,0,0,1,0,0,0', $fileNameToStore, $id);
             return redirect('/sysmg/accounts');
         }
 
 
 
-        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
+        $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         $this->process_permission_array($request, $temp_permission);
        
         $this->update_user($request, $request->role, $temp_permission, $fileNameToStore, $id);
