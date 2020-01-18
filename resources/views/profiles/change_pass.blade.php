@@ -20,14 +20,34 @@
                         <h1 class="page-header">Change Password </h1>
                                 {!! Form::open(['action' => ['ProfilesController@update_password', $user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                 
-                                    <div class="form-group">
+                               
+                                <div class="form-group{{ $errors->has('old_password') ? ' has-error' : '' }} {{ ($old_password_error === 1) ?   ' has-error' : ''}}">
                                         {{Form::label('old_password','Old Password')}}
                                         <input type="password" class="form-control" name="old_password">
+                    
+                                        @if ($errors->has('old_password'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('old_password') }}</strong>
+                                            </span>
+                                        @endif
+
+                                        @if ($old_password_error === 1)
+                                            <span class="help-block">
+                                                <strong> Incorrect old password input.</strong>
+                                            </span>
+                                        @endif
                                     </div>
                 
-                                    <div class="form-group">
-                                        {{Form::label('password','New Password')}}
+                                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                        {{Form::label('password', 'New Password')}}
                                         <input type="password" class="form-control" name="password">
+                
+                                        @if ($errors->has('password'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('password') }}</strong>
+                                            </span>
+                                        @endif
+                                        
                                     </div>
                 
                                     <div class="form-group">

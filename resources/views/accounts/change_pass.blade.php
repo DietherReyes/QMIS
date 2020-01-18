@@ -22,9 +22,16 @@
                 <h3>CHANGE PASSWORD</h3>
                 {!! Form::open(['action' => ['UsersController@update_password', $user->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
-                    <div class="form-group">
-                        {{Form::label('password','New Password')}}
+                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        {{Form::label('password', 'Password')}}
                         <input type="password" class="form-control" name="password">
+
+                        @if ($errors->has('password'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                        @endif
+                        
                     </div>
 
                     <div class="form-group">
