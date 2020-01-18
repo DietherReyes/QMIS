@@ -15,6 +15,14 @@ class UsersController extends Controller
     public function __construct(){
         $this->middleware('auth');
         $this->middleware('admin');
+
+        $this->custom_messages = [
+            'required'          => 'This field is required.',
+            'image'             => 'The input must be an image file.',
+            'name.max'          => 'The input must not be greater than 255 characters.',
+            'position.max'      => 'The input must not be greater than 255 characters.',
+            'profile_photo.max' => 'The image file size must not be greater than 5MB.'
+        ];
         
     }
     /**
@@ -192,14 +200,16 @@ class UsersController extends Controller
      */
     public function store_employee(Request $request)
     {
+
+       
         $this->validate($request, [
-            'name' => 'required',
-            'position' => 'required',
-            'functional_unit' => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed',
-            'profile_photo' => 'image|nullable'
-        ]);
+            'name'              => 'required',
+            'position'          => 'required',
+            'functional_unit'   => 'required',
+            'username'          => 'required|unique:users',
+            'password'          => 'required|confirmed',
+            'profile_photo'     => 'image|nullable|max:5000'
+        ], $this->custom_messages);
 
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
@@ -216,13 +226,13 @@ class UsersController extends Controller
     public function store_manager(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'position' => 'required',
-            'functional_unit' => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed',
-            'profile_photo' => 'image|nullable'
-        ]);
+            'name'              => 'required',
+            'position'          => 'required',
+            'functional_unit'   => 'required',
+            'username'          => 'required|unique:users',
+            'password'          => 'required|confirmed',
+            'profile_photo'     => 'image|nullable|max:5000'
+        ], $this->custom_messages);
 
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
@@ -239,13 +249,13 @@ class UsersController extends Controller
     public function store_admin(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'position' => 'required',
-            'functional_unit' => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed',
-            'profile_photo' => 'image|nullable'
-        ]);
+            'name'              => 'required',
+            'position'          => 'required',
+            'functional_unit'   => 'required',
+            'username'          => 'required|unique:users',
+            'password'          => 'required|confirmed',
+            'profile_photo'     => 'image|nullable|max:5000'
+        ], $this->custom_messages);
 
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
@@ -308,15 +318,16 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $this->validate($request, [
-            'isActivated' => 'required',
-            'name' => 'required',
-            'position' => 'required',
-            'functional_unit' => 'required',
-            'username' => 'required',
-            'role' => 'required',
-            'profile_photo' => 'image|nullable'
-        ]);
+            'name'              => 'required',
+            'position'          => 'required',
+            'functional_unit'   => 'required',
+            'username'          => 'required|unique:users',
+            'isActivated'       => 'required',
+            'role'              => 'required',
+            'profile_photo'     => 'image|nullable|max:5000'
+        ], $this->custom_messages);
 
         
 
