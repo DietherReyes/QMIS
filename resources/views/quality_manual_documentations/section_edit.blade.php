@@ -21,8 +21,19 @@
                 {!! Form::open(['action' => ['QualityManualDocumentationsController@update_section', $section->id], 'method' => 'POST']) !!}
                    <div class="row">
                         <div class="col-md-12">
+                           
+
+                            <div class="form-group{{ $errors->has('section_name') ? ' has-error' : '' }}">
                                 {{Form::label('section_name', 'Section Name')}}
-                                {{Form::text('section_name', $section->section_name, ['class' => 'form-control', 'placeholder' => 'Section Name'])}}
+                                {{Form::text('section_name', $section->section_name, ['class' => 'form-control'])}}
+            
+                                @if ($errors->has('section_name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('section_name') }}</strong>
+                                    </span>
+                                @endif
+                               
+                            </div>
                         
                                 
                         </div>

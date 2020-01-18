@@ -13,6 +13,14 @@ class QualityManualDocumentationsController extends Controller
 
     public function __construct(){
         $this->middleware('auth');
+
+        $this->custom_messages = [
+            'required'                  => 'This field is required.',
+            'numeric'                   => 'This field requires numeric input.',
+            'subject.max'               => 'The input must not be greater than 255 characters.',
+            'quality_manual_doc.max'    => 'The pdf file size must not be greater than 5MB.',
+            'quality_manual_doc.mimes'   => 'The file input must be a file type:pdf.'
+        ];
     }
 
     private function check_permission(&$isPermitted, $user_id, $permission){
@@ -71,11 +79,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function create()
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 13);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 13);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
 
         $sections = QualityDocumentSection::orderBy('section_name')->get();
         $data = [];
@@ -97,14 +105,14 @@ class QualityManualDocumentationsController extends Controller
     {
         
         $this->validate($request, [
-            'document_code' => 'required',
-            'section' => 'required',
-            'effectivity_date' => 'required',
-            'subject' => 'required',
-            'revision_number' => 'required',
-            'page_number' => 'required',
-            'quality_manual_doc' => 'required|mimes:pdf'
-        ]);
+            'document_code'         => 'required',
+            'section'               => 'required|max:255',
+            'effectivity_date'      => 'required',
+            'subject'               => 'required',
+            'revision_number'       => 'required|numeric',
+            'page_number'           => 'required|numeric',
+            'quality_manual_doc'    => 'required|mimes:pdf|max:5000'
+        ], $this->custom_messages);
         
         $quality_manual_doc = '';
         $this->save_file($request, $quality_manual_doc);
@@ -132,11 +140,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function show($id)
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 12);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 12);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         $manual_doc = QualityManualDocumentation::find($id);
         return view('quality_manual_documentations.show')->with('manual_doc', $manual_doc);
     }
@@ -149,11 +157,11 @@ class QualityManualDocumentationsController extends Controller
      */
     public function edit($id)
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 14);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 14);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         $manual_doc = QualityManualDocumentation::find($id);
         $sections = QualityDocumentSection::orderBy('section_name')->get();
         $data = [];
@@ -173,14 +181,14 @@ class QualityManualDocumentationsController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'document_code' => 'required',
-            'section' => 'required',
-            'effectivity_date' => 'required',
-            'subject' => 'required',
-            'revision_number' => 'required',
-            'page_number' => 'required',
-            'quality_manual_doc' => 'nullable|mimes:pdf'
-        ]);
+            'document_code'         => 'required',
+            'section'               => 'required|max:255',
+            'effectivity_date'      => 'required',
+            'subject'               => 'required',
+            'revision_number'       => 'required|numeric',
+            'page_number'           => 'required|numeric',
+            'quality_manual_doc'    => 'nullable|mimes:pdf|max:5000'
+        ], $this->custom_messages);
         
         $old_doc = QualityManualDocumentation::find($id);
 
@@ -214,11 +222,11 @@ class QualityManualDocumentationsController extends Controller
 
 
     public function manual_doc($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 15);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 15);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         $manual_doc = QualityManualDocumentation::find($id);
         $path = 'public/quality_manual_documentations/'.$manual_doc->quality_manual_doc;
         return Storage::download($path);
@@ -260,7 +268,7 @@ class QualityManualDocumentationsController extends Controller
     public function add_section(Request $request){
         $this->validate($request, [
             'section_name' => 'required'
-        ]);
+        ], $this->custom_messages);
 
         $section = new QualityDocumentSection;
         $section->section_name = $request->section_name;
@@ -292,7 +300,7 @@ class QualityManualDocumentationsController extends Controller
     {
         $this->validate($request, [
             'section_name' => 'required',
-        ]);
+        ], $this->custom_messages);
         
        
 
