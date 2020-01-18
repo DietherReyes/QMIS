@@ -37,15 +37,34 @@
                     
                         <div class="col-md-6">
                             
-                            <div class="form-group">
+
+                            <div class="form-group{{ $errors->has('document_code') ? ' has-error' : '' }}">
                                 {{Form::label('document_code', 'Document Code')}}
                                 {{Form::text('document_code', '', ['class' => 'form-control'])}}
+        
+                                @if ($errors->has('document_code'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('document_code') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
 
-                            <div class="form-group">
+                        
+
+                            <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                                 {{Form::label('subject', 'Subject')}}
                                 {{Form::text('subject', '', ['class' => 'form-control'])}}
+        
+                                @if ($errors->has('subject'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('subject') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
+
+                            
                             
                             <div class="form-group">
                                 {{Form::label('effectivity_date', 'Effectivity Date')}}
@@ -58,19 +77,43 @@
 
                         <div class="col-md-6">
 
-                            <div class="form-group">
-                                {{Form::label('section', 'Section Name')}}
-                                {{Form::select('section', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select section name'])}}
+
+                            <div class="form-group{{ $errors->has('section') ? ' has-error' : '' }}">
+                                    {{Form::label('section', 'Section Name')}}
+                                    {{Form::select('section', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select section name'])}}
+        
+                                @if ($errors->has('section'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('section') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
 
-                            <div class="form-group">
-                                {{Form::label('revision_number', 'Revision Number')}}
+
+                            <div class="form-group{{ $errors->has('revision_number') ? ' has-error' : '' }}">
+                                    {{Form::label('revision_number', 'Revision Number')}}
                                 {{Form::text('revision_number', '', ['class' => 'form-control'])}}
+        
+                                @if ($errors->has('revision_number'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('revision_number') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
 
-                            <div class="form-group">
+
+                            <div class="form-group{{ $errors->has('page_number') ? ' has-error' : '' }}">
                                 {{Form::label('page_number', 'Page Number')}}
                                 {{Form::text('page_number', '', ['class' => 'form-control'])}}
+        
+                                @if ($errors->has('page_number'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('page_number') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
 
                             
@@ -80,7 +123,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
+                    <div class="form-group{{ $errors->has('quality_manual_doc') ? ' has-error' : '' }}">
                         {{Form::label('quality_manual_doc', 'Quality Manual Document')}}
                         {{Form::file('quality_manual_doc', [ 'class' => 'hidden', 'id' => 'quality_manual_doc' ,'onChange' => 'uploadName(this.id, \'quality_manual_doc_text\')'])}}
                         <div class="row">
@@ -91,6 +134,11 @@
                                 {{Form::label('quality_manual_doc', 'Upload File', ['class' => 'file-input', 'for' => 'quality_manual_doc'])}}
                             </div> 
                         </div>
+                        @if ($errors->has('quality_manual_doc'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('quality_manual_doc') }}</strong>
+                            </span>
+                        @endif
                     </div>
 
                     {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}

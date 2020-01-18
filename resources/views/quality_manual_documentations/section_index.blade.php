@@ -23,13 +23,25 @@
                     {!! Form::open(['action' => 'QualityManualDocumentationsController@add_section', 'method' => 'POST']) !!}
                     <div class="row">
                         <div class="col-md-11">
-                            <div class="input-group">
-                            <input name="section_name" type="text" class="form-control" placeholder="New Section Name">
-                            <span class="input-group-btn">
-                                    {{Form::submit('ADD SECTION', ['class'=>'btn btn-primary'])}}
-                            </span>
+                            <div class="input-group {{ $errors->has('section_name') ? ' has-error' : '' }}">
+                                <input name="section_name" type="text" class="form-control" placeholder="New Section Name">
+                                
+                                <span class="input-group-btn">
+                                        {{Form::submit('ADD SECTION', ['class'=>'btn btn-primary'])}}
+                                </span>
+                               
                             </div>
+
+                            @if ($errors->has('section_name'))
+                                <div class="has-error">
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('section_name') }}</strong>
+                                    </span>
+                                </div>
+                                
+                            @endif
                         </div>
+                        
                     </div>
                     
                     {!! Form::close() !!}
