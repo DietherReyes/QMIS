@@ -31,20 +31,33 @@ function uploadName(input_id , textarea_id){
                 </div>
                 
                 <h1 class="page-header"> Add Signatory</h1>
+
                 {!! Form::open(['action' => 'SignatoriesController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
 
-                    <div class="form-group">
+                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {{Form::label('name', 'Name')}}
                         {{Form::text('name', '', ['class' => 'form-control'])}}
+
+                        @if ($errors->has('name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
+                        
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group{{ $errors->has('position') ? ' has-error' : '' }}">
                         {{Form::label('position', 'Position')}}
                         {{Form::text('position', '', ['class' => 'form-control'])}}
+                        @if ($errors->has('position'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('position') }}</strong>
+                            </span>
+                        @endif
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group{{ $errors->has('signature_photo') ? ' has-error' : '' }}">
                         {{Form::label('signature_photo', 'Signature(.png)')}}
                         {{Form::file('signature_photo', [ 'class' => 'hidden', 'id' => 'signature_photo' ,'onChange' => 'uploadName(this.id, \'signature_photo_text\')'])}}
                         <div class="row">
@@ -55,6 +68,11 @@ function uploadName(input_id , textarea_id){
                                 {{Form::label('signature_photo', 'Upload File', ['class' => 'file-input', 'for' => 'signature_photo'])}}
                             </div> 
                         </div>
+                        @if ($errors->has('signature_photo'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('signature_photo') }}</strong>
+                        </span>
+                        @endif
                     </div>
 
 

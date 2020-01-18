@@ -23,14 +23,29 @@
 
                 {!! Form::open(['action' => ['FunctionalUnitsController@update', $functional_unit->id], 'method' => 'POST']) !!}
 
-                    <div class="form-group">
+                    <div class="form-group{{ $errors->has('abbreviation') ? ' has-error' : '' }}">
                         {{Form::label('abbreviation', 'Abbreviation')}}
-                        {{Form::text('abbreviation', $functional_unit->abbreviation, ['class' => 'form-control', 'placeholder' => 'Ex. MIS'])}}
+                        {{Form::text('abbreviation', $functional_unit->abbreviation, ['class' => 'form-control'])}}
+
+                        @if ($errors->has('abbreviation'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('abbreviation') }}</strong>
+                            </span>
+                        @endif
+                        
                     </div>
 
-                    <div class="form-group">
+
+                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         {{Form::label('name', 'Name')}}
-                        {{Form::text('name', $functional_unit->name, ['class' => 'form-control', 'placeholder' => 'Management Information System'])}}
+                        {{Form::text('name', $functional_unit->name, ['class' => 'form-control'])}}
+
+                        @if ($errors->has('name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
+                        
                     </div>
 
                     <div class="container-fluid">
