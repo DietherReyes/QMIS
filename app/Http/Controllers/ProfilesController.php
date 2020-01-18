@@ -13,6 +13,15 @@ class ProfilesController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        
+        $this->custom_messages = [
+            'required'          => 'This field is required.',
+            'image'             => 'The input must be an image file.',
+            'name.max'          => 'The input must not be greater than 255 characters.',
+            'position.max'      => 'The input must not be greater than 255 characters.',
+            'username.max'      => 'The input must not be greater than 255 characters.',
+            'profile_photo.max' => 'The image file size must not be greater than 5MB.'
+        ];
     }
     
 
@@ -38,11 +47,11 @@ class ProfilesController extends Controller
     public function update(Request $request, $id){
 
         $this->validate($request, [
-            'profile_photo' => 'image|nullable',
-            'name' => 'required',
-            'position' => 'required',
-            'username' => 'required',
-        ]);
+            'profile_photo'     => 'image|nullable|max:5000',
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
+            'username'          => 'required|unique:users|max:255',
+        ], $this->custom_messages);
 
 
         $user = User::find($id);
@@ -68,9 +77,9 @@ class ProfilesController extends Controller
         }
 
         User::where('id',$id)->update(array(
-            'name' => $request->name,
-            'position' => $request->position,
-            'username' => $request->username,
+            'name'          => $request->name,
+            'position'      => $request->position,
+            'username'      => $request->username,
             'profile_photo' => $fileNameToStore
         ));
 
@@ -82,14 +91,14 @@ class ProfilesController extends Controller
         if(Auth::id() !== $user->id ){    
             return redirect('/unauthorized');
         }
-        return view('profiles.change_pass')->with('user', $user);
+        return view('profiles.change_pass')->with(['user' => $user, 'old_password_error' => 0]);
     }
 
     public function update_password(Request $request, $id){
         $this->validate($request, [
-            'old_password' => 'required',
-            'password' => 'required|confirmed'
-        ]);
+            'old_password'  => 'required',
+            'password'      => 'required|confirmed'
+        ], $this->custom_messages);
 
         $user = User::find($id);
 
@@ -100,8 +109,8 @@ class ProfilesController extends Controller
             ));
             return redirect('/profiles/'.$id);
         }
-
-        return redirect('/profiles/'.$id.'/change_pass');
+        
+        return view('profiles.change_pass')->with(['user' => $user, 'old_password_error' => 1]);
         
     }
 }

@@ -21,6 +21,7 @@ class UsersController extends Controller
             'image'             => 'The input must be an image file.',
             'name.max'          => 'The input must not be greater than 255 characters.',
             'position.max'      => 'The input must not be greater than 255 characters.',
+            'username.max'      => 'The input must not be greater than 255 characters.',
             'profile_photo.max' => 'The image file size must not be greater than 5MB.'
         ];
         
@@ -203,10 +204,10 @@ class UsersController extends Controller
 
        
         $this->validate($request, [
-            'name'              => 'required',
-            'position'          => 'required',
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
             'functional_unit'   => 'required',
-            'username'          => 'required|unique:users',
+            'username'          => 'required|unique:users|max:255',
             'password'          => 'required|confirmed',
             'profile_photo'     => 'image|nullable|max:5000'
         ], $this->custom_messages);
@@ -226,10 +227,10 @@ class UsersController extends Controller
     public function store_manager(Request $request)
     {
         $this->validate($request, [
-            'name'              => 'required',
-            'position'          => 'required',
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
             'functional_unit'   => 'required',
-            'username'          => 'required|unique:users',
+            'username'          => 'required|unique:users|max:255',
             'password'          => 'required|confirmed',
             'profile_photo'     => 'image|nullable|max:5000'
         ], $this->custom_messages);
@@ -249,10 +250,10 @@ class UsersController extends Controller
     public function store_admin(Request $request)
     {
         $this->validate($request, [
-            'name'              => 'required',
-            'position'          => 'required',
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
             'functional_unit'   => 'required',
-            'username'          => 'required|unique:users',
+            'username'          => 'required|unique:users|max:255',
             'password'          => 'required|confirmed',
             'profile_photo'     => 'image|nullable|max:5000'
         ], $this->custom_messages);
@@ -320,10 +321,10 @@ class UsersController extends Controller
     {
 
         $this->validate($request, [
-            'name'              => 'required',
-            'position'          => 'required',
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
             'functional_unit'   => 'required',
-            'username'          => 'required|unique:users',
+            'username'          => 'required|unique:users|max:255',
             'isActivated'       => 'required',
             'role'              => 'required',
             'profile_photo'     => 'image|nullable|max:5000'
@@ -408,7 +409,7 @@ class UsersController extends Controller
     public function update_password(Request $request, $id){
         $this->validate($request, [
             'password' => 'required|confirmed'
-        ]);
+        ], $this->custom_messages);
 
         $user = User::find($id);
         User::where('id',$id)->update(array(
