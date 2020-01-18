@@ -11,6 +11,11 @@ class FunctionalUnitsController extends Controller
         $this->middleware('auth');
         $this->middleware('admin');
         
+        $this->custom_messages = [
+            'required'          => 'This field is required.',
+            'abbreviation.max'  => 'The input must not be greater than 255 characters.',
+            'name.max'          => 'The input must not be greater than 255 characters.',
+        ];
     }
     /**
      * Display a listing of the resource.
@@ -41,11 +46,12 @@ class FunctionalUnitsController extends Controller
      */
     public function store(Request $request)
     {
-        //validation
+       
+        
         $this->validate($request, [
-            'abbreviation' => 'required',
-            'name' => 'required'
-        ]);
+            'abbreviation'      => 'required|max:255',
+            'name'              => 'required:max:255'
+        ],$this->custom_messages);
 
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         if($request->permission !== null){
@@ -102,11 +108,11 @@ class FunctionalUnitsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //validation
+       
         $this->validate($request, [
-            'abbreviation' => 'required',
-            'name' => 'required'
-        ]);
+            'abbreviation'      => 'required|max:255',
+            'name'              => 'required:max:255'
+        ], $this->custom_messages);
 
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         

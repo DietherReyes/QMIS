@@ -22,28 +22,49 @@
                 {!! Form::open(['action' => ['SignatoriesController@update', $signatory->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                 <div class="row">
                         <div class="col-md-8">
+
+
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                            {{Form::label('name', 'Name')}}
+                            {{Form::text('name',  $signatory->name, ['class' => 'form-control'])}}
+    
+                            @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                            @endif
                             
-                            <div class="form-group">
-                                {{Form::label('name', 'Name')}}
-                                {{Form::text('name', $signatory->name, ['class' => 'form-control'])}}
-                            </div>
-        
-                            <div class="form-group">
-                                {{Form::label('position', 'Position')}}
-                                {{Form::text('position', $signatory->position, ['class' => 'form-control'])}}
-                            </div>
-                            <div class="form-group">
-                                {{Form::label('signature_photo', 'Signature(.png)')}}
-                                {{Form::file('signature_photo', [ 'class' => 'hidden', 'id' => 'signature_photo' ,'onChange' => 'uploadName(this.id, \'signature_photo_text\')'])}}
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        {{Form::text('signature_photo_text', $signatory->signature_photo, ['class' => 'form-control', 'id' => 'signature_photo_text', 'disabled'])}}
-                                    </div>
-                                    <div class="col-md-3">
-                                        {{Form::label('signature_photo', 'Upload File', ['class' => 'file-input', 'for' => 'signature_photo'])}}
-                                    </div> 
+                        </div>
+    
+                        <div class="form-group{{ $errors->has('position') ? ' has-error' : '' }}">
+                            {{Form::label('position', 'Position')}}
+                            {{Form::text('position', $signatory->position, ['class' => 'form-control'])}}
+                            @if ($errors->has('position'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('position') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+    
+                        <div class="form-group{{ $errors->has('signature_photo') ? ' has-error' : '' }}">
+                            {{Form::label('signature_photo', 'Signature(.png)')}}
+                            {{Form::file('signature_photo', [ 'class' => 'hidden', 'id' => 'signature_photo' ,'onChange' => 'uploadName(this.id, \'signature_photo_text\')'])}}
+                            <div class="row">
+                                <div class="col-md-9">
+                                    {{Form::text('signature_photo_text', $signatory->signature_photo, ['class' => 'form-control', 'id' => 'signature_photo_text', 'disabled'])}}
                                 </div>
+                                <div class="col-md-3">
+                                    {{Form::label('signature_photo', 'Upload File', ['class' => 'file-input', 'for' => 'signature_photo'])}}
+                                </div> 
                             </div>
+                            @if ($errors->has('signature_photo'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('signature_photo') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                        
+                          
                             {{Form::hidden('_method','PUT')}}
 
                             {{Form::submit('EDIT', ['class'=>'btn btn-primary submit-btn'])}}

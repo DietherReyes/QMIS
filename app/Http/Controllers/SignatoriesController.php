@@ -14,6 +14,14 @@ class SignatoriesController extends Controller
         $this->middleware('auth');
         $this->middleware('admin');
         
+        $this->custom_messages = [
+            'required'              => 'This field is required.',
+            'image'                 => 'The input must be an image file.',
+            'name.max'              => 'The input must not be greater than 255 characters.',
+            'position.max'          => 'The input must not be greater than 255 characters.',
+            'signature_photo.max'   => 'The image file size must not be greater than 5MB.'
+        ];
+        
     }
     /**
      * Display a listing of the resource.
@@ -45,10 +53,10 @@ class SignatoriesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'position' => 'required',
-            'signature_photo' => 'image'
-        ]);
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
+            'signature_photo'   => 'required|image|max:5000'
+        ], $this->custom_messages);
 
        
         
@@ -106,10 +114,10 @@ class SignatoriesController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'position' => 'required',
-            'signature_photo' => 'image|nullable'
-        ]);
+            'name'              => 'required|max:255',
+            'position'          => 'required|max:255',
+            'signature_photo'   => 'nullable|image|max:5000'
+        ], $this->custom_messages);
 
 
         $signatory = Signatory::find($id);
