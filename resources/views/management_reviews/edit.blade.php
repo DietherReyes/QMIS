@@ -53,17 +53,26 @@
                     
                         <div class="col-md-6">
                             
-                            <div class="form-group">
+                            
+
+                            <div class="form-group{{ $errors->has('meeting_name') ? ' has-error' : '' }}">
                                 {{Form::label('meeting_name', 'Meeting name')}}
                                 {{Form::text('meeting_name', $management_review->meeting_name, ['class' => 'form-control'])}}
+        
+                                @if ($errors->has('meeting_name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('meeting_name') }}</strong>
+                                    </span>
+                                @endif
+                                
                             </div>
 
                             <div class="form-group">
                                 {{Form::label('date', 'Date')}}
-                                {{ Form::date('date', $management_review->date, ['class' => 'form-control']) }}
+                                {{ Form::date('date', new \DateTime(), ['class' => 'form-control']) }}
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group{{ $errors->has('action_plan') ? ' has-error' : '' }}">
                                 {{Form::label('action_plan', 'Action Plan')}}
                                 {{Form::file('action_plan', [ 'class' => 'hidden', 'id' => 'action_plan' ,'onChange' => 'uploadName(this.id, \'action_plan_test\')'])}}
                                 <div class="row">
@@ -74,30 +83,45 @@
                                         {{Form::label('action_plan', 'Upload File', ['class' => 'file-input', 'for' => 'action_plan'])}}
                                     </div> 
                                 </div>
+                                @if ($errors->has('action_plan'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('action_plan') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group{{ $errors->has('agenda_memo') ? ' has-error' : '' }}">
                                 {{Form::label('agenda_memo', 'Agenda Memo')}}
                                 {{Form::file('agenda_memo', [ 'class' => 'hidden', 'id' => 'agenda_memo' ,'onChange' => 'uploadName(this.id, \'agenda_memo_text\')'])}}
                                 <div class="row">
                                     <div class="col-md-8">
-                                        {{Form::text('agenda_memo_text',$management_review->agenda_memo, ['class' => 'form-control', 'id' => 'agenda_memo_text', 'disabled'])}}
+                                        {{Form::text('agenda_memo_text', $management_review->agenda_memo, ['class' => 'form-control', 'id' => 'agenda_memo_text', 'disabled'])}}
                                     </div>
                                     <div class="col-md-4">
                                         {{Form::label('agenda_memo', 'Upload File', ['class' => 'file-input', 'for' => 'agenda_memo'])}}
                                     </div> 
                                 </div>
+                                @if ($errors->has('agenda_memo'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('agenda_memo') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                                    
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group{{ $errors->has('venue') ? ' has-error' : '' }}">
                                 {{Form::label('venue', 'Venue')}}
                                 {{Form::text('venue', $management_review->venue, ['class' => 'form-control'])}}
+                                @if ($errors->has('venue'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('venue') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group{{ $errors->has('attendance_sheet') ? ' has-error' : '' }}">
                                 {{Form::label('attendance_sheet', 'Attendance Sheet')}}
                                 {{Form::file('attendance_sheet', [ 'class' => 'hidden', 'id' => 'attendance_sheet' ,'onChange' => 'uploadName(this.id, \'attendance_sheet_text\')'])}}
                                 <div class="row">
@@ -108,33 +132,50 @@
                                         {{Form::label('attendance_sheet', 'Upload File', ['class' => 'file-input', 'for' => 'attendance_sheet'])}}
                                     </div> 
                                 </div>
+                                @if ($errors->has('attendance_sheet'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('attendance_sheet') }}</strong>
+                                    </span>
+                                @endif
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group{{ $errors->has('minutes') ? ' has-error' : '' }}">
                                 {{Form::label('minutes', 'Minutes')}}
                                 {{Form::file('minutes', [ 'class' => 'hidden', 'id' => 'minutes' ,'onChange' => 'uploadName(this.id, \'minutes_text\')'])}}
                                 <div class="row">
                                     <div class="col-md-8">
-                                        {{Form::text('minutes_text',$management_review->minutes, ['class' => 'form-control', 'id' => 'minutes_text', 'disabled'])}}
+                                        {{Form::text('minutes_text', $management_review->minutes, ['class' => 'form-control', 'id' => 'minutes_text', 'disabled'])}}
                                     </div>
                                     <div class="col-md-4">
                                         {{Form::label('minutes', 'Upload File', ['class' => 'file-input', 'for' => 'minutes'])}}
                                     </div> 
                                 </div>
+                                @if ($errors->has('minutes'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('minutes') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         
-                            <div class="form-group">
-                                    {{Form::label('presentation_slides', 'Presentation Slides')}}
-                                    {{Form::file('presentation_slides[]', [ 'class' => 'hidden', 'multiple' => 'multiple', 'id' => 'presentation_slides' ,'onChange' => 'uploadNames(this.id, \'presentation_slides_text\')'])}}
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            {{Form::text('presentation_slides_text', $management_review->slides, ['class' => 'form-control', 'id' => 'presentation_slides_text', 'disabled'])}}
-                                        </div>
-                                        <div class="col-md-4">
-                                            {{Form::label('presentation_slides', 'Upload File(s)', ['class' => 'file-input', 'for' => 'presentation_slides'])}}
-                                        </div> 
+                            <div class="form-group {{ $errors->has('presentation_slides') ? ' has-error' : '' }}">
+                                {{Form::label('presentation_slides', 'Presentation Slides')}}
+                                {{Form::file('presentation_slides', [ 'class' => 'hidden', 'multiple' => 'multiple', 'id' => 'presentation_slides' ,'onChange' => 'uploadNames(this.id, \'presentation_slides_text\')'])}}
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        {{Form::text('presentation_slides_text', $management_review->slides, ['class' => 'form-control', 'id' => 'presentation_slides_text', 'disabled'])}}
                                     </div>
+                                    <div class="col-md-4">
+                                        {{Form::label('presentation_slides', 'Upload File(s)', ['class' => 'file-input', 'for' => 'presentation_slides'])}}
+                                    </div> 
                                 </div>
+                                @if ($errors->has('presentation_slides'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('presentation_slides') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                    
                 
                         </div>
 
