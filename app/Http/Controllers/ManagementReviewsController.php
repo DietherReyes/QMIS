@@ -19,6 +19,13 @@ class ManagementReviewsController extends Controller
 
     public function __construct(){
         $this->middleware('auth');
+
+        $this->custom_messages = [
+            'required'                  => 'This field is required.',
+            'meeting_name.max'          => 'The input must not be greater than 255 characters.',
+            'venue.max'                 => 'The pdf file size must not be greater than 5MB.',
+            '*.mimes'                   => 'The file input must be a file type:pdf,doc,xls,ppt.'
+        ];
     }
 
     private function check_permission(&$isPermitted, $user_id, $permission){
@@ -113,7 +120,7 @@ class ManagementReviewsController extends Controller
         //delete docs in man_rev_docs
         $deletedRows = ManagementReviewDocument::where('manrev_id', $manrev_id)->where('type', 'slides')->delete();
 
-        foreach($request->file('presentation_slides') as $file){
+        foreach($request->file('presentation_slides.*') as $file){
             
             // Get filename with the extension
             $filenameWithExt = $file->getClientOriginalName();
@@ -159,11 +166,11 @@ class ManagementReviewsController extends Controller
      */
     public function create()
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 9);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 9);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         return view('management_reviews.create');
     }
 
@@ -175,20 +182,27 @@ class ManagementReviewsController extends Controller
      */
     public function store(Request $request)
     {
+
+        // $request->validate([
+        //     "presentation_slides"    => "required|array",
+        //     "presentation_slides.*"  => "required|file|mimes:pdf,doc,xls,ppt",
+        // ]);
+        
         $this->validate($request, [
-            'meeting_name' => 'required',
-            'venue' => 'required',
-            'date' => 'required',
-            'minutes' => 'required|mimes:doc,pdf,docx,zip',
-            'action_plan' => 'required|mimes:doc,pdf,docx,zip',
-            'agenda_memo' => 'required|mimes:doc,pdf,docx,zip',
-            'presentation_slides[]' => 'nullable|mimes:doc,pdf,docx,zip',
-            'attendance_sheet' => 'required|mimes:doc,pdf,docx,zip',
-            'other_files[]' => 'nullable|mimes:doc,pdf,docx,zip',
-            'description' => 'nullable'
-        ]);
+            'meeting_name'              => 'required|max:255',
+            'venue'                     => 'required|max:255',
+            'date'                      => 'required',
+            'minutes'                   => 'required|mimes:pdf,doc,xls,ppt',
+            'action_plan'               => 'required|mimes:pdf,doc,xls,ppt',
+            'agenda_memo'               => 'required|mimes:pdf,doc,xls,ppt',
+            "presentation_slides"       => "required",
+            "presentation_slides.*"     => "required|file|mimes:pdf,doc,xls,ppt",
+            'attendance_sheet'          => 'required|mimes:pdf,doc,xls,ppt',
+            'other_files[]'             => 'nullable|mimes:pdf,doc,xls,ppt',
+            'description'               => 'nullable'
+        ], $this->custom_messages);
 
-
+        
 
         $minutes = '';
         $action_plan = '';
@@ -215,8 +229,6 @@ class ManagementReviewsController extends Controller
             $this->save_other_files($request, $manrev_id);
         }
 
-
-        
         return redirect('/manrev');
     }
 
@@ -228,11 +240,11 @@ class ManagementReviewsController extends Controller
      */
     public function show($id)
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 8);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 8);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
         
@@ -260,11 +272,11 @@ class ManagementReviewsController extends Controller
      */
     public function edit($id)
     {
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 10);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        // $isPermitted = false;
+        // $this->check_permission($isPermitted, Auth::id(), 10);
+        // if(!$isPermitted){
+        //     return view('pages.unauthorized');
+        // }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
         
@@ -294,17 +306,18 @@ class ManagementReviewsController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'meeting_name' => 'required',
-            'venue' => 'required',
-            'date' => 'required',
-            'minutes' => 'nullable|mimes:doc,pdf,docx,zip',
-            'action_plan' => 'nullable|mimes:doc,pdf,docx,zip',
-            'agenda_memo' => 'nullable|mimes:doc,pdf,docx,zip',
-            'presentation_slides[]' => 'nullable|mimes:doc,pdf,docx,zip',
-            'attendance_sheet' => 'nullable|mimes:doc,pdf,docx,zip',
-            'other_files[]' => 'nullable|mimes:doc,pdf,docx,zip',
-            'description' => 'nullable'
-        ]);
+            'meeting_name'          => 'required|max:255',
+            'venue'                 => 'required|max:255',
+            'date'                  => 'required',
+            'minutes'               => 'nullable|mimes:pdf,doc,xls,ppt',
+            'action_plan'           => 'nullable|mimes:pdf,doc,xls,ppt',
+            'agenda_memo'           => 'nullable|mimes:pdf,doc,xls,ppt',
+            "presentation_slides"   => "nullable",
+            "presentation_slides.*" => "nullable|file|mimes:pdf,doc,xls,ppt",
+            'attendance_sheet'      => 'nullable|mimes:pdf,doc,xls,ppt',
+            'other_files[]'         => 'nullable|mimes:pdf,doc,xls,ppt',
+            'description'           => 'nullable'
+        ], $this->custom_messages);
 
         $old_manrev = ManagementReview::find($id);
 
@@ -359,44 +372,28 @@ class ManagementReviewsController extends Controller
     }
 
     public function download_action_plan($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+       
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->action_plan;
         return Storage::download($path);
     }
 
     public function download_attendance($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->attendance_sheet;
         return Storage::download($path);
     }
 
     public function download_minutes($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->minutes;
         return Storage::download($path);
     }
 
     public function download_presentation_slide($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        
         $management_review = ManagementReview::find($id);
         $directory = 'storage/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/slides/*';
 
@@ -408,11 +405,7 @@ class ManagementReviewsController extends Controller
     }
 
     public function download_agenda_memo($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->agenda_memo;
         return Storage::download($path);
@@ -420,11 +413,7 @@ class ManagementReviewsController extends Controller
     }
 
     public function download_all_files($id){
-        $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 11);
-        if(!$isPermitted){
-            return view('pages.unauthorized');
-        }
+        
         //the directory should be writable
         $management_review = ManagementReview::find($id);
         $directory = 'storage/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/*';
