@@ -57,8 +57,9 @@ Route::resource('/qmsd', 'QualityManualDocumentationsController');
 Route::post('/qmsd/search', 'QualityManualDocumentationsController@search');
 Route::get('/qmsd/manual_doc/{id}', 'QualityManualDocumentationsController@manual_doc');
 Route::get('/qmsd/sections/idx', 'QualityManualDocumentationsController@get_sections');
-Route::post('qmsd/sections/idx', 'QualityManualDocumentationsController@add_section');
-Route::post('qmsd/sections/idx/search', 'QualityManualDocumentationsController@search_section');
+Route::get('qmsd/sections/add', 'QualityManualDocumentationsController@add_section');
+Route::post('/qmsd/sections/idx', 'QualityManualDocumentationsController@store_section');
+Route::post('/qmsd/sections/idx/search', 'QualityManualDocumentationsController@search_section');
 Route::get('/qmsd/sections/{id}/edit', 'QualityManualDocumentationsController@edit_section');
 Route::put('/qmsd/sections/{id}/update', 'QualityManualDocumentationsController@update_section');
 
@@ -66,8 +67,25 @@ Route::put('/qmsd/sections/{id}/update', 'QualityManualDocumentationsController@
 Route::resource('/csm', 'CustomerSatisfactionMeasurementsController');
 Route::get('/csm/supporting_documents/{id}', 'CustomerSatisfactionMeasurementsController@download_supporting_documents');
 Route::post('/csm/filter', 'CustomerSatisfactionMeasurementsController@filter');
+
 Route::get('/csm/statistics/idx', 'CustomerSatisfactionMeasurementsController@graphs');
 Route::post('/csm/statistics/idx', 'CustomerSatisfactionMeasurementsController@search_graphs');
+
+Route::get('/csm/services/idx', 'CustomerSatisfactionMeasurementsController@get_services');
+Route::get('/csm/services/add', 'CustomerSatisfactionMeasurementsController@add_service');
+Route::post('/csm/services/idx', 'CustomerSatisfactionMeasurementsController@store_service');
+Route::post('/csm/services/idx/search', 'CustomerSatisfactionMeasurementsController@search_service');
+Route::get('/csm/services/{id}/edit', 'CustomerSatisfactionMeasurementsController@edit_service');
+Route::put('/csm/services/{id}/update', 'CustomerSatisfactionMeasurementsController@update_service');
+
+Route::get('/csm/addresses/idx', 'CustomerSatisfactionMeasurementsController@get_addresses');
+Route::get('/csm/addresses/add', 'CustomerSatisfactionMeasurementsController@add_address');
+Route::post('/csm/addresses/idx', 'CustomerSatisfactionMeasurementsController@store_address');
+Route::post('/csm/addresses/idx/search', 'CustomerSatisfactionMeasurementsController@search_address');
+Route::get('/csm/addresses/{id}/edit', 'CustomerSatisfactionMeasurementsController@edit_address');
+Route::put('/csm/addresses/{id}/update', 'CustomerSatisfactionMeasurementsController@update_address');
+
+
 Auth::routes();
 
 
