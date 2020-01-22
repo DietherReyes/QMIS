@@ -18,7 +18,7 @@
         <div class="row">
     
             @include('include.add_qmsd_sidebar')
-            <div class="col-md-10  main">
+            <div class="col-md-9  main">
 
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
