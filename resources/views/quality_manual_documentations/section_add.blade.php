@@ -10,22 +10,22 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/qmsd">Quality Management System Documentation</a></li>
                 <li><a href="/qmsd/sections/idx">Quality Manual Section</a></li>
-                <li class="active"> Edit Section</li>
+                <li class="active"> Add Section</li>
             </ol>
             <div style="float:right">
                 <a class="btn btn-primary btn-md"  href="/qmsd/sections/idx">BACK</a>
             </div>
-            <h1 class="page-header">Edit Section</h1>
+            <h1 class="page-header">Add Section</h1>
 
             
-                {!! Form::open(['action' => ['QualityManualDocumentationsController@update_section', $section->id], 'method' => 'POST']) !!}
+                {!! Form::open(['action' => 'QualityManualDocumentationsController@store_section', 'method' => 'POST']) !!}
                    <div class="row">
                         <div class="col-md-12">
                            
 
                             <div class="form-group{{ $errors->has('section_name') ? ' has-error' : '' }}">
                                 {{Form::label('section_name', 'Section Name')}}
-                                {{Form::text('section_name', $section->section_name, ['class' => 'form-control'])}}
+                                {{Form::text('section_name', '', ['class' => 'form-control'])}}
             
                                 @if ($errors->has('section_name'))
                                     <span class="help-block">
@@ -39,8 +39,7 @@
                         </div>
                    </div>
                    <br> 
-                   {{Form::hidden('_method','PUT')}}
-                   {{Form::submit('EDIT', ['class'=>'btn btn-primary submit-btn'])}}   
+                   {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}   
                     
                 {!! Form::close() !!}
            
