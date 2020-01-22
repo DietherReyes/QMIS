@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\CustomerSatisfactionMeasurement;
+use App\CustomerSatisfactionService;
+use App\CustomerSatisfactionAddress;
 use App\CustomerClassification;
+use App\CustomerOtherClassification;
 use App\CustomerOverallRating;
 use App\CustomerRating;
 use App\CustomerSatisfactionDocuments;
@@ -23,6 +26,11 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
     public function __construct(){
         $this->middleware('auth');
+
+        $this->custom_messages = [
+            'required' => 'This field is required',
+            'numeric'  => 'This field requires numeric input'
+        ];
     }
 
     private function check_permission(&$isPermitted, $user_id, $permission){
@@ -49,7 +57,25 @@ class CustomerSatisfactionMeasurementsController extends Controller
     }
 
     private function save_customer_classification($request, $csm_id){
-        $classification = $request->customer_classification;
+        
+        $classification = [
+            'student'               => 0,
+            'government_employee'   => 0,
+            'internal'              => 0,
+            'business'              => 0,
+            'homemaker'             => 0,
+            'private_organization'  => 0,
+            'entrepreneur'          => 0
+        ];
+
+        $input_classification = $request->classification;
+        $input_classification_count = $request->classification_count;
+        $count = count($input_classification);
+
+        for($i = 0; $i < $count; $i++){
+            $classification[$input_classification[$i]] += $input_classification_count[$i];
+        }
+
         $customer_classification = new CustomerClassification;
         $customer_classification->student               = $classification['student'];
         $customer_classification->government_employee   = $classification['government_employee'];
@@ -58,15 +84,29 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $customer_classification->homemaker             = $classification['homemaker'];
         $customer_classification->entrepreneur          = $classification['entrepreneur'];
         $customer_classification->private_organization  = $classification['private_organization'];
-        $customer_classification->others                = $classification['others'];
-        $customer_classification->others_specify        = $classification['others_specify'];
         $customer_classification->csm_id                = $csm_id;
         $customer_classification->save();
 
     }
 
     private function update_customer_classification($request, $csm_id){
-        $classification = $request->customer_classification;
+        $classification = [
+            'student'               => 0,
+            'government_employee'   => 0,
+            'internal'              => 0,
+            'business'              => 0,
+            'homemaker'             => 0,
+            'private_organization'  => 0,
+            'entrepreneur'          => 0
+        ];
+
+        $input_classification = $request->classification;
+        $input_classification_count = $request->classification_count;
+        $count = count($input_classification);
+
+        for($i = 0; $i < $count; $i++){
+            $classification[$input_classification[$i]] += $input_classification_count[$i];
+        }
         CustomerClassification::where('csm_id',$csm_id)->update(array(
             'student'               => $classification['student'],
             'government_employee'   => $classification['government_employee'],
@@ -75,10 +115,25 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'homemaker'             => $classification['homemaker'],
             'entrepreneur'          => $classification['entrepreneur'],
             'private_organization'  => $classification['private_organization'],
-            'others'                => $classification['others'],
-            'others_specify'        => $classification['others_specify'],
             'csm_id'                => $csm_id
         )); 
+    }
+
+    private function save_customer_other_classification($request, $csm_id){
+        
+        $deletedRows = CustomerOtherClassification::where('csm_id', $csm_id)->delete();
+
+        $input_classification = $request->other_classification;
+        $input_classification_count = $request->other_classification_count;
+        $count = count($input_classification);
+
+        for($i = 0; $i < $count; $i++){
+            $customer_classification = new CustomerOtherClassification;
+            $customer_classification->name      = $input_classification[$i];
+            $customer_classification->count     = $input_classification_count[$i];
+            $customer_classification->csm_id    = $csm_id;
+            $customer_classification->save();
+        }
     }
 
     private function save_addresses($request, $csm_id){
@@ -114,21 +169,19 @@ class CustomerSatisfactionMeasurementsController extends Controller
     }
 
     private function save_customer_rating($request, $csm_id){
-        $rating = $request->customer_rating;
         $customer_rating = new CustomerRating;
-        $customer_rating->five_star = $rating['five_star'];
-        $customer_rating->four_star = $rating['four_star'];
-        $customer_rating->three_below = $rating['three_below'];
+        $customer_rating->five_star = $request->five_star;
+        $customer_rating->four_star = $request->four_star;
+        $customer_rating->three_below = $request->three_below;
         $customer_rating->csm_id = $csm_id;
         $customer_rating->save();
     }
 
     private function update_customer_rating($request, $csm_id){
-        $rating = $request->customer_rating;
         CustomerRating::where('csm_id',$csm_id)->update(array(
-            'five_star'     => $rating['five_star'],
-            'four_star'     => $rating['four_star'],
-            'three_below'   => $rating['three_below'],
+            'five_star'     => $request->five_star,
+            'four_star'     => $request->four_star,
+            'three_below'   => $request->three_below,
             'csm_id'        => $csm_id,
         )); 
     }
@@ -237,9 +290,29 @@ class CustomerSatisfactionMeasurementsController extends Controller
             '3' => '3',
             '4' => '4'
         ];
+
+        $classifications = [
+            'student'               => 'Student',
+            'government_employee'   => 'Government Employee',
+            'internal'              => 'Internal',
+            'business'              => 'Business',
+            'homemaker'             => 'Homemaker',
+            'private_organization'  => 'Private Organization',
+            'entrepreneur'          => 'Entrepreneur'
+        ];
+
+        $addresses = CustomerSatisfactionAddress::orderBy('name')->pluck('name');
+        $services = CustomerSatisfactionService::orderBy('name')->pluck('name');
+
         $data = [];
         $this->get_data($data);
-        return view('customer_satisfaction_measurements.create')->with(['data' =>  $data, 'quarter' => $quarter]);
+        return view('customer_satisfaction_measurements.create')->with([
+            'data'              =>  $data, 
+            'quarter'           =>  $quarter,
+            'classifications'   =>  $classifications,
+            'addresses'         =>  $addresses,
+            'services'          =>  $services
+        ]);
     }
 
     /**
@@ -250,26 +323,32 @@ class CustomerSatisfactionMeasurementsController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         $this->validate($request, [
-            'functional_unit' => 'required',
-            'year' => 'required',
-            'quarter' => 'required',
-            'total_customer' => 'required',
-            'total_male' => 'required',
-            'total_female' => 'required',
-            'customer_classification' => 'required',
-            'address' => 'required',
-            'address_count' => 'required',
-            'service' => 'required',
-            'service_count' => 'required',
-            'customer_rating' => 'required',
-            'response_delivery' => 'required',
-            'work_quality' => 'required',
-            'personnels_quality' => 'required',
-            'overall_rating' => 'required',
-            'other_files[]' => 'nullable|mimes:doc,pdf,docx,zip',
-            'comments' => 'nullable'
+            'functional_unit'               => 'required',
+            'year'                          => 'required|numeric',
+            'quarter'                       => 'required',
+            'total_customer'                => 'required|numeric|min:1',
+            'total_male'                    => 'required|numeric|min:0',
+            'total_female'                  => 'required|numeric|min:0',
+            'classification'                => 'required',
+            'classification_count'          => 'required',
+            'other_classification'          => 'required',
+            'other_classification_count'    => 'required',
+            'address'                       => 'required',
+            'address_count'                 => 'required',
+            'service'                       => 'required',
+            'service_count'                 => 'required',
+            'five_star'                     => 'required|numeric',
+            'four_star'                     => 'required|numeric',
+            'three_below'                   => 'required|numeric',
+            'response_delivery'             => 'required|numeric|min:1|max:5',
+            'work_quality'                  => 'required|numeric|min:1|max:5',
+            'personnels_quality'            => 'required|numeric|min:1|max:5',
+            'overall_rating'                => 'required|numeric|min:1|max:5',
+            "supporting_documents"          => "required",
+            "supporting_documents.*"        => "required|file|mimes:pdf,doc,xls,ppt",
+            'comments'                      => 'nullable'
         ]);
 
         
@@ -819,6 +898,139 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'customer_addresses_chart' => $customer_addresses_chart
             
         ]);
+    }
+
+    //
+    //  Services Functions
+    //
+
+    public function get_services(){
+
+        $services = CustomerSatisfactionService::orderBy('name')->paginate(10);
+        return view('customer_satisfaction_measurements.services_index')->with('services', $services);
+    }
+
+    public function search_service(Request $request){
+        $services = CustomerSatisfactionService::where('name', 'like', '%'.$request->search_term.'%')->orderBy('name')->paginate(10);
+        return view('customer_satisfaction_measurements.services_index')->with('services', $services);
+    }
+
+    public function add_service()
+    {
+        return view('customer_satisfaction_measurements.services_add');
+    }
+
+    public function store_service(Request $request){
+        $this->validate($request, [
+            'name' => 'required'
+        ], $this->custom_messages);
+
+        $service = new CustomerSatisfactionService;
+        $service->name = $request->name;
+        $service->save();
+
+        return redirect('/csm/services/idx');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_service($id)
+    {
+        $service = CustomerSatisfactionService::find($id);
+        return view('customer_satisfaction_measurements.services_edit')->with('service', $service);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_service(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ], $this->custom_messages);
+        
+       
+
+        CustomerSatisfactionService::where('id',$id)->update(array(
+            'name'      => $request->name,
+        ));
+
+        return redirect('/csm/services/idx');
+    }
+
+
+    //
+    //  Addresses Functions
+    //
+
+    public function get_addresses(){
+
+        $addresses = CustomerSatisfactionAddress::orderBy('name')->paginate(10);
+        return view('customer_satisfaction_measurements.addresses_index')->with('addresses', $addresses);
+    }
+
+    public function search_address(Request $request){
+        $addresses = CustomerSatisfactionAddress::where('name', 'like', '%'.$request->search_term.'%')->orderBy('name')->paginate(10);
+        return view('customer_satisfaction_measurements.addresses_index')->with('addresses', $addresses);
+    }
+
+    public function add_address()
+    {
+        return view('customer_satisfaction_measurements.addresses_add');
+    }
+
+    public function store_address(Request $request){
+        $this->validate($request, [
+            'name' => 'required'
+        ], $this->custom_messages);
+
+        $address = new CustomerSatisfactionAddress;
+        $address->name = $request->name;
+        $address->save();
+
+        return redirect('/csm/addresses/idx');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit_address($id)
+    {
+        $address = CustomerSatisfactionAddress::find($id);
+        return view('customer_satisfaction_measurements.addresses_edit')->with('address', $address);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update_address(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => 'required',
+        ], $this->custom_messages);
+        
+       
+
+        CustomerSatisfactionAddress::where('id',$id)->update(array(
+            'name'      => $request->name,
+        ));
+
+        return redirect('/csm/addresses/idx');
     }
 
     
