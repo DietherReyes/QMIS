@@ -19,7 +19,7 @@ class QualityManualDocumentationsController extends Controller
             'numeric'                   => 'This field requires numeric input.',
             'subject.max'               => 'The input must not be greater than 255 characters.',
             'quality_manual_doc.max'    => 'The pdf file size must not be greater than 5MB.',
-            'quality_manual_doc.mimes'   => 'The file input must be a file type:pdf.'
+            'quality_manual_doc.mimes'  => 'The file input must be a file type:pdf.'
         ];
     }
 
@@ -265,7 +265,14 @@ class QualityManualDocumentationsController extends Controller
         return view('quality_manual_documentations.section_index')->with('sections', $sections);
     }
 
-    public function add_section(Request $request){
+
+
+    public function add_section()
+    {
+        return view('quality_manual_documentations.section_add');
+    }
+
+    public function store_section(Request $request){
         $this->validate($request, [
             'section_name' => 'required'
         ], $this->custom_messages);
