@@ -16,7 +16,7 @@ class CreateCustomerOtherClassificationsTable extends Migration
     
         Schema::create('customer_other_classifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('name')->nullable();
+            $table->string('name')->nullable();
             $table->integer('count')->nullable();
             $table->integer('csm_id')->unsigned();
             $table->timestamps();
