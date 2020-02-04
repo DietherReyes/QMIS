@@ -11,10 +11,57 @@
                 <li><a href="/qmsd">Quality Management System Documentation</a></li>
                 <li class="active"> Quality Manual Section</li>
             </ol>
+
+
             <div style="float:right">
+                {{-- <a class="btn btn-primary btn-md" data-toggle="modal" data-target="#addSection">ADD</a> --}}
                 <a class="btn btn-primary btn-md" href="/qmsd/sections/add">ADD</a>
                 <a class="btn btn-primary btn-md" href="/qmsd">BACK</a>
             </div>
+
+            
+            <div class="modal fade" id="addSection" tabindex="-1" role="dialog" aria-labelledby="addSection" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">Add Section</h4>
+                    </div>
+
+                    {!! Form::open(['action' => 'QualityManualDocumentationsController@store_section', 'method' => 'POST']) !!}
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                
+        
+                                    <div class="form-group{{ $errors->has('section_name') ? ' has-error' : '' }}">
+                                        {{Form::label('section_name', 'Section Name')}}
+                                        {{Form::text('section_name', '', ['class' => 'form-control'])}}
+                    
+                                        @if ($errors->has('section_name'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('section_name') }}</strong>
+                                            </span>
+                                        @endif
+                                    
+                                    </div>
+                                
+                                        
+                                </div>
+                        </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            {{Form::submit('ADD', ['class'=>'btn btn-primary submit-btn'])}}  
+                        </div>
+                    
+                    {!! Form::close() !!}
+                   
+                  </div>
+                </div>
+            </div>
+
+
             <h1 class="page-header">Quality Manual Sections</h1>
 
             <div class="container">
