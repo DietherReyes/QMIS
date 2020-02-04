@@ -159,7 +159,7 @@
                         
                             <div class="form-group {{ $errors->has('presentation_slides') ? ' has-error' : '' }}">
                                 {{Form::label('presentation_slides', 'Presentation Slides')}}
-                                {{Form::file('presentation_slides', [ 'class' => 'hidden', 'multiple' => 'multiple', 'id' => 'presentation_slides' ,'onChange' => 'uploadNames(this.id, \'presentation_slides_text\')'])}}
+                                {{Form::file('presentation_slides[]', [ 'class' => 'hidden', 'multiple' => 'multiple', 'id' => 'presentation_slides' ,'onChange' => 'uploadNames(this.id, \'presentation_slides_text\')'])}}
                                 <div class="row">
                                     <div class="col-md-8">
                                         {{Form::text('presentation_slides_text', '', ['class' => 'form-control', 'id' => 'presentation_slides_text', 'disabled'])}}
