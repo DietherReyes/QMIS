@@ -30,8 +30,8 @@
         $("#add_address").click(function(e){
             event.preventDefault();
             $("#addresses").append('<div id="address">' +
-                                        '<div class="col-md-5"> {{Form::label("address", "City/Province Name")}} {{Form::select("address", $addresses, null, ["class" => "form-control", "placeholder" => "Click to select address"])}} </div>' +
-                                        '<div class="col-md-5"> {{Form::label("address_count", "Number of Customers")}} {{Form::text("address_count", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("address", "Province/City Name")}} {{Form::select("address[]", $addresses, null, ["class" => "form-control", "placeholder" => "Click to select address"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("address_count", "Number of Customers")}} {{Form::number("address_count[]", "", ["class" => "form-control"])}} </div>' +
                                         '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete">DELETE </button> </div>' +  
                                     '</div>');
 
@@ -42,8 +42,8 @@
         $("#add_service").click(function(e){
             event.preventDefault();
             $("#services").append('<div id="service">' +
-                                        '<div class="col-md-5"> {{Form::label("service", "Service Offered")}} {{Form::select("service", $services, null, ["class" => "form-control", "placeholder" => "Click to select service"])}} </div>' +
-                                        '<div class="col-md-5"> {{Form::label("service_count", "Number of Customers")}} {{Form::text("service_count", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("service", "Service Offered")}} {{Form::select("service[]", $services, null, ["class" => "form-control", "placeholder" => "Click to select service"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("service_count", "Number of Customers")}} {{Form::number("service_count[]", "", ["class" => "form-control"])}} </div>' +
                                         '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete">DELETE </button> </div>' +  
                                     '</div>');
             
@@ -53,8 +53,8 @@
         $("#add_other_classification").click(function(e){
             event.preventDefault();
             $("#other_classifications").append('<div id="other_classification">' +
-                                        '<div class="col-md-5"> {{Form::label("other_classification", "Other Classification")}} {{Form::text("other_classification", "", ["class" => "form-control"])}} </div>' +
-                                        '<div class="col-md-5"> {{Form::label("other_classification_count", "Number of Customers")}} {{Form::text("other_classification_count", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("other_classification", "Other Classification")}} {{Form::text("other_classification[]", "", ["class" => "form-control"])}} </div>' +
+                                        '<div class="col-md-5"> {{Form::label("other_classification_count", "Number of Customers")}} {{Form::number("other_classification_count[]", "", ["class" => "form-control"])}} </div>' +
                                         '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete">DELETE </button> </div>' +  
                                     '</div>');
             
@@ -63,8 +63,8 @@
         $("#add_classification").click(function(e){
             event.preventDefault();
             $("#classifications").append('<div id="classification">' +
-                                                '<div class="col-md-5"> {{Form::label("classification", "Classification")}} {{Form::select("classification", $classifications, null, ["class" => "form-control", "placeholder" => "Click to select classification"])}} </div>' +
-                                                '<div class="col-md-5"> {{Form::label("classification_count", "Number of Customers")}} {{Form::text("classification_count", "", ["class" => "form-control"])}} </div>' +
+                                                '<div class="col-md-5"> {{Form::label("classification", "Classification")}} {{Form::select("classification[]", $classifications, null, ["class" => "form-control", "placeholder" => "Click to select classification"])}} </div>' +
+                                                '<div class="col-md-5"> {{Form::label("classification_count", "Number of Customers")}} {{Form::number("classification_count[]", "", ["class" => "form-control"])}} </div>' +
                                                 '<div class="col-md-2"> <button class="btn btn-danger btn-md delete-address" id="delete">DELETE </button> </div>' +  
                                          '</div>');
             
@@ -103,7 +103,7 @@
                     
                     <div class="row">
                     
-                        <div class="col-md-6">
+                        <div class="col-md-6">  
                             
                     
                             <div class="form-group{{ $errors->has('functional_unit') ? ' has-error' : '' }}">
@@ -129,6 +129,7 @@
                                         <strong>{{ $errors->first('total_customer') }}</strong>
                                     </span>
                                 @endif
+
                                 
                             </div>
 
@@ -149,13 +150,19 @@
                                 
                             </div>
 
-                            <div class="form-group{{ $errors->has('total_male') ? ' has-error' : '' }}">
+                            <div class="form-group {{ $errors->has('total_male') ? ' has-error' : '' }}  {{ $errors->has('error_gender_count') ? ' has-error' : '' }}">
                                 {{Form::label('total_male', 'Total Male')}}
                                 {{Form::text('total_male', '', ['class' => 'form-control'])}}
         
                                 @if ($errors->has('total_male'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('total_male') }}</strong>
+                                    </span>
+                                @endif
+
+                                @if ($errors->has('error_gender_count')) 
+                                    <span class="help-block">
+                                        <strong> {{ $errors->first('error_gender_count') }}</strong>
                                     </span>
                                 @endif
                                 
@@ -180,13 +187,19 @@
     
                                
 
-                                <div class="form-group{{ $errors->has('total_female') ? ' has-error' : '' }}">
+                                <div class="form-group{{ $errors->has('total_female') ? ' has-error' : '' }}  {{ $errors->has('error_gender_count') ? ' has-error' : '' }}">
                                     {{Form::label('total_female', 'Total Female')}}
                                     {{Form::text('total_female', '', ['class' => 'form-control'])}}
             
                                     @if ($errors->has('total_female'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('total_female') }}</strong>
+                                        </span>
+                                    @endif
+
+                                    @if ($errors->has('error_gender_count')) 
+                                        <span class="help-block">
+                                            <strong> {{ $errors->first('error_gender_count') }}</strong>
                                         </span>
                                     @endif
                                     
@@ -203,6 +216,29 @@
                                     <button class="btn btn-primary btn-md" id="add_other_classification"> ADD OTHERS </button>
                             </div>
                             <h3 class="page-header">Customer Classification</h3>
+                            @if ($errors->has('classification.*') or $errors->has('classification_count.*'))
+                                <div class="alert alert-danger">
+                                    <ul>
+                                       <li>The field "Classification" is required.</li>
+                                       <li>The filed "Number of Customers" reqiures numeric input greater than 0.</li>
+                                    </ul>
+                                </div>
+                            @endif
+                            @if ($errors->has('other_classification.*') or $errors->has('other_classification_count.*'))
+                                <div class="alert alert-danger">
+                                    <ul>
+                                       <li>The field "Other Classification" is required with the field "Number of Customers".</li>
+                                       <li>The filed "Number of Customers" reqiures numeric input greater than 0.</li>
+                                    </ul>
+                                </div>
+                            @endif
+                            @if ($errors->has('error_classification_count')) 
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>{{$errors->first('error_classification_count')}}</li>
+                                    </ul>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -211,13 +247,13 @@
                             <div id="classification">
                                 <div class="col-md-5">
                                     {{Form::label('classification', 'Classification')}}
-                                    {{Form::select("classification", $classifications, null, ["class" => "form-control", "placeholder" => "Click to select classification"])}}
+                                    {{Form::select("classification[]", $classifications, null, ["class" => "form-control", "placeholder" => "Click to select classification"])}}
                                 </div>
 
 
                                 <div class="col-md-5">
                                     {{Form::label('classification_count', 'Number of Customers')}}
-                                    {{Form::text('classification_count', '', ['class' => 'form-control'])}}
+                                    {{Form::number('classification_count[]', '', ['class' => 'form-control'])}}
                                 </div>
 
                             </div>
@@ -239,7 +275,24 @@
                                     <button class="btn btn-primary btn-md" id="add_address"> ADD </button>
                             </div>
                             <h3 class="page-header">Customer Address</h3>
+                            @if ($errors->has('address.*') or $errors->has('address_count.*'))
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>The field "Province/City Name" is required.</li>
+                                        <li>The filed "Number of Customers" reqiures numeric input greater than 0.</li>
+                                    </ul>
+                                </div>
+                            @endif
+                            @if ($errors->has('error_address_count')) 
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>{{$errors->first('error_address_count')}}</li>
+                                    </ul>
+                                </div>
+                            @endif
+
                         </div>
+                        
                     </div>
 
                     <div id="addresses" class="row">
@@ -248,14 +301,14 @@
                                 <div class="col-md-5">
 
                                     {{Form::label('address', 'Province/City Name')}}
-                                    {{Form::select('address', $addresses, null, ['class' => 'form-control', 'placeholder' => 'Click to select address'])}}
+                                    {{Form::select('address[]', $addresses, null, ['class' => 'form-control', 'placeholder' => 'Click to select address'])}}
                                     
                                 </div>
 
 
                                 <div class="col-md-5">
                                     {{Form::label('address_count', 'Number of Customers')}}
-                                    {{Form::text('address_count', '', ['class' => 'form-control'])}}
+                                    {{Form::number('address_count[]', '', ['class' => 'form-control'])}}
                                 </div>
 
                             </div>
@@ -270,7 +323,18 @@
                                     <button class="btn btn-primary btn-md" id="add_service"> ADD </button>
                             </div>
                             <h3 class="page-header">Services Offerred</h3>
+                            @if ($errors->has('service.*') or $errors->has('service_count.*')) 
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>The field "Service Offered" is required.</li>
+                                        <li>The filed "Number of Customers" reqiures numeric input greater than 0.</li>
+                                    </ul>
+                                </div>
+                            @endif
+
+                            
                         </div>
+                        
                     </div>
 
                     <div id="services" class="row">
@@ -278,14 +342,14 @@
                             <div id="service">
                                 <div class="col-md-5">
                                     {{Form::label('service', 'Service Offered')}}
-                                    {{Form::select('service', $services, null, ['class' => 'form-control', 'placeholder' => 'Click to select service'])}}
+                                    {{Form::select('service[]', $services, null, ['class' => 'form-control', 'placeholder' => 'Click to select service'])}}
                                     
                                 </div>
 
                               
                                 <div class="col-md-5">
                                     {{Form::label('service_count', 'Number of Customers')}}
-                                    {{Form::text('service_count', '', ['class' => 'form-control'])}}
+                                    {{Form::number('service_count[]', '', ['class' => 'form-control'])}}
                                 </div>
                                 
                             </div>
@@ -432,14 +496,14 @@
 
                     <div class="form-group">
                         {{Form::label('comments', 'Comments and Suggestions')}}
-                        {{Form::text('comments', '', ['class' => 'form-control'])}}
+                        {{Form::textarea('comments', '', ['class' => 'form-control'])}}
                     </div>
 
                     
 
                     <div class="form-group {{ $errors->has('supporting_documents') ? ' has-error' : '' }}">
                         {{Form::label('supporting_documents', 'Supporting Documents')}}
-                        {{Form::file('supporting_documents', [ 'class' => 'hidden', 'multiple' => 'multiple','id' => 'supporting_documents' ,'onChange' => 'uploadNames(this.id, \'supporting_documents_text\')'])}}
+                        {{Form::file('supporting_documents[]', [ 'class' => 'hidden', 'multiple' => 'multiple','id' => 'supporting_documents' ,'onChange' => 'uploadNames(this.id, \'supporting_documents_text\')'])}}
                         <div class="row">
                             <div class="col-md-10">
                                 {{Form::text('supporting_documents_text', '', ['class' => 'form-control', 'id' => 'supporting_documents_text', 'disabled'])}}
