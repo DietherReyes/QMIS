@@ -478,29 +478,33 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
+
         $customer_satisfaction_measurement = CustomerSatisfactionMeasurement::find($id);
         $customer_satisfaction_documents = CustomerSatisfactionDocuments::where('csm_id',$id)->get();
         $customer_rating = CustomerRating::where('csm_id',$id)->get()[0];
-        $customer_classification = CustomerClassification::where('csm_id',$id)->get()[0];
         $customer_overall_rating = CustomerOverallRating::where('csm_id',$id)->get()[0];
         $customer_addresses = CustomerAddress::where('csm_id', $id)->get();
         $customer_services_offered = CustomerServicesOffered::where('csm_id', $id)->get();
-        
-        $this->get_data($data);
-        $other_files = '';
+        $customer_other_classifications = CustomerOtherClassification::where('csm_id', $id)->get();
+        $customer_classifications = [];
+        $customer_classifications_count = [];
+        $this->get_customer_classifications($id, $customer_classifications, $customer_classifications_count);
+
+        $supporting_documents = '';
         foreach($customer_satisfaction_documents as $file){
-            $other_files = $other_files.$file->file_name.', ';
+            $supporting_documents = $supporting_documents.$file->file_name.', ';
         }
         
-        $customer_satisfaction_measurement->other_files = $other_files;
+        $customer_satisfaction_measurement->supporting_documents = $supporting_documents;
         return view('customer_satisfaction_measurements.show')->with([
-                'csm' => $customer_satisfaction_measurement,
-                'customer_classification'   => $customer_classification,
-                'customer_overall_rating'   => $customer_overall_rating,
-                'customer_rating'           => $customer_rating,
-                'customer_addresses'        => $customer_addresses,
-                'customer_services_offered' => $customer_services_offered, 
-                
+                'csm'                               => $customer_satisfaction_measurement,
+                'customer_classifications'          => $customer_classifications,
+                'customer_classifications_count'    => $customer_classifications_count,
+                'customer_other_classifications'    => $customer_other_classifications,
+                'customer_overall_rating'           => $customer_overall_rating,
+                'customer_rating'                   => $customer_rating,
+                'customer_addresses'                => $customer_addresses,
+                'customer_services_offered'         => $customer_services_offered, 
             ]);
     }
 
