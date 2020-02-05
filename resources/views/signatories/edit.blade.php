@@ -38,7 +38,7 @@
     
                         <div class="form-group{{ $errors->has('position') ? ' has-error' : '' }}">
                             {{Form::label('position', 'Position')}}
-                            {{Form::text('position', $signatory->position, ['class' => 'form-control'])}}
+                            {{Form::select('position', $positions, $signatory->position, ['class' => 'form-control', 'placeholder' => 'Click to select position'])}}
                             @if ($errors->has('position'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('position') }}</strong>

@@ -43,7 +43,13 @@ class SignatoriesController extends Controller
      */
     public function create()
     {
-        return view('signatories.create');
+        $positions = [
+            'ARD for Technical Operations'              => 'ARD for Technical Operations' ,
+            'ARD Finance and Administrative Services'   => 'ARD Finance and Administrative Services' ,
+            'Quality Core Team Leader'                  => 'Quality Core Team Leader' ,
+            'Regional Director'                         => 'Regional Director'
+        ];
+        return view('signatories.create')->with('positions', $positions);
     }
 
     /**
@@ -110,8 +116,17 @@ class SignatoriesController extends Controller
      */
     public function edit($id)
     {
+        $positions = [
+            'ARD for Technical Operations'              => 'ARD for Technical Operations' ,
+            'ARD Finance and Administrative Services'   => 'ARD Finance and Administrative Services' ,
+            'Quality Core Team Leader'                  => 'Quality Core Team Leader' ,
+            'Regional Director'                         => 'Regional Director'
+        ];
         $signatory = Signatory::find($id);
-        return view('signatories.edit')->with('signatory', $signatory);
+        return view('signatories.edit')->with([
+            'signatory'     => $signatory,
+            'positions'     => $positions
+        ]);
     }
 
     /**

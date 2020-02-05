@@ -97,10 +97,16 @@
                             </div>
 
                           
-                            <div class="form-group">
-                                {{Form::label('functional_unit', 'Functional Unit')}}
-                                {{Form::select('functional_unit', $data, '', ['class' => 'form-control'])}}
-                            </div> 
+                            <div class="form-group {{ $errors->has('functional_unit') ? ' has-error' : '' }}">
+                                    {{Form::label('functional_unit', 'Functional Unit')}}
+                                    {{Form::select('functional_unit', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select functional unit'])}}
+                                    
+                                    @if ($errors->has('functional_unit'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('functional_unit') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
 
                            
 

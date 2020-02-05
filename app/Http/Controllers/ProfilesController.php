@@ -9,6 +9,7 @@ use App\User;
 use App\Log;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use Validator;
 
 class ProfilesController extends Controller
 {
@@ -47,12 +48,31 @@ class ProfilesController extends Controller
 
     public function update(Request $request, $id){
 
-        $this->validate($request, [
+
+        $validator = Validator::make($request->all(), [
             'profile_photo'     => 'image|nullable|max:5000',
             'name'              => 'required|max:255',
             'position'          => 'required|max:255',
-            'username'          => 'required|unique:users|max:255',
         ], $this->custom_messages);
+
+        $old_user = User::find($id);
+
+        if($request->username === $old_user->username){
+            $validator->validate();
+        }else{
+            $username = User::where('username', $request->username)->pluck('username');
+            
+            if(count($username) === 0){
+                $validator->validate();
+            }else{
+    
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('username', 'The username has already been taken.');
+                });
+                $validator->validate();
+                
+            }
+        }
 
 
         $user = User::find($id);
