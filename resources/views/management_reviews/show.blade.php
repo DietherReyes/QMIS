@@ -122,12 +122,11 @@
                 <h5 >Other Files</h5>
                 <li class="list-group-item">{{$management_review->other_files}}</li>
                         
-                            
-                            
-                       
-            
-                <h5>Other Files Description</h5>
-                <li class="list-group-item">{{$management_review->description}}</li>
+                @if ($management_review->description !== null)
+                    <h5>Other Files Description</h5>
+                    <li class="list-group-item">{{$management_review->description}}</li>
+                @endif
+                
             </ul>
 
                     
