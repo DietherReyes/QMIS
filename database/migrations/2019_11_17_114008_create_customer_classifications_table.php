@@ -22,8 +22,6 @@ class CreateCustomerClassificationsTable extends Migration
             $table->integer('homemaker')->nullable();
             $table->integer('entrepreneur')->nullable();
             $table->integer('private_organization')->nullable();
-            $table->integer('others')->nullable();
-            $table->string('others_specify')->nullable();
             $table->integer('csm_id')->unsigned();
             $table->timestamps();
         });

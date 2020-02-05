@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerClassification extends Model
+class CustomerOtherClassification extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,10 +12,10 @@ class CustomerClassification extends Model
      * @var array
      */
     protected $fillable = [
-        'student', 'government_employee', 'internal', 'business', 'homemaker', 'entrepreneur', 'private_organization', 'csm_id'
+        'name', 'count', 'csm_id'
     ];
 
-    public function customer_classification()
+    public function customer_other_classification()
     {
         return $this->belongsTo('App\CustomerSatisfactionMeasurement');
     }

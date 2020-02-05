@@ -120,7 +120,7 @@ class ManagementReviewsController extends Controller
         //delete docs in man_rev_docs
         $deletedRows = ManagementReviewDocument::where('manrev_id', $manrev_id)->where('type', 'slides')->delete();
 
-        foreach($request->file('presentation_slides.*') as $file){
+        foreach($request->file('presentation_slides') as $file){
             
             // Get filename with the extension
             $filenameWithExt = $file->getClientOriginalName();
@@ -132,7 +132,7 @@ class ManagementReviewsController extends Controller
             $fileNameToStore= $filename.'.'.$extension;
             // Upload file
             $path = $file->storeAs('public/management_reviews/'.$folder_name.'/slides', $fileNameToStore);
-
+            error_log($fileNameToStore);
             $man_rev_doc = new ManagementReviewDocument;
             $man_rev_doc->file_name = $fileNameToStore;
             $man_rev_doc->type = 'slides';

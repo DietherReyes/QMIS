@@ -67,93 +67,92 @@
                 </div>
 
                 <div class="row">
-                        <div class="col-md-12">
-                            <h3 class="page-header">Customer Classification</h3>
-                        </div>
+                    <div class="col-md-12">
+                        <h3 class="page-header">Customer Classification</h3>
                     </div>
+                </div>
 
-                <div class="row">
+                <div id="classifications" class="row">
 
-                    <div class="col-md-4">
-                            <ul class="list-group">
+                    @for($i = 0; $i < count($customer_classifications); $i++)
+                        <div id="address">
+                            <div class="col-md-6">
+                                    <ul class="list-group">
 
-                                <h5>Student</h5>
-                                <li class="list-group-item">{{ (($customer_classification->student !== null) ? $customer_classification->student : 0) }}</li>
-        
-                                <h5>Business</h5>
-                                <li class="list-group-item">{{(($customer_classification->business !== null) ? $customer_classification->business : 0)}}</li>
-
-                                <h5>Entrepreneur</h5>
-                                <li class="list-group-item">{{(($customer_classification->entrepreneur !== null) ? $customer_classification->entrepreneur : 0) }}</li>
-
-                            </ul> 
-                      
-                    </div>
-
-                    <div class="col-md-4">
-
-                            <ul class="list-group">
-
-                                <h5>Government Employee</h5>
-                                <li class="list-group-item">{{(($customer_classification->government_employee !== null) ? $customer_classification->government_employee : 0) }}</li>
-        
-                                <h5>Homemaker</h5>
-                                <li class="list-group-item">{{(($customer_classification->homemaker !== null) ? $customer_classification->homemaker : 0) }}</li>
-
-                                <h5>Others</h5>
-                                <li class="list-group-item">{{(($customer_classification->others !== null) ? $customer_classification->others : 0) }}</li>
-
-                            </ul> 
-                          
-                    </div>
-
-                    <div class="col-md-4">
-                            <ul class="list-group">
-
-                                    <h5>Internal</h5>
-                                    <li class="list-group-item">{{(($customer_classification->internal !== null) ? $customer_classification->internal : 0) }}</li>
+                                        <h5>Classification</h5>
+                                        <li class="list-group-item">{{$customer_classifications[$i]}}</li>
             
-                                    <h5>Private Organization</h5>
-                                    <li class="list-group-item">{{(($customer_classification->private_organization !== null) ? $customer_classification->private_organization : 0) }}</li>
-    
-                                    <h5>Please Specify</h5>
-                                    <li class="list-group-item">{{(($customer_classification->others_specify !== null) ? $customer_classification->others_specify : 'NULL') }}</li>
-    
-                                </ul> 
-                    </div>
+                                    </ul> 
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <h5>Number of Customers</h5>
+                                    <li class="list-group-item">{{$customer_classifications_count[$i]}}</li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    @endfor
 
                 </div>
 
-                <div class="row">
-                        <div class="col-md-12">
-                           
-                            <h3 class="page-header">Customer Address</h3>
-                        </div>
-                    </div>
 
-                    <div id="addresses" class="row">
 
-                        @for($i = 0; $i < count($customer_addresses); $i++)
-                            <div id="address">
-                                <div class="col-md-6">
-                                        <ul class="list-group">
+                <div id="other_classifications" class="row">
 
-                                            <h5>City or Province</h5>
-                                            <li class="list-group-item">{{$customer_addresses[$i]->address}}</li>
-                
-                                        </ul> 
-                                </div>
-                                <div class="col-md-6">
+                    @for($i = 0; $i < count($customer_other_classifications); $i++)
+                        <div id="address">
+                            <div class="col-md-6">
                                     <ul class="list-group">
-                                        <h5>Number of Customers</h5>
-                                        <li class="list-group-item">{{$customer_addresses[$i]->count}}</li>
-                                    </ul>
-                                </div>
-                                
-                            </div>
-                        @endfor
 
+                                        <h5>Classification</h5>
+                                        <li class="list-group-item">{{$customer_other_classifications[$i]->name}}</li>
+            
+                                    </ul> 
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <h5>Number of Customers</h5>
+                                    <li class="list-group-item">{{$customer_other_classifications[$i]->count}}</li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    @endfor
+
+                </div>
+
+                
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="page-header">Customer Address</h3>
                     </div>
+                </div>
+
+                <div id="addresses" class="row">
+
+                    @for($i = 0; $i < count($customer_addresses); $i++)
+                        <div id="address">
+                            <div class="col-md-6">
+                                    <ul class="list-group">
+
+                                        <h5>City or Province</h5>
+                                        <li class="list-group-item">{{$customer_addresses[$i]->address}}</li>
+            
+                                    </ul> 
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <h5>Number of Customers</h5>
+                                    <li class="list-group-item">{{$customer_addresses[$i]->count}}</li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    @endfor
+
+                </div>
 
                     <br>
 
@@ -266,11 +265,14 @@
                     </div>
 
                     <ul class="list-group">
-                        <h5>Comments and Suggestions</h5>
-                        <li class="list-group-item">{{$csm->comments}}</li>
+
+                        @if($csm->comments !== null)
+                            <h5>Comments and Suggestions</h5>
+                            {{Form::textarea('comments', $csm->comments, ['class' => 'form-control', 'disabled'])}}
+                        @endif
 
                         <h5>Supporting Documents</h5>
-                        <li class="list-group-item">{{$csm->other_files}}</li>
+                        <li class="list-group-item">{{$csm->supporting_documents}}</li>
                     </ul> 
 
                         

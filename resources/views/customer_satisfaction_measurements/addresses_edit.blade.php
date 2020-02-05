@@ -4,32 +4,32 @@
 
 <div class="container-fluid">
     <div class="row">
-        @include('include.add_section_sidebar');
+        @include('include.addresses_sidebar');
         <div class="col-md-9  main">
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
-                <li><a href="/qmsd">Quality Management System Documentation</a></li>
-                <li><a href="/qmsd/sections/idx">Quality Manual Section</a></li>
-                <li class="active"> Edit Section</li>
+                <li><a href="/csm">Customer Satisfaction Measurement</a></li>
+                <li><a href="/csm/addresses/idx">Addresses</a></li>
+                <li class="active"> Edit Address</li>
             </ol>
             <div style="float:right">
-                <a class="btn btn-primary btn-md"  href="/qmsd/sections/idx">BACK</a>
+                <a class="btn btn-primary btn-md"  href="/csm/addresses/idx">BACK</a>
             </div>
-            <h1 class="page-header">Edit Section</h1>
+            <h1 class="page-header">Edit Address</h1>
 
             
-                {!! Form::open(['action' => ['QualityManualDocumentationsController@update_section', $section->id], 'method' => 'POST']) !!}
+                {!! Form::open(['action' => ['CustomerSatisfactionMeasurementsController@update_address', $address->id], 'method' => 'POST']) !!}
                    <div class="row">
                         <div class="col-md-12">
                            
 
-                            <div class="form-group{{ $errors->has('section_name') ? ' has-error' : '' }}">
-                                {{Form::label('section_name', 'Section Name')}}
-                                {{Form::text('section_name', $section->section_name, ['class' => 'form-control'])}}
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                {{Form::label('name', 'Address')}}
+                                {{Form::text('name', $address->name, ['class' => 'form-control'])}}
             
-                                @if ($errors->has('section_name'))
+                                @if ($errors->has('name'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('section_name') }}</strong>
+                                        <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
                                
@@ -49,3 +49,5 @@
 </div>
 
 @endsection
+
+
