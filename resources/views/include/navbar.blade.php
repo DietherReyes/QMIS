@@ -29,7 +29,7 @@
 
                     <ul class="nav navbar-nav">
                         <li><a href="/csm">CSM</a></li>
-                        <li><a href="/manrev">MGRV</a></li>
+                        <li><a href="/manrev">MR</a></li>
                         <li><a href="/qmsd">QMSD</a></li>
                         
                         

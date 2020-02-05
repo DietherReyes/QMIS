@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Signatory;
+use App\Log;
 use Illuminate\Support\Facades\Storage;
+use Auth;
 
 
 class SignatoriesController extends Controller
@@ -77,6 +79,14 @@ class SignatoriesController extends Controller
         $signatory->position = $request->position;
         $signatory->signature_photo = $fileNameToStore;
         $signatory->save();
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'SIGNATORIES';
+        $log->description = 'Added  new signatory Name: ' . $request->name. ' Position: ' . $request->position;
+        $log->save();
+
         return redirect('/sysmg/signatories');
     }
 
@@ -121,6 +131,13 @@ class SignatoriesController extends Controller
 
 
         $signatory = Signatory::find($id);
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'SIGNATORIES';
+        $log->description = 'Updated signatory Name: ' . $signatory->name. ' Position: ' . $signatory->position;
+        $log->save();
+
         $fileNameToStore = $signatory->signature_photo;
         // Handle File Upload
         if($request->hasFile('signature_photo')){
@@ -142,6 +159,10 @@ class SignatoriesController extends Controller
         $signatory->position = $request->position;
         $signatory->signature_photo = $fileNameToStore;
         $signatory->save();
+
+
+        
+
         return redirect('/sysmg/signatories');
 
     
