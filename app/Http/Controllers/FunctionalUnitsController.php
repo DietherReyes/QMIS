@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\FunctionalUnit;
+use App\Log;
+use Auth;
 
 class FunctionalUnitsController extends Controller
 {
@@ -70,6 +72,13 @@ class FunctionalUnitsController extends Controller
         $functional_unit->permission = $temp_permission;
         $functional_unit->save();
 
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'FUNCTIONAL-UNIT';
+        $log->description = 'Added new unit: ' . $request->name;
+        $log->save();
+
         return redirect('sysmg/units');
     }
 
@@ -123,14 +132,23 @@ class FunctionalUnitsController extends Controller
     
             }
         }
-        
         $temp_permission = implode(',',$temp_permission);
+
+        $old_unit = FunctionalUnit::find($id);
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'FUNCTIONAL-UNIT';
+        $log->description = 'Updated  unit: ' . $old_unit->name;
+        $log->save();
 
         $functional_unit = FunctionalUnit::find($id);
         $functional_unit->abbreviation = $request->abbreviation;
         $functional_unit->name = $request->name;
         $functional_unit->permission = $temp_permission;
         $functional_unit->save();
+
+        
 
         return redirect('sysmg/units');
     }

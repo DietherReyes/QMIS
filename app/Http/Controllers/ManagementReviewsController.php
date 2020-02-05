@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use App\ManagementReview;
 use App\ManagementReviewDocument;
+use App\Log;
 use Illuminate\Support\Facades\Storage;
 use Zipper;
 use Auth;
@@ -26,6 +27,10 @@ class ManagementReviewsController extends Controller
             'venue.max'                 => 'The pdf file size must not be greater than 5MB.',
             '*.mimes'                   => 'The file input must be a file type:pdf,doc,xls,ppt.'
         ];
+
+        $this->view_mgrv = 6;
+        $this->add_mgrv = 7;
+        $this->edit_mgrv = 8;
     }
 
     private function check_permission(&$isPermitted, $user_id, $permission){
@@ -166,11 +171,11 @@ class ManagementReviewsController extends Controller
      */
     public function create()
     {
-        // $isPermitted = false;
-        // $this->check_permission($isPermitted, Auth::id(), 9);
-        // if(!$isPermitted){
-        //     return view('pages.unauthorized');
-        // }
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), $this->add_mgrv);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         return view('management_reviews.create');
     }
 
@@ -183,10 +188,7 @@ class ManagementReviewsController extends Controller
     public function store(Request $request)
     {
 
-        // $request->validate([
-        //     "presentation_slides"    => "required|array",
-        //     "presentation_slides.*"  => "required|file|mimes:pdf,doc,xls,ppt",
-        // ]);
+        
         
         $this->validate($request, [
             'meeting_name'              => 'required|max:255',
@@ -229,6 +231,13 @@ class ManagementReviewsController extends Controller
             $this->save_other_files($request, $manrev_id);
         }
 
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'MR';
+        $log->description = 'Added MR for ' . $request->meeting_name;
+        $log->save();
+
         return redirect('/manrev');
     }
 
@@ -240,11 +249,11 @@ class ManagementReviewsController extends Controller
      */
     public function show($id)
     {
-        // $isPermitted = false;
-        // $this->check_permission($isPermitted, Auth::id(), 8);
-        // if(!$isPermitted){
-        //     return view('pages.unauthorized');
-        // }
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), $this->view_mgrv);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
         
@@ -272,11 +281,11 @@ class ManagementReviewsController extends Controller
      */
     public function edit($id)
     {
-        // $isPermitted = false;
-        // $this->check_permission($isPermitted, Auth::id(), 10);
-        // if(!$isPermitted){
-        //     return view('pages.unauthorized');
-        // }
+        $isPermitted = false;
+        $this->check_permission($isPermitted, Auth::id(), $this->edit_mgrv);
+        if(!$isPermitted){
+            return view('pages.unauthorized');
+        }
         $management_review = ManagementReview::find($id);
         $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
         
@@ -330,12 +339,20 @@ class ManagementReviewsController extends Controller
         $this->update_file($request, $agenda_memo, 'agenda_memo', $old_manrev);
         $this->update_file($request, $attendance_sheet, 'attendance_sheet', $old_manrev);
         
-        //rename directory if meeting name was changed
+        //rename directory if meeting name or date was changed
         if($old_manrev->meeting_name !== $request->meeting_name || $old_manrev->date !== $request->date){
             $old_dir = $old_manrev->meeting_name.'-'.$old_manrev->date;
             $new_dir = $request->meeting_name.'-'.$request->date;
             Storage::move('public/management_reviews/'.$old_dir , 'public/management_reviews/'.$new_dir);
         }
+
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'MR';
+        $log->description = 'Updated MR for ' . $old_manrev->meeting_name;
+        $log->save();
         
 
         ManagementReview::where('id',$id)->update(array(
@@ -356,6 +373,9 @@ class ManagementReviewsController extends Controller
         if($request->hasFile('other_files')){
             $this->save_other_files($request, $id);
         }
+
+
+        
         
         return redirect('/manrev');
     }
@@ -375,6 +395,14 @@ class ManagementReviewsController extends Controller
        
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->action_plan;
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download action plan';
+        $log->save();
+
         return Storage::download($path);
     }
 
@@ -382,6 +410,14 @@ class ManagementReviewsController extends Controller
         
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->attendance_sheet;
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download attendance sheet';
+        $log->save();
+        
         return Storage::download($path);
     }
 
@@ -389,6 +425,14 @@ class ManagementReviewsController extends Controller
         
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->minutes;
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download meeting minutes';
+        $log->save();
+        
         return Storage::download($path);
     }
 
@@ -401,6 +445,14 @@ class ManagementReviewsController extends Controller
         $storage_path = public_path('storage/downloads/');
         $zip_name = $management_review->meeting_name.'-slides-'.time().'.zip';
         Zipper::make($storage_path.$zip_name)->add($files)->close();
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download presentation slides';
+        $log->save();
+
         return Storage::download('public/downloads/'.$zip_name);
     }
 
@@ -408,7 +460,16 @@ class ManagementReviewsController extends Controller
         
         $management_review = ManagementReview::find($id);
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->agenda_memo;
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download agenda memo';
+        $log->save();  
+        
         return Storage::download($path);
+
         
     }
 
@@ -422,6 +483,14 @@ class ManagementReviewsController extends Controller
         $storage_path = public_path('storage/downloads/');
         $zip_name = $management_review->meeting_name.'-'.time().'.zip';
         Zipper::make($storage_path.$zip_name)->add($files)->close();
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'MR';
+        $log->description = 'Download all files';
+        $log->save();
+
         return Storage::download('public/downloads/'.$zip_name);
         
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Log;
 use Illuminate\Support\Facades\Storage;
 use Auth;
 
@@ -55,8 +56,16 @@ class ProfilesController extends Controller
 
 
         $user = User::find($id);
-        $fileNameToStore = $user->profile_photo;
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'PROFILE';
+        $log->description = 'Updated  user: ' . $user->name;
+        $log->save();
+
+
         // Handle File Upload
+        $fileNameToStore = $user->profile_photo;
         if($request->hasFile('profile_photo')){
             
             if($user->profile_photo !== 'default.jpg'){
@@ -83,6 +92,8 @@ class ProfilesController extends Controller
             'profile_photo' => $fileNameToStore
         ));
 
+       
+
         return redirect('/profiles/'.$user->id);
     }
 
@@ -102,13 +113,27 @@ class ProfilesController extends Controller
 
         $user = User::find($id);
 
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'PROFILE-PASSWORD';
+        $log->description = 'Updated password of  user: ' . $user->name;
+        $log->save();
+
         if (Hash::check($request->old_password, $user->password)) {
+
+
            
             User::where('id',$id)->update(array(
                 'password' => Hash::make($request->password)
             ));
+
+            
+
             return redirect('/profiles/'.$id);
         }
+
+        
         
         return view('profiles.change_pass')->with(['user' => $user, 'old_password_error' => 1]);
         

@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Hash;
 
 use App\User;
 use App\FunctionalUnit;
+use App\Log;
+use Auth;
+use Validator;
 use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
@@ -219,6 +222,13 @@ class UsersController extends Controller
         $this->process_permission_array($request, $temp_permission);
         
         $this->save_user($request, 'employee', $temp_permission, $fileNameToStore);
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'USER';
+        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log->save();
         
         return redirect('sysmg/accounts/');
     }
@@ -242,6 +252,13 @@ class UsersController extends Controller
         $this->process_permission_array($request, $temp_permission);
         
         $this->save_user($request, 'manager', $temp_permission, $fileNameToStore);
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'USER';
+        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log->save();
         
         return redirect('sysmg/accounts/');
     }
@@ -260,9 +277,15 @@ class UsersController extends Controller
 
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
-            
         $this->save_user($request, 'admin', '1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore);
         
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'USER';
+        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log->save();
+
         return redirect('sysmg/accounts/');
     }
 
@@ -320,19 +343,44 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name'              => 'required|max:255',
             'position'          => 'required|max:255',
             'functional_unit'   => 'required',
-            'username'          => 'required|unique:users|max:255',
             'isActivated'       => 'required',
             'role'              => 'required',
             'profile_photo'     => 'image|nullable|max:5000'
         ], $this->custom_messages);
 
-        
+        $old_user = User::find($id);
+
+        if($request->username === $old_user->username){
+            $validator->validate();
+        }else{
+            $username = User::where('username', $request->username)->pluck('username');
+            
+            if(count($username) === 0){
+                $validator->validate();
+            }else{
+    
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('username', 'The username has already been taken.');
+                });
+                $validator->validate();
+                
+            }
+        }
+
+
+
 
         $user = User::find($id);
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'USER';
+        $log->description = 'Updated user Name: ' . $user->name . ' Position: ' . $user->position;
+        $log->save();
 
         $fileNameToStore = '';
         $this->get_photo($request, $fileNameToStore, $user->profile_photo);
@@ -411,7 +459,16 @@ class UsersController extends Controller
             'password' => 'required|confirmed'
         ], $this->custom_messages);
 
+
         $user = User::find($id);
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'USER-PASSWORD';
+        $log->description = 'Updated password of  user: ' . $user->name;
+        $log->save();
+
+
         User::where('id',$id)->update(array(
             'password' => Hash::make($request->password)
         ));

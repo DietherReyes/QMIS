@@ -15,6 +15,7 @@ use App\CustomerAddress;
 use App\CustomerServicesOffered;
 use App\FunctionalUnit;
 use App\User;
+use App\Log;
 use App\Charts\CustomerSatisfactionChart;
 use Illuminate\Support\Facades\Storage;
 use Zipper;
@@ -22,10 +23,12 @@ use Auth;
 use Validator;
 
 
+
 class CustomerSatisfactionMeasurementsController extends Controller
 {
 
     public function __construct(){
+
         $this->middleware('auth');
 
         $this->custom_messages = [
@@ -36,6 +39,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'max'           => 'This field requires numeric input less than or equal to :max.',
             'file'          => 'This field requires fiele input.'
         ];
+
+        $this->view_csm = 0;
+        $this->add_csm = 1;
+        $this->edit_csm = 2;
     }
 
     private function check_permission(&$isPermitted, $user_id, $permission){
@@ -318,7 +325,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     public function create()
     {
         $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 1);
+        $this->check_permission($isPermitted, Auth::id(), $this->add_csm);
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
@@ -461,7 +468,15 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if($request->other_classification !== null){
             $this->save_customer_other_classification($request, $csm_id);
         }
-        
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'CSM';
+        $log->description = 'Added CSM for functional unit: ' . $request->functional_unit . ' year: ' . $request->year . ' Quarter: ' . $request->quarter;
+        $log->save();
+
+
         return redirect('/csm');
     }
 
@@ -474,7 +489,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     public function show($id)
     {
         $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 0);
+        $this->check_permission($isPermitted, Auth::id(), $this->view_csm);
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
@@ -520,7 +535,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
 
         $isPermitted = false;
-        $this->check_permission($isPermitted, Auth::id(), 2);
+        $this->check_permission($isPermitted, Auth::id(), $this->edit_csm);
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
@@ -678,7 +693,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if($old_dir !== $new_dir){
             Storage::move('public/customer_satisfaction_measurements/'.$old_dir , 'public/customer_satisfaction_measurements/'.$new_dir);
         }
-            
+         
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'CSM';
+        $log->description = 'Updated CSM for functional unit: ' . $old_csm->functional_unit . ' year: ' . $old_csm->year . ' Quarter: ' . $old_csm->quarter;
+        $log->save();
         
         
         CustomerSatisfactionMeasurement::where('id',$id)->update(array(
@@ -705,6 +727,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if($request->other_classification !== null){
             $this->save_customer_other_classification($request, $id);
         }
+
+        
 
         
         
@@ -737,6 +761,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $storage_path = public_path('storage/downloads/');
         $zip_name = $folder_name.'-'.time().'.zip';
         Zipper::make($storage_path.$zip_name)->add($files)->close();
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'DOWNLOAD';
+        $log->module = 'CSM';
+        $log->description = 'Download Supporting documents';
+        $log->save();
+
         return Storage::download('public/downloads/'.$zip_name);
     }
 
@@ -1117,6 +1149,15 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $service->name = $request->name;
         $service->save();
 
+
+
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'CSM-SERVICES';
+        $log->description = 'Added new service: ' . $request->name;
+        $log->save();
+
         return redirect('/csm/services/idx');
     }
 
@@ -1144,8 +1185,16 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $this->validate($request, [
             'name' => 'required',
         ], $this->custom_messages);
+
+
+        $old_service = CustomerSatisfactionService::find($id);
         
-       
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'CSM-SERVICES';
+        $log->description = 'Updated service from ' . $old_service->name . 'to ' .$request->name;
+        $log->save();
 
         CustomerSatisfactionService::where('id',$id)->update(array(
             'name'      => $request->name,
@@ -1184,6 +1233,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $address->name = $request->name;
         $address->save();
 
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'ADD';
+        $log->module = 'CSM-ADDRESSES';
+        $log->description = 'Added new address: ' . $request->name;
+        $log->save();
+
         return redirect('/csm/addresses/idx');
     }
 
@@ -1212,7 +1268,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'name' => 'required',
         ], $this->custom_messages);
         
-       
+        $old_address = CustomerSatisfactionAddress::find($id);
+        
+        $log = new Log;
+        $log->name = Auth::user()->name;
+        $log->action = 'EDIT';
+        $log->module = 'CSM-ADDRESSES';
+        $log->description = 'Updated adress from ' . $old_address->name . 'to ' .$request->name;
+        $log->save();
 
         CustomerSatisfactionAddress::where('id',$id)->update(array(
             'name'      => $request->name,
