@@ -85,6 +85,8 @@ Route::post('/csm/addresses/idx/search', 'CustomerSatisfactionMeasurementsContro
 Route::get('/csm/addresses/{id}/edit', 'CustomerSatisfactionMeasurementsController@edit_address');
 Route::put('/csm/addresses/{id}/update', 'CustomerSatisfactionMeasurementsController@update_address');
 
+Route::post('/csm/generate', 'SpreadsheetsController@generate');
+
 
 Auth::routes();
 

@@ -102,7 +102,18 @@
                     
                     
                     <div class="row">
-                    
+
+                        <div class="col-md-12">
+                            @if ($errors->has('error_duplicate'))
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>The system does not allow duplicate entry.".</li>
+                                        <li>Please check the details of the 'Functional Unit', 'Year' and 'Quarter' again.</li>
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
+                        
                         <div class="col-md-6">  
                             
                     
