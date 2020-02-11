@@ -10,7 +10,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Chart\Chart;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
+use PhpOffice\PhpSpreadsheet\Chart\Legend;
+use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
+use PhpOffice\PhpSpreadsheet\Chart\Title;
+use PhpOffice\PhpSpreadsheet\Chart\Layout;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\CustomerSatisfactionMeasurementSummary;
+use App\Signatory;
 
 class SpreadsheetsController extends Controller
 {
@@ -35,6 +44,7 @@ class SpreadsheetsController extends Controller
             $overall_summary->getColumnDimension('C')->setWidth(12);
             $overall_summary->getColumnDimension('D')->setWidth(12);
             $overall_summary->getColumnDimension('E')->setWidth(12);
+            $overall_summary->getColumnDimension('F')->setWidth(12);
             $overall_summary->getColumnDimension('G')->setWidth(25);
         
         //End General Style
@@ -309,7 +319,235 @@ class SpreadsheetsController extends Controller
         $overall_summary->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
 
     //End Data
+
+    //Bar Chart
+
+        $start_header = $end_data + 2;
+
+        //Header
+        $overall_summary->mergeCells('A'.$start_header.':G'.$start_header);
+        $header = [
+            ['Customer Satisfaction Measurement January to December ' . $year]
+        ];
+        $overall_summary->fromArray($header, NULL, 'A' . $start_header);
+        $overall_summary->getStyle('A' . $start_header)->getFont()->setBold(TRUE);
+
+        
+        // Set the Labels for each data series we want to plot
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$F$6';
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref , null, 1),
+        ];
+        // Set the X-Axis Labels
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$A$' . $start_data . ':$A$' . ($end_data -1 ); 
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref, null, 4), 
+        ];
+        // Set the Data values for each data series we want to plot
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$F$' . $start_data . ':$F$' . ($end_data - 1); 
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, $cell_ref, null, 4), 
+        ];
+        // $dataSeriesValues[2]->setLineWidth(60000);
+
+        // Build the dataseries
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART, // plotType
+            NULL, // plotGrouping
+            range(0, count($dataSeriesValues) - 1), // plotOrder
+            $dataSeriesLabels, // plotLabel
+            $xAxisTickValues, // plotCategory
+            $dataSeriesValues        // plotValues
+        );
+        $layout = new Layout();
+        $layout->setShowVal(true);
+        // Set the series in the plot area
+        $plotArea = new PlotArea($layout, [$series]);
+        // Set the chart legend
+        $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
+
+        $title = new Title('Customer Satisfaction Measurement January to December ' . $year);
+        $xAxisLabel = new Title('FUNCTIONAL UNIT / SERVICE');
+        $yAxisLabel = new Title('CUSTOMER SATISFACTION RATING');
+
+        // Create the chart
+        $chart = new Chart(
+            'CSM Chart', // name
+            $title, // title
+            $legend, // legend
+            $plotArea, // plotArea
+            true, // plotVisibleOnly
+            0, // displayBlanksAs
+            $xAxisLabel, // xAxisLabel
+            $yAxisLabel  // yAxisLabel
+        );
+
+        $start_bar = $start_header + 1;
+        $end_bar = $start_bar + 20;
+
+        // Set the position where the chart should appear in the worksheet
+        $chart->setTopLeftPosition('A' . $start_bar);
+        $chart->setBottomRightPosition('H' . $end_bar);
+
+        // Add the chart to the worksheet
+        $overall_summary->addChart($chart);
+
+    //End Bar Chart
+    
+    //Signatories
+        $storage_path = public_path('storage/signature_photos/');
+        $start_sig = $end_bar + 3;
+
+        // $positions = [
+        //     'ARD for Technical Operations',              
+        //     'ARD Finance and Administrative Services',  
+        //     'Quality Core Team Leader',                  
+        //     'Regional Director'                         
+        // ];
             
+        //quality core team leader
+        try {
+            
+            $signatory = Signatory::where('position', 'Quality Core Team Leader' )->get()[0];
+            error_log($signatory->name);
+            $overall_summary->setCellValue('A' . $start_sig, 'Evaluated By:');
+            $overall_summary->setCellValue('A' . ($start_sig + 2), $signatory->name);
+            $overall_summary->setCellValue('A' . ($start_sig + 3), $signatory->position);
+
+            $drawing = new Drawing();
+            $drawing->setName('Signature');
+            $drawing->setDescription('Signature');
+            $drawing->setPath($storage_path . $signatory->signature_photo);
+            $drawing->setWidthAndHeight(300, 300);
+            $drawing->setOffsetX(45);
+            $drawing->setCoordinates('A' . ($start_sig - 2));
+            $drawing->setWorksheet($overall_summary);
+
+            //style
+            $overall_summary->getStyle('A' . ($start_sig + 2))->getFont()->setBold(TRUE);
+            $overall_summary->getStyle('A' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+        } catch (\Throwable $th) {
+            error_log('Signatory for Quality Core Team Leader not found.');
+        }
+
+
+        //ARD for Technical Operation
+        try {
+            
+            $overall_summary->mergeCells('B' . ($start_sig + 2) . ':D' . ($start_sig + 2));
+            $overall_summary->mergeCells('B' . ($start_sig + 3) . ':D' . ($start_sig + 3));
+
+            $signatory = Signatory::where('position', 'ARD for Technical Operations' )->get()[0];
+            error_log($signatory->name);
+            $overall_summary->setCellValue('B' . $start_sig, 'Noted By:');
+            $overall_summary->setCellValue('B' . ($start_sig + 2), $signatory->name);
+            $overall_summary->setCellValue('B' . ($start_sig + 3), $signatory->position);
+
+            $drawing = new Drawing();
+            $drawing->setName('Signature');
+            $drawing->setDescription('Signature');
+            $drawing->setPath($storage_path . $signatory->signature_photo);
+            $drawing->setWidthAndHeight(300, 300);
+            $drawing->setOffsetX(45);
+            $drawing->setCoordinates('B' . ($start_sig - 2));
+            $drawing->setWorksheet($overall_summary);
+
+            //style
+            $overall_summary->getStyle('B' . ($start_sig + 2))->getFont()->setBold(TRUE);
+            $overall_summary->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+        } catch (\Throwable $th) {
+            error_log('Signatory for ARD for Technical Operations not found.');
+        }
+
+
+         //Regional Director
+         try {
+            
+            $overall_summary->mergeCells('F' . ($start_sig + 2) . ':H' . ($start_sig + 2));
+            $overall_summary->mergeCells('F' . ($start_sig + 3) . ':H' . ($start_sig + 3));
+
+            $signatory = Signatory::where('position', 'Regional Director' )->get()[0];
+            error_log($signatory->name);
+            $overall_summary->setCellValue('F' . $start_sig, 'Evaluated By:');
+            $overall_summary->setCellValue('F' . ($start_sig + 2), $signatory->name);
+            $overall_summary->setCellValue('F' . ($start_sig + 3), $signatory->position);
+
+            $drawing = new Drawing();
+            $drawing->setName('Signature');
+            $drawing->setDescription('Signature');
+            $drawing->setPath($storage_path . $signatory->signature_photo);
+            $drawing->setWidthAndHeight(300, 300);
+            $drawing->setOffsetX(45);
+            $drawing->setCoordinates('F' . ($start_sig - 2));
+            $drawing->setWorksheet($overall_summary);
+
+            //style
+            $overall_summary->getStyle('F' . ($start_sig + 2))->getFont()->setBold(TRUE);
+            $overall_summary->getStyle('F' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+        } catch (\Throwable $th) {
+            error_log('Signatory for ARD for Technical Operations not found.');
+        }
+
+        
+         //ARD for FAS
+         try {
+            
+            $overall_summary->mergeCells('B' . ($start_sig + 6) . ':D' . ($start_sig + 6));
+            $overall_summary->mergeCells('B' . ($start_sig + 7) . ':D' . ($start_sig + 7));
+
+            $signatory = Signatory::where('position', 'ARD Finance and Administrative Services' )->get()[0];
+            error_log($signatory->name);
+            $overall_summary->setCellValue('B' . ($start_sig + 6), $signatory->name);
+            $overall_summary->setCellValue('B' . ($start_sig + 7), $signatory->position);
+
+            $drawing = new Drawing();
+            $drawing->setName('Signature');
+            $drawing->setDescription('Signature');
+            $drawing->setPath($storage_path . $signatory->signature_photo);
+            $drawing->setWidthAndHeight(300, 300);
+            $drawing->setOffsetX(45);
+            $drawing->setCoordinates('B' . ($start_sig + 2 ));
+            $drawing->setWorksheet($overall_summary);
+
+            //style
+            $overall_summary->getStyle('B' . ($start_sig + 6))->getFont()->setBold(TRUE);
+            $overall_summary->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+        } catch (\Throwable $th) {
+            error_log('Signatory for ARD for Technical Operations not found.');
+        }
+        
+
+    //End Signatories
+
+    }
+
+
+    private function comparison_report(&$spreadsheet, $year){
+        
+        
+
     }
 
     /**
@@ -317,7 +555,11 @@ class SpreadsheetsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * Note:
+     *      Code for chart generation referenced from https://github.com/PHPOffice/PhpSpreadsheet/tree/master/samples/Chart
      */
+
+    
     public function generate(Request $request)
     {
 
@@ -336,12 +578,13 @@ class SpreadsheetsController extends Controller
         $spreadsheet->removeSheetByIndex(3);
         
         $this->overall_summary_report($spreadsheet, $request->year);
-
+        $this->comparison_report($spreadsheet, $request->year);
        
        
 
 
         $writer = new Xlsx($spreadsheet);
+        $writer->setIncludeCharts(true);
         $writer->save($storage_path.'CSM Report' . $request->year . '.xlsx');
         return Storage::download('public/downloads/'.'CSM Report' . $request->year . '.xlsx');
     }
