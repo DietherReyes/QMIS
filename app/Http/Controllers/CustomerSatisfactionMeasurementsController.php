@@ -391,57 +391,42 @@ class CustomerSatisfactionMeasurementsController extends Controller
         ])->get();
 
         if(count($summary) === 0){
+
+            $functional_units = FunctionalUnit::all();
             
-            $new_summary = new CustomerSatisfactionMeasurementSummary;
-            $new_summary->functional_unit = $request->functional_unit;
-            $new_summary->year = $request->year;
-
-            switch ($request->quarter) {
-                case '1':
-                    $new_summary->q1_overall_rating = $request->overall_rating;
-                    break;
-
-                case '2':
-                    $new_summary->q2_overall_rating = $request->overall_rating;
-                    break;
-
-                case '3':
-                    $new_summary->q3_overall_rating = $request->overall_rating;
-                    break;
-
-                case '4':
-                    $new_summary->q4_overall_rating = $request->overall_rating;
-                    break;
+            foreach($functional_units as $functional_unit){
+                $new_summary = new CustomerSatisfactionMeasurementSummary;
+                $new_summary->functional_unit = $functional_unit->name;
+                $new_summary->year = $request->year;
+                $new_summary->save();
             }
-            $new_summary->save();
 
-        }else{
-
-
-            $summary = CustomerSatisfactionMeasurementSummary::where([
-                ['functional_unit', $request->functional_unit],
-                ['year', $request->year]
-            ])->get()[0];
-            switch ($request->quarter) {
-                case '1':
-                    $summary->q1_overall_rating = $request->overall_rating;
-                    break;
-
-                case '2':
-                    $summary->q2_overall_rating = $request->overall_rating;
-                    break;
-
-                case '3':
-                    $summary->q3_overall_rating = $request->overall_rating;
-                    break;
-
-                case '4':
-                    $summary->q4_overall_rating = $request->overall_rating;
-                    break;
-            }
-            $summary->save();
-             
         }
+
+        $summary = CustomerSatisfactionMeasurementSummary::where([
+            ['functional_unit', $request->functional_unit],
+            ['year', $request->year]
+        ])->get()[0];
+        switch ($request->quarter) {
+            case '1':
+                $summary->q1_overall_rating = $request->overall_rating;
+                break;
+
+            case '2':
+                $summary->q2_overall_rating = $request->overall_rating;
+                break;
+
+            case '3':
+                $summary->q3_overall_rating = $request->overall_rating;
+                break;
+
+            case '4':
+                $summary->q4_overall_rating = $request->overall_rating;
+                break;
+        }
+        $summary->save();
+             
+        
 
         $this->update_summary($request->functional_unit, $request->year);
     }
@@ -475,7 +460,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $this->get_data($data);
         $this->get_year($year);
         $this->get_year($generate_year);
-        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
+        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('year', 'DESC')->orderBy('functional_unit')->orderBy('quarter')->paginate(10);
         return view('customer_satisfaction_measurements.index')->with([
             'csm'           => $customer_satisfaction_measurements,
             'data'          => $data,
@@ -994,9 +979,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
             '3' => '3',
             '4' => '4'
         ];
+        $generate_year = [];
         $this->get_data($data);
         $this->get_year($year);
-
+        $this->get_year($generate_year);
         
         if($request->functional_unit === 'all' && $request->year === 'all' && $request->quarter === 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
@@ -1040,7 +1026,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'csm'       => $customer_satisfaction_measurements,
             'data'      => $data,
             'quarter'   => $quarter,
-            'year'      => $year
+            'year'      => $year,
+            'generate_year' => $generate_year
         ]);
     }
 

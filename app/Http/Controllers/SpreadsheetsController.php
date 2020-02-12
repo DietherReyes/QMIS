@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Chart\Legend;
 use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
 use PhpOffice\PhpSpreadsheet\Chart\Title;
 use PhpOffice\PhpSpreadsheet\Chart\Layout;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\CustomerSatisfactionMeasurementSummary;
 use App\Signatory;
@@ -26,6 +27,137 @@ class SpreadsheetsController extends Controller
     
     public function __construct(){
         $this->middleware('auth');        
+    }
+
+    private function add_signatory($end, $active_sheet){
+        //Signatories
+            $storage_path = public_path('storage/signature_photos/');
+            $start_sig = $end + 3;
+
+            // $positions = [
+            //     'ARD for Technical Operations',              
+            //     'ARD Finance and Administrative Services',  
+            //     'Quality Core Team Leader',                  
+            //     'Regional Director'                         
+            // ];
+                
+            //quality core team leader
+            try {
+                
+                $signatory = Signatory::where('position', 'Quality Core Team Leader' )->get()[0];
+                error_log($signatory->name);
+                $active_sheet->setCellValue('A' . $start_sig, 'Evaluated By:');
+                $active_sheet->setCellValue('A' . ($start_sig + 2), $signatory->name);
+                $active_sheet->setCellValue('A' . ($start_sig + 3), $signatory->position);
+
+                $drawing = new Drawing();
+                $drawing->setName('Signature');
+                $drawing->setDescription('Signature');
+                $drawing->setPath($storage_path . $signatory->signature_photo);
+                $drawing->setWidthAndHeight(300, 300);
+                $drawing->setOffsetX(45);
+                $drawing->setCoordinates('A' . ($start_sig - 2));
+                $drawing->setWorksheet($active_sheet);
+
+                //style
+                $active_sheet->getStyle('A' . ($start_sig + 2))->getFont()->setBold(TRUE);
+                $active_sheet->getStyle('A' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+            } catch (\Throwable $th) {
+                error_log('Signatory for Quality Core Team Leader not found.');
+            }
+
+
+            //ARD for Technical Operation
+            try {
+                
+                $active_sheet->mergeCells('B' . ($start_sig + 2) . ':D' . ($start_sig + 2));
+                $active_sheet->mergeCells('B' . ($start_sig + 3) . ':D' . ($start_sig + 3));
+
+                $signatory = Signatory::where('position', 'ARD for Technical Operations' )->get()[0];
+                error_log($signatory->name);
+                $active_sheet->setCellValue('B' . $start_sig, 'Noted By:');
+                $active_sheet->setCellValue('B' . ($start_sig + 2), $signatory->name);
+                $active_sheet->setCellValue('B' . ($start_sig + 3), $signatory->position);
+
+                $drawing = new Drawing();
+                $drawing->setName('Signature');
+                $drawing->setDescription('Signature');
+                $drawing->setPath($storage_path . $signatory->signature_photo);
+                $drawing->setWidthAndHeight(300, 300);
+                $drawing->setOffsetX(45);
+                $drawing->setCoordinates('B' . ($start_sig - 2));
+                $drawing->setWorksheet($active_sheet);
+
+                //style
+                $active_sheet->getStyle('B' . ($start_sig + 2))->getFont()->setBold(TRUE);
+                $active_sheet->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+            } catch (\Throwable $th) {
+                error_log('Signatory for ARD for Technical Operations not found.');
+            }
+
+
+            //Regional Director
+            try {
+                
+                $active_sheet->mergeCells('E' . ($start_sig + 2) . ':G' . ($start_sig + 2));
+                $active_sheet->mergeCells('E' . ($start_sig + 3) . ':G' . ($start_sig + 3));
+
+                $signatory = Signatory::where('position', 'Regional Director' )->get()[0];
+                error_log($signatory->name);
+                $active_sheet->setCellValue('E' . $start_sig, 'Evaluated By:');
+                $active_sheet->setCellValue('E' . ($start_sig + 2), $signatory->name);
+                $active_sheet->setCellValue('E' . ($start_sig + 3), $signatory->position);
+
+                $drawing = new Drawing();
+                $drawing->setName('Signature');
+                $drawing->setDescription('Signature');
+                $drawing->setPath($storage_path . $signatory->signature_photo);
+                $drawing->setWidthAndHeight(300, 300);
+                $drawing->setOffsetX(45);
+                $drawing->setCoordinates('E' . ($start_sig - 2));
+                $drawing->setWorksheet($active_sheet);
+
+                //style
+                $active_sheet->getStyle('E' . ($start_sig + 2))->getFont()->setBold(TRUE);
+                $active_sheet->getStyle('E' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+            } catch (\Throwable $th) {
+                error_log('Signatory for ARD for Technical Operations not found.');
+            }
+
+            
+            //ARD for FAS
+            try {
+                
+                $active_sheet->mergeCells('B' . ($start_sig + 6) . ':D' . ($start_sig + 6));
+                $active_sheet->mergeCells('B' . ($start_sig + 7) . ':D' . ($start_sig + 7));
+
+                $signatory = Signatory::where('position', 'ARD Finance and Administrative Services' )->get()[0];
+                error_log($signatory->name);
+                $active_sheet->setCellValue('B' . ($start_sig + 6), $signatory->name);
+                $active_sheet->setCellValue('B' . ($start_sig + 7), $signatory->position);
+
+                $drawing = new Drawing();
+                $drawing->setName('Signature');
+                $drawing->setDescription('Signature');
+                $drawing->setPath($storage_path . $signatory->signature_photo);
+                $drawing->setWidthAndHeight(300, 300);
+                $drawing->setOffsetX(45);
+                $drawing->setCoordinates('B' . ($start_sig + 2 ));
+                $drawing->setWorksheet($active_sheet);
+
+                //style
+                $active_sheet->getStyle('B' . ($start_sig + 6))->getFont()->setBold(TRUE);
+                $active_sheet->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+
+            } catch (\Throwable $th) {
+                error_log('Signatory for ARD for Technical Operations not found.');
+            }
+        
+
+        //End Signatories
     }
 
 
@@ -127,11 +259,6 @@ class SpreadsheetsController extends Controller
         //Data
             $start_data = 7; //Top left coordinate of the worksheet range where we want to set these values at Column A.
             $data = [];
-            $total_customer = 0;
-            $response_delivery = 0;
-            $work_quality = 0;
-            $personnels_quality = 0;
-            $overall_rating = 0;
             $count = 0;
             $csm_summaries = CustomerSatisfactionMeasurementSummary::where('year', $year)->orderBy('functional_unit', 'ASC')->get();
 
@@ -145,25 +272,31 @@ class SpreadsheetsController extends Controller
                 array_push($temp, $csm->overall_rating);
                 array_push($temp, $csm->adjectival_rating);
 
-                $total_customer += $csm->total_customer;
-                $response_delivery += $csm->response_delivery;
-                $work_quality += $csm->work_quality;
-                $personnels_quality += $csm->personnels_quality;
-                $overall_rating += $csm->overall_rating;
-
                 array_push($data, $temp);
                 $count++;
             }
 
+            $end_data = $start_data + $count;
+
             $temp = [
                 'Total Customers / Average Rating',
-                $total_customer,
-                number_format($response_delivery / $count, 2, '.', ''),
-                number_format($work_quality / $count, 2, '.', ''),
-                number_format($personnels_quality / $count, 2, '.', ''),
-                number_format($overall_rating / $count, 2, '.', ''),
+                '=SUM(B'. $start_data . ':B' . ($end_data - 1 ) .')',
+                '=AVERAGE(C'. $start_data . ':C' . ($end_data - 1 ) .')',
+                '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
+                '=AVERAGE(E'. $start_data . ':E' . ($end_data - 1 ) .')',
+                '=AVERAGE(F'. $start_data . ':F' . ($end_data - 1 ) .')',
                 NULL //adjectival rating
             ];
+
+            // $temp = [
+            //     'Total Customers / Average Rating',
+            //     $total_customer,
+            //     number_format($response_delivery / $count, 2, '.', ''),
+            //     number_format($work_quality / $count, 2, '.', ''),
+            //     number_format($personnels_quality / $count, 2, '.', ''),
+            //     number_format($overall_rating / $count, 2, '.', ''),
+            //     NULL //adjectival rating
+            // ];
             
             array_push($data, $temp);
             $overall_summary->fromArray($data, NULL, 'A' . $start_data);
@@ -194,6 +327,7 @@ class SpreadsheetsController extends Controller
             $overall_summary->getStyle('A5'.':G'.$end_data)->applyFromArray($table_border);
             $overall_summary->getStyle('A'.$start_data.':A'. ($end_data - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
             $overall_summary->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $overall_summary->getStyle('C' . $start_data . ':F' . $end_data)->getNumberFormat()->setFormatCode('#.00');
 
         //End Data
 
@@ -253,11 +387,7 @@ class SpreadsheetsController extends Controller
         //Data
         $start_data = $start_column + 1; //Top left coordinate of the worksheet range where we want to set these values at Column A.
         $data = [];
-        $q1 = 0;
-        $q2 = 0;
-        $q3 = 0;
-        $q4 = 0;
-        $overall_rating = 0;
+
         $count = 0;
         $csm_summaries = CustomerSatisfactionMeasurementSummary::where('year', $year)->orderBy('functional_unit', 'ASC')->get();
 
@@ -268,24 +398,19 @@ class SpreadsheetsController extends Controller
             array_push($temp, $csm->q2_overall_rating);
             array_push($temp, $csm->q3_overall_rating);
             array_push($temp, $csm->q4_overall_rating);
-            array_push($temp, $csm->overall_rating);
-            
-            $q1 += $csm->q1_overall_rating;
-            $q2 += $csm->q2_overall_rating;
-            $q3 += $csm->q3_overall_rating;
-            $q4 += $csm->q4_overall_rating;
-            $overall_rating += $csm->overall_rating;
+            array_push($temp, '=AVERAGE(B'. ($start_data + $count) . ':E' . ($start_data + $count) .')' );
             array_push($data, $temp);
             $count++;
         }
 
+        $end_data = $start_data + $count;
         $temp = [
             'Average Rating Per Quarter',
-            number_format($q1 / $count, 2, '.', ''),
-            number_format($q2 / $count, 2, '.', ''),
-            number_format($q3 / $count, 2, '.', ''),
-            number_format($q4 / $count, 2, '.', ''),
-            number_format($overall_rating / $count, 2, '.', '')
+            '=AVERAGE(B'. $start_data . ':B' . ($end_data - 1 ) .')',
+            '=AVERAGE(C'. $start_data . ':C' . ($end_data - 1 ) .')',
+            '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
+            '=AVERAGE(E'. $start_data . ':E' . ($end_data - 1 ) .')',
+            '=AVERAGE(F'. $start_data . ':F' . ($end_data - 1 ) .')', 
         ];
         
         array_push($data, $temp);
@@ -317,6 +442,7 @@ class SpreadsheetsController extends Controller
         $overall_summary->getStyle('A'.$start_column.':F'.$end_data)->applyFromArray($table_border);
         $overall_summary->getStyle('A'.$start_data.':A'. ($end_data - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $overall_summary->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+        $overall_summary->getStyle('B' . $start_data . ':F' . $end_data)->getNumberFormat()->setFormatCode('#.00');
 
     //End Data
 
@@ -413,141 +539,340 @@ class SpreadsheetsController extends Controller
     //End Bar Chart
     
     //Signatories
-        $storage_path = public_path('storage/signature_photos/');
-        $start_sig = $end_bar + 3;
-
-        // $positions = [
-        //     'ARD for Technical Operations',              
-        //     'ARD Finance and Administrative Services',  
-        //     'Quality Core Team Leader',                  
-        //     'Regional Director'                         
-        // ];
-            
-        //quality core team leader
-        try {
-            
-            $signatory = Signatory::where('position', 'Quality Core Team Leader' )->get()[0];
-            error_log($signatory->name);
-            $overall_summary->setCellValue('A' . $start_sig, 'Evaluated By:');
-            $overall_summary->setCellValue('A' . ($start_sig + 2), $signatory->name);
-            $overall_summary->setCellValue('A' . ($start_sig + 3), $signatory->position);
-
-            $drawing = new Drawing();
-            $drawing->setName('Signature');
-            $drawing->setDescription('Signature');
-            $drawing->setPath($storage_path . $signatory->signature_photo);
-            $drawing->setWidthAndHeight(300, 300);
-            $drawing->setOffsetX(45);
-            $drawing->setCoordinates('A' . ($start_sig - 2));
-            $drawing->setWorksheet($overall_summary);
-
-            //style
-            $overall_summary->getStyle('A' . ($start_sig + 2))->getFont()->setBold(TRUE);
-            $overall_summary->getStyle('A' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-
-        } catch (\Throwable $th) {
-            error_log('Signatory for Quality Core Team Leader not found.');
-        }
-
-
-        //ARD for Technical Operation
-        try {
-            
-            $overall_summary->mergeCells('B' . ($start_sig + 2) . ':D' . ($start_sig + 2));
-            $overall_summary->mergeCells('B' . ($start_sig + 3) . ':D' . ($start_sig + 3));
-
-            $signatory = Signatory::where('position', 'ARD for Technical Operations' )->get()[0];
-            error_log($signatory->name);
-            $overall_summary->setCellValue('B' . $start_sig, 'Noted By:');
-            $overall_summary->setCellValue('B' . ($start_sig + 2), $signatory->name);
-            $overall_summary->setCellValue('B' . ($start_sig + 3), $signatory->position);
-
-            $drawing = new Drawing();
-            $drawing->setName('Signature');
-            $drawing->setDescription('Signature');
-            $drawing->setPath($storage_path . $signatory->signature_photo);
-            $drawing->setWidthAndHeight(300, 300);
-            $drawing->setOffsetX(45);
-            $drawing->setCoordinates('B' . ($start_sig - 2));
-            $drawing->setWorksheet($overall_summary);
-
-            //style
-            $overall_summary->getStyle('B' . ($start_sig + 2))->getFont()->setBold(TRUE);
-            $overall_summary->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-
-        } catch (\Throwable $th) {
-            error_log('Signatory for ARD for Technical Operations not found.');
-        }
-
-
-         //Regional Director
-         try {
-            
-            $overall_summary->mergeCells('F' . ($start_sig + 2) . ':H' . ($start_sig + 2));
-            $overall_summary->mergeCells('F' . ($start_sig + 3) . ':H' . ($start_sig + 3));
-
-            $signatory = Signatory::where('position', 'Regional Director' )->get()[0];
-            error_log($signatory->name);
-            $overall_summary->setCellValue('F' . $start_sig, 'Evaluated By:');
-            $overall_summary->setCellValue('F' . ($start_sig + 2), $signatory->name);
-            $overall_summary->setCellValue('F' . ($start_sig + 3), $signatory->position);
-
-            $drawing = new Drawing();
-            $drawing->setName('Signature');
-            $drawing->setDescription('Signature');
-            $drawing->setPath($storage_path . $signatory->signature_photo);
-            $drawing->setWidthAndHeight(300, 300);
-            $drawing->setOffsetX(45);
-            $drawing->setCoordinates('F' . ($start_sig - 2));
-            $drawing->setWorksheet($overall_summary);
-
-            //style
-            $overall_summary->getStyle('F' . ($start_sig + 2))->getFont()->setBold(TRUE);
-            $overall_summary->getStyle('F' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-
-        } catch (\Throwable $th) {
-            error_log('Signatory for ARD for Technical Operations not found.');
-        }
-
+        $this->add_signatory($end_bar, $overall_summary);
         
-         //ARD for FAS
-         try {
-            
-            $overall_summary->mergeCells('B' . ($start_sig + 6) . ':D' . ($start_sig + 6));
-            $overall_summary->mergeCells('B' . ($start_sig + 7) . ':D' . ($start_sig + 7));
-
-            $signatory = Signatory::where('position', 'ARD Finance and Administrative Services' )->get()[0];
-            error_log($signatory->name);
-            $overall_summary->setCellValue('B' . ($start_sig + 6), $signatory->name);
-            $overall_summary->setCellValue('B' . ($start_sig + 7), $signatory->position);
-
-            $drawing = new Drawing();
-            $drawing->setName('Signature');
-            $drawing->setDescription('Signature');
-            $drawing->setPath($storage_path . $signatory->signature_photo);
-            $drawing->setWidthAndHeight(300, 300);
-            $drawing->setOffsetX(45);
-            $drawing->setCoordinates('B' . ($start_sig + 2 ));
-            $drawing->setWorksheet($overall_summary);
-
-            //style
-            $overall_summary->getStyle('B' . ($start_sig + 6))->getFont()->setBold(TRUE);
-            $overall_summary->getStyle('B' . $start_sig)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
-
-        } catch (\Throwable $th) {
-            error_log('Signatory for ARD for Technical Operations not found.');
-        }
-        
-
-    //End Signatories
 
     }
 
 
     private function comparison_report(&$spreadsheet, $year){
         
+        //General Style
+        $spreadsheet->setActiveSheetIndex(1);
+        $comparison_report = $spreadsheet->getActiveSheet();
+        
+        $comparison_report->getStyle('A1:G999')->getAlignment()->setWrapText(true);
+        $comparison_report->getStyle('A1:G999')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
+        $comparison_report->getStyle('A1:G999')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $comparison_report->getColumnDimension('A')->setWidth(45);
+        $comparison_report->getColumnDimension('B')->setWidth(12);
+        $comparison_report->getColumnDimension('C')->setWidth(25);
+        $comparison_report->getColumnDimension('D')->setWidth(12);
+        $comparison_report->getColumnDimension('E')->setWidth(25);
+        $comparison_report->getColumnDimension('F')->setWidth(12);
+        $comparison_report->getColumnDimension('G')->setWidth(25);
+    
+    //End General Style
+
+
+                            //TABLE1
+
+    //header
+
+        $comparison_report->mergeCells('A1:F1');
+        $comparison_report->mergeCells('A2:F2');
+
+        $header = [
+            ['Department of Science and Technology - CALABARZON Region '],
+            ['Comparison of Customer Satisfaction Measurement ' . ($year - 1) . ' & ' . $year],
+        ];
+        $comparison_report->fromArray($header, NULL, 'A1');
+
+        //Header Style
+            $comparison_report->getStyle('A1:A2')->getFont()->setBold(TRUE);
+    //End Header
+
+                           
+
+    //Column Names
+        $comparison_report->getRowDimension('4')->setRowHeight(20);
+        $comparison_report->getRowDimension('5')->setRowHeight(40);
+        $comparison_report->mergeCells('A4:A5');
+        $comparison_report->mergeCells('F4:F5');
+        $comparison_report->mergeCells('D4:E4');
+        $comparison_report->mergeCells('B4:C4');
+
+        $column_names = [
+            [
+                'Service/Center/ Provincial Office/ Division/Unit', 
+                $year,
+                NULL,
+                $year - 1,
+                NULL,
+                'Standing'
+            ],
+            [
+                NULL,
+                'Overall Rating',
+                'Adjectival Rating',
+                'Overall Rating',
+                'Adjectival Rating',
+                NULL
+            ]
+        ];
+        $comparison_report->fromArray($column_names, NULL, 'A4');
         
 
+        //Column Names Style
+        $column_style = [
+            'font' => [
+                'bold' => true,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'abadb0',
+                ]
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN
+                ],
+            ]
+
+        ];
+        $comparison_report->getStyle('A4:F5')->applyFromArray($column_style);
+        
+
+    //End Column Names
+
+    //Data
+        $start_data = 6;
+        $data = [];
+        $temp_data = [];
+        $temp_keys = [];
+        $curr_rating = 0;
+        $prev_rating = 0;
+        $count = 0;
+
+        $curr_csms = CustomerSatisfactionMeasurementSummary::where('year', $year)->orderBy('functional_unit')->get();
+        foreach($curr_csms as $csm){
+            $temp = [];
+            array_push($temp, $csm->functional_unit);
+            array_push($temp, $csm->overall_rating);
+            array_push($temp, $csm->adjectival_rating);
+
+            $curr_rating += $csm->overall_rating;
+            
+            array_push($temp_keys, $csm->functional_unit);
+            $temp_data[$csm->functional_unit] = $temp;
+
+            $count++;
+
+        }
+
+        $prev_csms = CustomerSatisfactionMeasurementSummary::where('year', ($year - 1))->orderBy('functional_unit')->get();
+        
+        if(count($prev_csms) === 0){
+            foreach($temp_keys as $key){
+                array_push($temp_data[$key], NULL);
+                array_push($temp_data[$key], NULL);
+                array_push($temp_data[$key], NULL);
+            }
+        }else{
+            foreach($prev_csms as $csm){
+                array_push($temp_data[$csm->functional_unit], $csm->overall_rating);
+                array_push($temp_data[$csm->functional_unit], $csm->adjectival_rating);
+
+                $prev_rating += $csm->overall_rating;
+
+                if($temp_data[$csm->functional_unit][1] !== NULL && $temp_data[$csm->functional_unit][3] !== NULL ){
+
+                    if($temp_data[$csm->functional_unit][1] >= $temp_data[$csm->functional_unit][3]){
+                        array_push($temp_data[$csm->functional_unit], '+');
+                    }else{
+                        array_push($temp_data[$csm->functional_unit], '-');
+                    }
+
+                }else{
+                    array_push($temp_data[$csm->functional_unit], NULL);
+                }
+                
+            }
+        }
+
+        
+
+        $standing = '';
+        if($curr_rating !== 0 && $prev_rating !== 0 ){
+
+            if($curr_rating >= $prev_rating){
+                $standing = '+';
+            }else{
+                $standing = '-';
+            }
+
+        }else{
+            $standing = NULL;
+        }
+
+       
+        $end_data = $start_data + $count;
+        $temp = [
+            'Mean Overall Rating',
+            '=AVERAGE(B'. $start_data . ':B' . ($end_data - 1 ) .')',
+            NULL,
+            '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
+            NULL,
+            $standing
+        ];
+        $temp_data['mean'] = $temp;
+        array_push($temp_keys, 'mean');
+
+        foreach($temp_keys as $key){
+            array_push($data, $temp_data[$key]);
+        }
+
+        $comparison_report->fromArray($data, NULL, 'A' . $start_data);
+
+        //Data Style
+        $end_row_style = [
+            'font' => [
+                'bold' => true,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'abadb0',
+                ]
+            ]
+        ];
+
+        $table_border = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN
+                ],
+            ]
+        ];
+
+        $end_data = $start_data + $count;
+        $comparison_report->getStyle('A'.$end_data.':F'.$end_data)->applyFromArray($end_row_style);
+        $comparison_report->getStyle('A4:F'.$end_data)->applyFromArray($table_border);
+        $comparison_report->getStyle('A'.$start_data.':A'. ($end_data - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+        $comparison_report->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+
+        $comparison_report->getStyle('F' . $start_data . ':F' . $end_data)->getFont()->setBold(TRUE);
+        $comparison_report->getStyle('B' . $start_data . ':D' . $end_data)->getNumberFormat()->setFormatCode('#.00');
+        $ptr = $start_data;
+        foreach ($temp_keys as $key) {
+            if($temp_data[$key][5] === '+'){
+                $comparison_report->getStyle('F' . $ptr )->getFont()->getColor()->setARGB(Color::COLOR_BLUE);
+            }else{
+                $comparison_report->getStyle('F' . $ptr )->getFont()->getColor()->setARGB(Color::COLOR_RED);
+            }
+            $ptr++;
+        }
+
+        
+        
+        $this->add_signatory($end_data, $comparison_report);
+
+    }
+
+    private function trends_report($spreadsheet, $year){
+        //General Style
+            $spreadsheet->setActiveSheetIndex(2);
+            $trends_report = $spreadsheet->getActiveSheet();
+            
+            $trends_report->getStyle('A1:K999')->getAlignment()->setWrapText(true);
+            $trends_report->getStyle('A1:K999')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
+            $trends_report->getStyle('A1:K999')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $trends_report->getColumnDimension('A')->setWidth(45);
+            $trends_report->getColumnDimension('B')->setWidth(11);
+            $trends_report->getColumnDimension('C')->setWidth(11);
+            $trends_report->getColumnDimension('D')->setWidth(11);
+            $trends_report->getColumnDimension('E')->setWidth(11);
+            $trends_report->getColumnDimension('F')->setWidth(11);
+            $trends_report->getColumnDimension('G')->setWidth(11);
+            $trends_report->getColumnDimension('H')->setWidth(11);
+            $trends_report->getColumnDimension('I')->setWidth(11);
+            $trends_report->getColumnDimension('J')->setWidth(11);
+            $trends_report->getColumnDimension('K')->setWidth(11);
+
+        //End General Style
+                //TABLE1
+
+        //header
+
+            $trends_report->mergeCells('A1:K1');
+            $trends_report->mergeCells('A2:K2');
+
+            $header = [
+                ['Department of Science and Technology - CALABARZON Region '],
+                ['Comparison of Customer Satisfaction Measurement ' . ($year - 4) . '-' . $year],
+            ];
+            $trends_report->fromArray($header, NULL, 'A1');
+
+            //Header Style
+                $trends_report->getStyle('A1:A2')->getFont()->setBold(TRUE);
+        //End Header
+
+                            
+
+        //Column Names
+            $trends_report->getRowDimension('4')->setRowHeight(20);
+            $trends_report->getRowDimension('5')->setRowHeight(40);
+            $trends_report->mergeCells('A4:A5');
+            $trends_report->mergeCells('B4:C4');
+            $trends_report->mergeCells('D4:E4');
+            $trends_report->mergeCells('F4:G4');
+            $trends_report->mergeCells('H4:I4');
+            $trends_report->mergeCells('J4:K4');
+            
+
+            $column_names = [
+                [
+                    'Service/Center/ Provincial Office/ Division/Unit', 
+                    $year - 4,
+                    NULL,
+                    $year - 3,
+                    NULL,
+                    $year - 2,
+                    NULL,
+                    $year - 1,
+                    NULL,
+                    $year
+                ],
+                [
+                    NULL,
+                    'Overall Rating',
+                    'No. of Customers',
+                    'Overall Rating',
+                    'No. of Customers',
+                    'Overall Rating',
+                    'No. of Customers',
+                    'Overall Rating',
+                    'No. of Customers',
+                    'Overall Rating',
+                    'No. of Customers',
+                ]
+            ];
+            $trends_report->fromArray($column_names, NULL, 'A4');
+            
+
+            //Column Names Style
+            $column_style = [
+                'font' => [
+                    'bold' => true,
+                ],
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => [
+                        'argb' => 'abadb0',
+                    ]
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN
+                    ],
+                ]
+
+            ];
+            $trends_report->getStyle('A4:K5')->applyFromArray($column_style);
+            
+
+        //End Column Names
     }
 
     /**
@@ -562,6 +887,7 @@ class SpreadsheetsController extends Controller
     
     public function generate(Request $request)
     {
+        
 
         $storage_path = public_path('storage/downloads/');
         $spreadsheet = new Spreadsheet();
@@ -579,7 +905,7 @@ class SpreadsheetsController extends Controller
         
         $this->overall_summary_report($spreadsheet, $request->year);
         $this->comparison_report($spreadsheet, $request->year);
-       
+        $this->trends_report($spreadsheet, $request->year);
        
 
 
