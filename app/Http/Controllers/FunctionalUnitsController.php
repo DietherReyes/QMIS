@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\FunctionalUnit;
 use App\Log;
+use App\CustomerSatisfactionMeasurementSummary;
+use App\CustomerSatisfactionMeasurement;
+use App\User;
 use Auth;
 
 class FunctionalUnitsController extends Controller
@@ -19,6 +22,52 @@ class FunctionalUnitsController extends Controller
             'name.max'          => 'The input must not be greater than 255 characters.',
         ];
     }
+
+    private function get_year(&$years){
+        $csm_years = CustomerSatisfactionMeasurementSummary::distinct('year')->orderBy('year', 'DESC')->pluck('year');
+        foreach($csm_years as $csm_year){
+            array_push($years, $csm_year);
+        }
+    }
+
+    private function create_summary($name){
+        $years = [];
+        $this->get_year($years);
+
+        foreach($years as $year){
+            $new_summary = new CustomerSatisfactionMeasurementSummary;
+            $new_summary->functional_unit = $name;
+            $new_summary->year = $year;
+            $new_summary->save();
+        } 
+
+    }
+
+    private function update_functional_unit_name($old_name, $new_name){
+
+        $ids = CustomerSatisfactionMeasurementSummary::where('functional_unit', $old_name)->pluck('id');
+        foreach($ids as $id){
+            CustomerSatisfactionMeasurementSummary::where('id', $id)->update(array(
+                'functional_unit' => $new_name
+            ));
+        }
+
+        $ids = CustomerSatisfactionMeasurement::where('functional_unit', $old_name)->pluck('id');
+        foreach($ids as $id){
+            CustomerSatisfactionMeasurement::where('id', $id)->update(array(
+                'functional_unit' => $new_name
+            ));
+        }
+
+
+        $ids = User::where('functional_unit', $old_name)->pluck('id');
+        foreach($ids as $id){
+            User::where('id', $id)->update(array(
+                'functional_unit' => $new_name
+            ));
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -71,6 +120,7 @@ class FunctionalUnitsController extends Controller
         $functional_unit->name = $request->name;
         $functional_unit->permission = $temp_permission;
         $functional_unit->save();
+        $this->create_summary($request->name);
 
         $log = new Log;
         $log->name = Auth::user()->name;
@@ -148,7 +198,10 @@ class FunctionalUnitsController extends Controller
         $functional_unit->permission = $temp_permission;
         $functional_unit->save();
 
-        
+
+        if($old_unit->name !== $request->name){
+            $this->update_functional_unit_name($old_unit->name, $request->name);
+        }        
 
         return redirect('sysmg/units');
     }
