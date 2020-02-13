@@ -45,7 +45,7 @@ class SpreadsheetsController extends Controller
             try {
                 
                 $signatory = Signatory::where('position', 'Quality Core Team Leader' )->get()[0];
-                error_log($signatory->name);
+                
                 $active_sheet->setCellValue('A' . $start_sig, 'Evaluated By:');
                 $active_sheet->setCellValue('A' . ($start_sig + 2), $signatory->name);
                 $active_sheet->setCellValue('A' . ($start_sig + 3), $signatory->position);
@@ -75,7 +75,7 @@ class SpreadsheetsController extends Controller
                 $active_sheet->mergeCells('B' . ($start_sig + 3) . ':D' . ($start_sig + 3));
 
                 $signatory = Signatory::where('position', 'ARD for Technical Operations' )->get()[0];
-                error_log($signatory->name);
+                
                 $active_sheet->setCellValue('B' . $start_sig, 'Noted By:');
                 $active_sheet->setCellValue('B' . ($start_sig + 2), $signatory->name);
                 $active_sheet->setCellValue('B' . ($start_sig + 3), $signatory->position);
@@ -105,7 +105,7 @@ class SpreadsheetsController extends Controller
                 $active_sheet->mergeCells('E' . ($start_sig + 3) . ':G' . ($start_sig + 3));
 
                 $signatory = Signatory::where('position', 'Regional Director' )->get()[0];
-                error_log($signatory->name);
+                
                 $active_sheet->setCellValue('E' . $start_sig, 'Evaluated By:');
                 $active_sheet->setCellValue('E' . ($start_sig + 2), $signatory->name);
                 $active_sheet->setCellValue('E' . ($start_sig + 3), $signatory->position);
@@ -135,7 +135,7 @@ class SpreadsheetsController extends Controller
                 $active_sheet->mergeCells('B' . ($start_sig + 7) . ':D' . ($start_sig + 7));
 
                 $signatory = Signatory::where('position', 'ARD Finance and Administrative Services' )->get()[0];
-                error_log($signatory->name);
+                
                 $active_sheet->setCellValue('B' . ($start_sig + 6), $signatory->name);
                 $active_sheet->setCellValue('B' . ($start_sig + 7), $signatory->position);
 
@@ -751,8 +751,6 @@ class SpreadsheetsController extends Controller
         $comparison_report->getStyle('A4:F'.$end_data)->applyFromArray($table_border);
         $comparison_report->getStyle('A'.$start_data.':A'. ($end_data - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $comparison_report->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-
-        $comparison_report->getStyle('F' . $start_data . ':F' . $end_data)->getFont()->setBold(TRUE);
         $comparison_report->getStyle('B' . $start_data . ':D' . $end_data)->getNumberFormat()->setFormatCode('#.00');
         $ptr = $start_data;
         foreach ($temp_keys as $key) {
@@ -770,6 +768,120 @@ class SpreadsheetsController extends Controller
 
     }
 
+                                                                                   
+    private function trends_functional_unit($spreadsheet, $functional_unit, $year, $data_coordinates , $chart_coordinates){
+
+        $trends_report = $spreadsheet->getActiveSheet();
+
+        $overall_rating_arr = [];
+        $overall_rating_keys = [];
+
+        $csm_years = [$year - 4, $year - 3, $year - 2, $year - 1, $year];
+        foreach($csm_years as $csm_year){
+            $csm = CustomerSatisfactionMeasurementSummary::where([
+                ['functional_unit', $functional_unit],
+                ['year', $csm_year]
+                ])->get();
+            
+            if(count($csm) === 1 && $csm[0]->overall_rating !== NULL){
+                $overall_rating_arr[$csm_year] = number_format($csm[0]->overall_rating, 2, '.', NULL);
+                array_push($overall_rating_keys, $csm_year);
+            } 
+        }
+        
+        
+        //add data to worksheet;
+        $start_chart_data = $data_coordinates['row'];
+        $chart_data = [];
+        foreach($overall_rating_keys as $key){
+            $temp = [];
+            array_push($temp, $key);
+            array_push($temp, $overall_rating_arr[$key]);
+            array_push($chart_data, $temp);
+        }
+        $chart_data_count = count($chart_data);
+        $trends_report->fromArray($chart_data, NULL, $data_coordinates['left'] . $start_chart_data);
+        $end_chart_data = $start_chart_data + $chart_data_count;
+        
+
+        // Set the Labels for each data series we want to plot
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$B$5';
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref , null, 1),
+        ];
+        // Set the X-Axis Labels
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$' . $data_coordinates['left'] . '$' . $start_chart_data . ':$' . $data_coordinates['left'] . '$' . ($end_chart_data - 1); 
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref, null, $chart_data_count), 
+        ];
+        // Set the Data values for each data series we want to plot
+        //     Datatype
+        //     Cell reference for data
+        //     Format Code
+        //     Number of datapoints in series
+        //     Data values
+        //     Data Marker
+        $cell_ref = 'Worksheet!$' . $data_coordinates['right'] . '$' . $start_chart_data . ':$' . $data_coordinates['right'] . '$' . ($end_chart_data - 1); 
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, $cell_ref, null, $chart_data_count), 
+        ];
+        // $dataSeriesValues[2]->setLineWidth(60000);
+
+        // Build the dataseries
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART, // plotType
+            NULL, // plotGrouping
+            range(0, count($dataSeriesValues) - 1), // plotOrder
+            $dataSeriesLabels, // plotLabel
+            $xAxisTickValues, // plotCategory
+            $dataSeriesValues        // plotValues
+        );
+        $layout = new Layout();
+        $layout->setShowVal(true);
+        // Set the series in the plot area
+        $plotArea = new PlotArea($layout, [$series]);
+        // Set the chart legend
+        $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
+
+        $title = new Title($functional_unit);
+        $xAxisLabel = new Title('YEAR');
+        $yAxisLabel = new Title('RATING');
+
+        // Create the chart
+        $chart = new Chart(
+            'CSM Chart', // name
+            $title, // title
+            $legend, // legend
+            $plotArea, // plotArea
+            true, // plotVisibleOnly
+            0, // displayBlanksAs
+            $xAxisLabel, // xAxisLabel
+            $yAxisLabel  // yAxisLabel
+        );
+
+        $start_chart = $start_chart_data;
+        $end_chart = $start_chart + 15;
+
+        // Set the position where the chart should appear in the worksheet
+        $chart->setTopLeftPosition($chart_coordinates['start'] . $start_chart);
+        $chart->setBottomRightPosition($chart_coordinates['end'] . $end_chart);
+
+        // Add the chart to the worksheet
+        $trends_report->addChart($chart);
+    }
+
     private function trends_report($spreadsheet, $year){
         //General Style
             $spreadsheet->setActiveSheetIndex(2);
@@ -778,17 +890,17 @@ class SpreadsheetsController extends Controller
             $trends_report->getStyle('A1:K999')->getAlignment()->setWrapText(true);
             $trends_report->getStyle('A1:K999')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER); 
             $trends_report->getStyle('A1:K999')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $trends_report->getColumnDimension('A')->setWidth(45);
-            $trends_report->getColumnDimension('B')->setWidth(11);
-            $trends_report->getColumnDimension('C')->setWidth(11);
-            $trends_report->getColumnDimension('D')->setWidth(11);
-            $trends_report->getColumnDimension('E')->setWidth(11);
-            $trends_report->getColumnDimension('F')->setWidth(11);
-            $trends_report->getColumnDimension('G')->setWidth(11);
-            $trends_report->getColumnDimension('H')->setWidth(11);
-            $trends_report->getColumnDimension('I')->setWidth(11);
-            $trends_report->getColumnDimension('J')->setWidth(11);
-            $trends_report->getColumnDimension('K')->setWidth(11);
+            $trends_report->getColumnDimension('A')->setWidth(40);
+            $trends_report->getColumnDimension('B')->setWidth(14);
+            $trends_report->getColumnDimension('C')->setWidth(14);
+            $trends_report->getColumnDimension('D')->setWidth(14);
+            $trends_report->getColumnDimension('E')->setWidth(14);
+            $trends_report->getColumnDimension('F')->setWidth(14);
+            $trends_report->getColumnDimension('G')->setWidth(14);
+            $trends_report->getColumnDimension('H')->setWidth(14);
+            $trends_report->getColumnDimension('I')->setWidth(14);
+            $trends_report->getColumnDimension('J')->setWidth(14);
+            $trends_report->getColumnDimension('K')->setWidth(14);
 
         //End General Style
                 //TABLE1
@@ -800,7 +912,7 @@ class SpreadsheetsController extends Controller
 
             $header = [
                 ['Department of Science and Technology - CALABARZON Region '],
-                ['Comparison of Customer Satisfaction Measurement ' . ($year - 4) . '-' . $year],
+                ['Trends of Customer Satisfaction Measurement ' . ($year - 4) . '-' . $year],
             ];
             $trends_report->fromArray($header, NULL, 'A1');
 
@@ -873,6 +985,246 @@ class SpreadsheetsController extends Controller
             
 
         //End Column Names
+        
+
+        //Data
+            $start_data = 6;
+            $data = [];
+            $temp_data = [];
+            $temp_keys = [];
+            $count = 0;
+            $overall_rating_arr = [];
+            $overall_rating_keys = [];
+
+            //getting all functional units
+            $curr_csms = CustomerSatisfactionMeasurementSummary::where('year', $year)->orderBy('functional_unit')->get();
+            foreach($curr_csms as $csm){
+                $temp = [];
+                array_push($temp, $csm->functional_unit);
+                array_push($temp_keys, $csm->functional_unit);
+                $temp_data[$csm->functional_unit] = $temp;
+                $count++;
+            }
+
+
+            $csm_years = [$year - 4, $year - 3, $year - 2, $year - 1, $year];
+
+            foreach($csm_years as $csm_year){
+
+                $average = CustomerSatisfactionMeasurementSummary::where('year', $csm_year)->avg('overall_rating');
+                if($average !== NULL){
+                    $overall_rating_arr[$csm_year] = number_format($average, 2, '.', NULL);
+                    array_push($overall_rating_keys, $csm_year);
+                } 
+                
+
+                $csms = CustomerSatisfactionMeasurementSummary::where('year', $csm_year)->orderBy('functional_unit')->get();
+                if(count($csms) === 0){
+                    foreach($temp_keys as $key){
+                        array_push($temp_data[$key], NULL);
+                        array_push($temp_data[$key], NULL);
+                    }
+                }else{
+                    foreach($csms as $csm){
+                        array_push($temp_data[$csm->functional_unit], $csm->overall_rating);
+                        array_push($temp_data[$csm->functional_unit], $csm->total_customer);
+                    }
+                }
+            }
+
+            $end_data = $start_data + $count;
+            $temp = [
+                'Total Customers / Average Rating',
+                '=AVERAGE(B'. $start_data . ':B' . ($end_data - 1 ) .')',
+                '=AVERAGE(C'. $start_data . ':C' . ($end_data - 1 ) .')',
+                '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
+                '=AVERAGE(E'. $start_data . ':E' . ($end_data - 1 ) .')',
+                '=AVERAGE(F'. $start_data . ':F' . ($end_data - 1 ) .')',
+                '=AVERAGE(G'. $start_data . ':G' . ($end_data - 1 ) .')',
+                '=AVERAGE(H'. $start_data . ':H' . ($end_data - 1 ) .')',
+                '=AVERAGE(I'. $start_data . ':I' . ($end_data - 1 ) .')',
+                '=AVERAGE(J'. $start_data . ':J' . ($end_data - 1 ) .')',
+                '=AVERAGE(K'. $start_data . ':K' . ($end_data - 1 ) .')'
+            ];
+            $temp_data['mean'] = $temp;
+            array_push($temp_keys, 'mean');
+
+            foreach($temp_keys as $key){
+                array_push($data, $temp_data[$key]);
+            }
+
+            $trends_report->fromArray($data, NULL, 'A' . $start_data);
+            
+            //Data Style
+            $end_row_style = [
+                'font' => [
+                    'bold' => true,
+                ],
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => [
+                        'argb' => 'abadb0',
+                    ]
+                ]
+            ];
+
+            $table_border = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN
+                    ],
+                ]
+            ];
+
+            $end_data = $start_data + $count;
+            $trends_report->getStyle('A'.$end_data.':K'.$end_data)->applyFromArray($end_row_style);
+            $trends_report->getStyle('A4:K'.$end_data)->applyFromArray($table_border);
+            $trends_report->getStyle('A'.$start_data.':A'. ($end_data - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+            $trends_report->getStyle('A'. $end_data)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $trends_report->getStyle('B' . $start_data . ':K' . $end_data)->getNumberFormat()->setFormatCode('#.00');
+
+
+        //End Data
+        
+
+        //Overall rating chart
+            
+            //add data to worksheet;
+            $start_chart_data = $end_data + 2;
+            $chart_data = [];
+            foreach($overall_rating_keys as $key){
+                $temp = [];
+                array_push($temp, $key);
+                array_push($temp, $overall_rating_arr[$key]);
+                array_push($chart_data, $temp);
+            }
+            $chart_data_count = count($chart_data);
+            $trends_report->fromArray($chart_data, NULL, 'A' . $start_chart_data);
+            $end_chart_data = $start_chart_data + $chart_data_count;
+            
+
+            // Set the Labels for each data series we want to plot
+            //     Datatype
+            //     Cell reference for data
+            //     Format Code
+            //     Number of datapoints in series
+            //     Data values
+            //     Data Marker
+            $cell_ref = 'Worksheet!$B$5';
+            $dataSeriesLabels = [
+                new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref , null, 1),
+            ];
+            // Set the X-Axis Labels
+            //     Datatype
+            //     Cell reference for data
+            //     Format Code
+            //     Number of datapoints in series
+            //     Data values
+            //     Data Marker
+            $cell_ref = 'Worksheet!$A$' . $start_chart_data . ':$A$' . ($end_chart_data - 1); 
+            $xAxisTickValues = [
+                new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, $cell_ref, null, $chart_data_count), 
+            ];
+            // Set the Data values for each data series we want to plot
+            //     Datatype
+            //     Cell reference for data
+            //     Format Code
+            //     Number of datapoints in series
+            //     Data values
+            //     Data Marker
+            $cell_ref = 'Worksheet!$B$' . $start_chart_data . ':$B$' . ($end_chart_data - 1); 
+            $dataSeriesValues = [
+                new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, $cell_ref, null, $chart_data_count), 
+            ];
+            // $dataSeriesValues[2]->setLineWidth(60000);
+
+            // Build the dataseries
+            $series = new DataSeries(
+                DataSeries::TYPE_LINECHART, // plotType
+                NULL, // plotGrouping
+                range(0, count($dataSeriesValues) - 1), // plotOrder
+                $dataSeriesLabels, // plotLabel
+                $xAxisTickValues, // plotCategory
+                $dataSeriesValues        // plotValues
+            );
+            $layout = new Layout();
+            $layout->setShowVal(true);
+            // Set the series in the plot area
+            $plotArea = new PlotArea($layout, [$series]);
+            // Set the chart legend
+            $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
+
+            $title = new Title('Overall Rating ' . ($year - 4) . '-' . $year);
+            $xAxisLabel = new Title('YEAR');
+            $yAxisLabel = new Title('RATING');
+
+            // Create the chart
+            $chart = new Chart(
+                'CSM Chart', // name
+                $title, // title
+                $legend, // legend
+                $plotArea, // plotArea
+                true, // plotVisibleOnly
+                0, // displayBlanksAs
+                $xAxisLabel, // xAxisLabel
+                $yAxisLabel  // yAxisLabel
+            );
+
+            $start_chart = $start_chart_data;
+            $end_chart = $start_chart + 15;
+
+            // Set the position where the chart should appear in the worksheet
+            $chart->setTopLeftPosition('A' . $start_chart);
+            $chart->setBottomRightPosition('G' . $end_chart);
+
+            // Add the chart to the worksheet
+            $trends_report->addChart($chart);
+
+        //End Chart
+
+
+        //Chart for Each Functional Unit / Services
+            $row = $end_chart + 2;
+            $counter = 0;
+            $coordinates = [
+                    'data' => [
+                        'left'  => ['A', 'D', 'I'],
+                        'right' => ['B', 'E', 'J']
+                    ],
+
+                    'chart' => [
+                        'start' => ['A', 'D', 'I'],
+                        'end'   => ['C', 'H', 'M']
+                    ] 
+            ];
+
+            array_pop($temp_keys);
+            foreach($temp_keys as $key){
+                
+                $data_coordinates = [];
+                $data_coordinates['row']    = $row;
+                $data_coordinates['left']   = $coordinates['data']['left'][$counter];
+                $data_coordinates['right']  = $coordinates['data']['right'][$counter];
+
+                $chart_coordinates = [];
+                $chart_coordinates['start'] = $coordinates['chart']['start'][$counter];
+                $chart_coordinates['end']   = $coordinates['chart']['end'][$counter];
+
+                $this->trends_functional_unit($spreadsheet, $key, $year, $data_coordinates , $chart_coordinates);
+
+                $counter++;
+
+                if($counter > 2){
+                    $counter = 0;
+                    $row += 17;
+                }
+            }
+
+        //End Chart for Each Functional Unit / Services
+        
+        //signatories
+            $end_data = $row + 17;
+            $this->add_signatory($end_data, $trends_report);
     }
 
     /**
