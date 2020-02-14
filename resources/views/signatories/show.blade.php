@@ -34,7 +34,7 @@
                     
                 </div>
                 <div class="col-md-4">
-                        <img class="profile-photo" src="/storage/signature_photos/{{$signatory->signature_photo}}">
+                        <img class="signature-photo" src="/storage/signature_photos/{{$signatory->signature_photo}}">
                 </div>
             </div>
 
