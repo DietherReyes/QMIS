@@ -153,8 +153,15 @@ label.file-input {
 #profile-photo {
   position: relative;
   top: 30px;
+  width: 200px;
+  height: 200px;
+}
+
+.signature-photo {
+  position: relative;
   left: 40px;
-  width: 150px;
+  width: 250px;
+  height: 200px;
 }
 
 .delete-address {
