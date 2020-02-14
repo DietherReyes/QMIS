@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\CustomerSatisfactionMeasurementSummary;
 use App\CustomerSatisfactionMeasurement;
 use App\CustomerSatisfactionService;
 use App\CustomerSatisfactionAddress;
@@ -281,6 +282,155 @@ class CustomerSatisfactionMeasurementsController extends Controller
         }
     }
 
+
+    private function update_summary($functional_unit, $year){
+
+        $summary = CustomerSatisfactionMeasurementSummary::where([
+            ['functional_unit', $functional_unit],
+            ['year', $year]
+        ])->get()[0];
+
+        $csms = CustomerSatisfactionMeasurement::where([
+            ['functional_unit', $functional_unit],
+            ['year', $year]
+        ])->orderBy('quarter', 'ASC')->get();
+        
+        
+       
+        
+        $count = count($csms);
+        
+
+        if($count === 4){
+
+
+            $q1_ratings = CustomerOverallRating::where('csm_id', $csms[0]->id)->get()[0];
+            $q2_ratings = CustomerOverallRating::where('csm_id', $csms[1]->id)->get()[0];
+            $q3_ratings = CustomerOverallRating::where('csm_id', $csms[2]->id)->get()[0];
+            $q4_ratings = CustomerOverallRating::where('csm_id', $csms[3]->id)->get()[0];
+
+            $total_customer     = $csms[0]->total_customer + $csms[1]->total_customer + $csms[2]->total_customer + $csms[3]->total_customer;
+            $q1_overall_rating  = $q1_ratings->overall_rating;
+            $q2_overall_rating  = $q2_ratings->overall_rating;
+            $q3_overall_rating  = $q3_ratings->overall_rating;
+            $q4_overall_rating  = $q4_ratings->overall_rating;
+            $response_delivery  =  ($q1_ratings->response_delivery + $q2_ratings->response_delivery + $q3_ratings->response_delivery + $q4_ratings->response_delivery) / $count;
+            $work_quality       =  ($q1_ratings->work_quality + $q2_ratings->work_quality + $q3_ratings->work_quality + $q4_ratings->work_quality) / $count;
+            $personnels_quality =  ($q1_ratings->personnels_quality + $q2_ratings->personnels_quality + $q3_ratings->personnels_quality + $q4_ratings->personnels_quality) / $count;
+            $overall_rating     =  ($q1_ratings->overall_rating + $q2_ratings->overall_rating + $q3_ratings->overall_rating + $q4_ratings->overall_rating) / $count;
+            
+            //code for determining djectoval rating
+
+            CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+                'total_customer'        => $total_customer,
+                'q1_overall_rating'     => $q1_overall_rating,
+                'q2_overall_rating'     => $q2_overall_rating,
+                'q3_overall_rating'     => $q3_overall_rating,
+                'q4_overall_rating'     => $q4_overall_rating,
+                'response_delivery'     => $response_delivery,
+                'work_quality'          => $work_quality,
+                'personnels_quality'    => $personnels_quality,
+                'overall_rating'       => $overall_rating
+            ));
+
+        }
+        
+
+    }
+
+    private function nullify_summary($functional_unit, $year, $quarter){
+
+        
+
+        $summary = CustomerSatisfactionMeasurementSummary::where([
+            ['functional_unit', $functional_unit],
+            ['year', $year]
+        ])->get()[0];
+
+        
+        CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+            'total_customer'        => null,
+            'response_delivery'     => null,
+            'work_quality'          => null,
+            'personnels_quality'    => null,
+            'overall_rating'        => null
+        ));
+
+        switch ($quarter) {
+            case '1':
+                CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+                    'q1_overall_rating'     => null
+                ));
+                break;
+
+            case '2':
+                CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+                    'q2_overall_rating'     => null
+                ));
+                break;
+
+            case '3':
+                CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+                    'q3_overall_rating'     => null
+                ));
+                break;
+
+            case '4':
+                CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
+                    'q4_overall_rating'     => null
+                ));
+                break;
+        }
+    }
+
+    private function check_summary($request){
+
+        $summary = CustomerSatisfactionMeasurementSummary::where([
+            ['functional_unit', $request->functional_unit],
+            ['year', $request->year]
+        ])->get();
+
+        if(count($summary) === 0){
+
+            $functional_units = FunctionalUnit::all();
+            
+            foreach($functional_units as $functional_unit){
+                $new_summary = new CustomerSatisfactionMeasurementSummary;
+                $new_summary->functional_unit = $functional_unit->name;
+                $new_summary->year = $request->year;
+                $new_summary->save();
+            }
+
+        }
+
+        $summary = CustomerSatisfactionMeasurementSummary::where([
+            ['functional_unit', $request->functional_unit],
+            ['year', $request->year]
+        ])->get()[0];
+        switch ($request->quarter) {
+            case '1':
+                $summary->q1_overall_rating = $request->overall_rating;
+                break;
+
+            case '2':
+                $summary->q2_overall_rating = $request->overall_rating;
+                break;
+
+            case '3':
+                $summary->q3_overall_rating = $request->overall_rating;
+                break;
+
+            case '4':
+                $summary->q4_overall_rating = $request->overall_rating;
+                break;
+        }
+        $summary->save();
+             
+        
+
+        $this->update_summary($request->functional_unit, $request->year);
+    }
+
     
 
     /**
@@ -304,15 +454,19 @@ class CustomerSatisfactionMeasurementsController extends Controller
             '3' => '3',
             '4' => '4'
         ];
+
+        $generate_year = [];
         
         $this->get_data($data);
         $this->get_year($year);
-        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
+        $this->get_year($generate_year);
+        $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('year', 'DESC')->orderBy('functional_unit')->orderBy('quarter')->paginate(10);
         return view('customer_satisfaction_measurements.index')->with([
-            'csm'       => $customer_satisfaction_measurements,
-            'data'      => $data,
-            'quarter'   => $quarter,
-            'year'      => $year
+            'csm'           => $customer_satisfaction_measurements,
+            'data'          => $data,
+            'quarter'       => $quarter,
+            'year'          => $year,
+            'generate_year' => $generate_year
         ]);
         
     }
@@ -413,14 +567,12 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
 
 
-
+        //
         $count_other_classification = ($request->other_classification_count === null) ? 0 : array_sum($request->other_classification_count);
         $count_classification = array_sum($request->classification_count) + $count_other_classification;
         $count_address = array_sum($request->address_count);
         $total_gender = $request->total_male + $request->total_female;
         $total_count = $request->total_customer;
-        
-        
 
         if($total_count != $count_classification){
             
@@ -441,7 +593,23 @@ class CustomerSatisfactionMeasurementsController extends Controller
                 $validator->errors()->add('error_address_count', 'Total count of address should be equal to the total number of customers.');
             });
         }
-        
+
+        //check if the csm already exist
+
+        if($request->functional_unit !== null && $request->year !== null && $request->quarter !== null){
+            $csm = CustomerSatisfactionMeasurement::where([
+                ['functional_unit', $request->functional_unit],
+                ['year', $request->year],
+                ['quarter', $request->quarter]
+            ])->get();
+    
+            if(count($csm) !== 0){
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('error_duplicate', 'Duplicate error');
+                });
+            }
+        }   
+
         $validator->validate();
         
 
@@ -468,6 +636,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if($request->other_classification !== null){
             $this->save_customer_other_classification($request, $csm_id);
         }
+
+        $this->check_summary($request);
 
         $log = new Log;
         $log->name = Auth::user()->name;
@@ -682,6 +852,29 @@ class CustomerSatisfactionMeasurementsController extends Controller
                 $validator->errors()->add('error_address_count', 'Total count of address should be equal to the total number of customers.');
             });
         }
+        $old_csm = CustomerSatisfactionMeasurement::find($id);
+        //check if the csm already exist
+
+        if(    $request->functional_unit        !== null // 
+            && $request->year                   !== null ////// Checks if 
+            && $request->quarter                !== null //
+            && $request->functional_unit        !== $old_csm->functional_unit 
+            && $request->year                   !== $old_csm->year 
+            && $request->quarter                !== $old_csm->quarter){
+
+            $csm = CustomerSatisfactionMeasurement::where([
+                ['functional_unit', $request->functional_unit],
+                ['year', $request->year],
+                ['quarter', $request->quarter]
+            ])->get();
+    
+            if(count($csm) !== 0){
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('error_duplicate', 'Duplicate error');
+                });
+            }
+        } 
+        
         
         $validator->validate();
         
@@ -728,7 +921,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
             $this->save_customer_other_classification($request, $id);
         }
 
-        
+        $this->nullify_summary($old_csm->functional_unit, $old_csm->year, $old_csm->quarter);
+        $this->check_summary($request);
 
         
         
@@ -785,9 +979,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
             '3' => '3',
             '4' => '4'
         ];
+        $generate_year = [];
         $this->get_data($data);
         $this->get_year($year);
-
+        $this->get_year($generate_year);
         
         if($request->functional_unit === 'all' && $request->year === 'all' && $request->quarter === 'all'){
             $customer_satisfaction_measurements = CustomerSatisfactionMeasurement::orderBy('functional_unit')->orderBy('year', 'DESC')->orderBy('quarter')->paginate(10);
@@ -831,7 +1026,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'csm'       => $customer_satisfaction_measurements,
             'data'      => $data,
             'quarter'   => $quarter,
-            'year'      => $year
+            'year'      => $year,
+            'generate_year' => $generate_year
         ]);
     }
 

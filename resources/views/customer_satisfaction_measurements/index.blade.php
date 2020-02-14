@@ -15,8 +15,50 @@
                 </ol>
                     
                 <div style="float:right">
+                    <a class="btn btn-primary btn-md"  data-toggle="modal" data-target="#generate">GENERATE</a>
                     <a class="btn btn-primary btn-md"  href="/csm/statistics/idx">STATISTICS</a>
                     <a class="btn btn-primary btn-md"  href="/csm/create">ADD</a>
+                </div>
+
+
+                <div class="modal fade" id="generate" tabindex="-1" role="dialog" aria-labelledby="generate" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+
+                            
+
+                            {!! Form::open(['action' => 'SpreadsheetsController@generate', 'method' => 'POST']) !!}
+                        
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" >Genarate CSM Report</h4>
+                                </div>
+    
+                                <div class="modal-body">
+                                    <div class="row">
+                                            <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        {{Form::label('year', 'Year')}}
+                                                        {{Form::select('year', $generate_year, '', ['class' => 'form-control'])}}
+                                                    </div>
+                                                </div>
+
+                                    </div>
+                                    
+                                </div>
+    
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    {{Form::submit('GENERATE', ['class'=>'btn btn-primary submit-btn'])}}
+                                </div>
+
+                                
+
+                    
+                            {!! Form::close() !!}
+
+                        </div>
+                    </div>
                 </div>
                     
                 <h1 class="page-header"> Customer Satisfaction Measurement </h1>
