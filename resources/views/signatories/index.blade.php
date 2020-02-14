@@ -47,7 +47,7 @@
                 <div class="row placeholders">
                     @foreach($signatories as $signatory)
 
-                    <div class="col-xs-6 col-sm-3 placeholder">
+                    <div class="col-md-4 placeholder">
                         <img src="/storage/signature_photos/{{$signatory->signature_photo}}" width="200" height="200">
                         <h4>{{$signatory->name}}</h4>
                         <h5>{{$signatory->position}}</h5>
