@@ -17,6 +17,7 @@ use PhpOffice\PhpSpreadsheet\Chart\Legend;
 use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
 use PhpOffice\PhpSpreadsheet\Chart\Title;
 use PhpOffice\PhpSpreadsheet\Chart\Layout;
+use PhpOffice\PhpSpreadsheet\Chart\Axis;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\CustomerSatisfactionMeasurementSummary;
@@ -503,16 +504,28 @@ class SpreadsheetsController extends Controller
             $xAxisTickValues, // plotCategory
             $dataSeriesValues        // plotValues
         );
+
+        // Set the series in the plot area
         $layout = new Layout();
         $layout->setShowVal(true);
-        // Set the series in the plot area
         $plotArea = new PlotArea($layout, [$series]);
+
         // Set the chart legend
         $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
 
-        $title = new Title('Customer Satisfaction Measurement January to December ' . $year);
+        //Set tilte
+        $layout = new Layout();
+        $layout->setHeight(30);
+        $layout->setWidth(30);
+        $title = new Title('Customer Satisfaction Measurement January to December ' . $year, $layout);
+        
+        //Set Axis Label
         $xAxisLabel = new Title('FUNCTIONAL UNIT / SERVICE');
         $yAxisLabel = new Title('CUSTOMER SATISFACTION RATING');
+
+       
+        $yAxis = new Axis();
+        $yAxis->setAxisOptionsProperties('CUSTOMER SATISFACTION RATING', null, null, null, 1 , 0 , 0, 5, null, null);
 
         // Create the chart
         $chart = new Chart(
@@ -522,8 +535,9 @@ class SpreadsheetsController extends Controller
             $plotArea, // plotArea
             true, // plotVisibleOnly
             0, // displayBlanksAs
-            $xAxisLabel, // xAxisLabel
-            $yAxisLabel  // yAxisLabel
+            $xAxisLabel,
+            $yAxisLabel,
+            $yAxis
         );
 
         $start_bar = $start_header + 1;
@@ -848,16 +862,21 @@ class SpreadsheetsController extends Controller
             $xAxisTickValues, // plotCategory
             $dataSeriesValues        // plotValues
         );
+
+         // Set the series in the plot area
         $layout = new Layout();
         $layout->setShowVal(true);
-        // Set the series in the plot area
         $plotArea = new PlotArea($layout, [$series]);
+
         // Set the chart legend
         $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
 
         $title = new Title($functional_unit);
-        $xAxisLabel = new Title('YEAR');
-        $yAxisLabel = new Title('RATING');
+        // $xAxisLabel = new Title('YEAR');
+        // $yAxisLabel = new Title('RATING');
+
+        $yAxis = new Axis();
+        $yAxis->setAxisOptionsProperties('CUSTOMER SATISFACTION RATING', null, null, null, 1 , 0 , 0, 5, null, null);
 
         // Create the chart
         $chart = new Chart(
@@ -867,8 +886,9 @@ class SpreadsheetsController extends Controller
             $plotArea, // plotArea
             true, // plotVisibleOnly
             0, // displayBlanksAs
-            $xAxisLabel, // xAxisLabel
-            $yAxisLabel  // yAxisLabel
+            null,
+            null,
+            $yAxis
         );
 
         $start_chart = $start_chart_data;
@@ -1036,15 +1056,15 @@ class SpreadsheetsController extends Controller
             $temp = [
                 'Total Customers / Average Rating',
                 '=AVERAGE(B'. $start_data . ':B' . ($end_data - 1 ) .')',
-                '=AVERAGE(C'. $start_data . ':C' . ($end_data - 1 ) .')',
+                '=SUM(C'. $start_data . ':C' . ($end_data - 1 ) .')',
                 '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
-                '=AVERAGE(E'. $start_data . ':E' . ($end_data - 1 ) .')',
+                '=SUM(E'. $start_data . ':E' . ($end_data - 1 ) .')',
                 '=AVERAGE(F'. $start_data . ':F' . ($end_data - 1 ) .')',
-                '=AVERAGE(G'. $start_data . ':G' . ($end_data - 1 ) .')',
+                '=SUM(G'. $start_data . ':G' . ($end_data - 1 ) .')',
                 '=AVERAGE(H'. $start_data . ':H' . ($end_data - 1 ) .')',
-                '=AVERAGE(I'. $start_data . ':I' . ($end_data - 1 ) .')',
+                '=SUM(I'. $start_data . ':I' . ($end_data - 1 ) .')',
                 '=AVERAGE(J'. $start_data . ':J' . ($end_data - 1 ) .')',
-                '=AVERAGE(K'. $start_data . ':K' . ($end_data - 1 ) .')'
+                '=SUM(K'. $start_data . ':K' . ($end_data - 1 ) .')'
             ];
             $temp_data['mean'] = $temp;
             array_push($temp_keys, 'mean');
@@ -1147,16 +1167,21 @@ class SpreadsheetsController extends Controller
                 $xAxisTickValues, // plotCategory
                 $dataSeriesValues        // plotValues
             );
+
+            // Set the series in the plot area
             $layout = new Layout();
             $layout->setShowVal(true);
-            // Set the series in the plot area
             $plotArea = new PlotArea($layout, [$series]);
+
             // Set the chart legend
             $legend = new Legend(Legend::POSITION_TOPRIGHT, null, false);
 
-            $title = new Title('Overall Rating ' . ($year - 4) . '-' . $year);
-            $xAxisLabel = new Title('YEAR');
-            $yAxisLabel = new Title('RATING');
+            $title = new Title('Overall Rating');
+            // $xAxisLabel = new Title('YEAR');
+            // $yAxisLabel = new Title('RATING');
+
+            $yAxis = new Axis();
+            $yAxis->setAxisOptionsProperties('CUSTOMER SATISFACTION RATING', null, null, null, 1 , 0 , 0, 5, null, null);
 
             // Create the chart
             $chart = new Chart(
@@ -1166,8 +1191,9 @@ class SpreadsheetsController extends Controller
                 $plotArea, // plotArea
                 true, // plotVisibleOnly
                 0, // displayBlanksAs
-                $xAxisLabel, // xAxisLabel
-                $yAxisLabel  // yAxisLabel
+                null,
+                null,
+                $yAxis
             );
 
             $start_chart = $start_chart_data;
@@ -1259,7 +1285,7 @@ class SpreadsheetsController extends Controller
         $this->comparison_report($spreadsheet, $request->year);
         $this->trends_report($spreadsheet, $request->year);
        
-
+        $spreadsheet->setActiveSheetIndex(0);
 
         $writer = new Xlsx($spreadsheet);
         $writer->setIncludeCharts(true);
