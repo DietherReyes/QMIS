@@ -124,7 +124,7 @@ class QualityManualDocumentationsController extends Controller
         $this->save_file($request, $quality_manual_doc);
 
         $manual = new QualityManualDocumentation;
-        $manual->document_code = $request->document_code;
+        $manual->document_code = strtoupper($request->document_code);
         $manual->effectivity_date = $request->effectivity_date;
         $manual->subject = $request->subject;
         $manual->revision_number = $request->revision_number;
