@@ -1,20 +1,17 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <font color="white" size="1">
+                            <img style="max-width:36px; margin-top: -5px; margin-left: -20px"
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/DOST_seal.svg/1010px-DOST_seal.svg.png">
+                        </font>
+                        <strong>  {{ config('app.name', 'Laravel') }} </strong>
                     </a>
                 </div>
+
+                
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     
@@ -23,16 +20,12 @@
                     @else
 
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+
 
                     <ul class="nav navbar-nav">
                         <li><a href="/csm">CSM</a></li>
                         <li><a href="/manrev">MR</a></li>
-                        <li><a href="/qmsd">QMSD</a></li>
-                        
-                        
+                        <li><a href="/qmsd">QMSD</a></li>  
                     </ul>
 
                     @endguest
