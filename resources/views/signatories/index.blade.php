@@ -27,9 +27,9 @@
                             <input name="search_term" type="text" class="form-control" placeholder="Search">
                             <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary btn-md">
-                                            <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                            <span class="glyphicon glyphicon-search"> </span>
                                     </button>
-                                    <a href="/sysmg/accounts" class="btn btn-primary btn-md">
+                                    <a href="/sysmg/signatories" class="btn btn-primary btn-md">
                                         <span class="glyphicon glyphicon-refresh"></span> REFRESH
                                     </a>
                             </span>

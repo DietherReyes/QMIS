@@ -21,12 +21,12 @@
                 
                     {!! Form::open(['action' => 'CustomerSatisfactionMeasurementsController@search_service', 'method' => 'POST']) !!}
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-10">
                             <div class="input-group">
                             <input name="search_term" type="text" class="form-control">
                             <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary btn-md">
-                                            <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                            <span class="glyphicon glyphicon-search"> </span>
                                     </button>
                                     <a href="/csm/services/idx" class="btn btn-primary btn-md">
                                         <span class="glyphicon glyphicon-refresh"></span> REFRESH
