@@ -12,7 +12,9 @@ class CustomerAddress extends Model
      * @var array
      */
     protected $fillable = [
-        'address', 'count','csm_id'
+        'address', 
+        'count',
+        'csm_id'
     ];
 
     public function other_files()

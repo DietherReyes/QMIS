@@ -12,6 +12,12 @@ class CustomerSatisfactionMeasurement extends Model
      * @var array
      */
     protected $fillable = [
-        'functional_unit', 'year', 'quarter', 'total_customer', 'total_male', 'total_female', 'comments'
+        'functional_unit', 
+        'year', 
+        'quarter', 
+        'total_customer', 
+        'total_male', 
+        'total_female', 
+        'comments'
     ];
 }

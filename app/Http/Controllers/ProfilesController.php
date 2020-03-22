@@ -14,8 +14,11 @@ use Validator;
 class ProfilesController extends Controller
 {
     public function __construct(){
+
+        //Checks if user is authenticated
         $this->middleware('auth');
         
+        //Form validation messages
         $this->custom_messages = [
             'required'          => 'This field is required.',
             'image'             => 'The input must be an image file.',
@@ -27,9 +30,8 @@ class ProfilesController extends Controller
     }
     
 
-
+    //View own profile
     public function show($id){
-        
         $user = User::find($id);
         if(Auth::id() !== $user->id ){    
             return redirect('/unauthorized');
@@ -38,6 +40,7 @@ class ProfilesController extends Controller
         return view('profiles.show')->with('user', $user);
     }
 
+    //Edit own profile
     public function edit($id){
         $user = User::find($id);
         if(Auth::id() !== $user->id ){    
@@ -46,8 +49,8 @@ class ProfilesController extends Controller
         return view('profiles.edit')->with('user', $user);
     }
 
+    //Update own profile
     public function update(Request $request, $id){
-
 
         $validator = Validator::make($request->all(), [
             'profile_photo'     => 'image|nullable|max:5000',
@@ -55,13 +58,12 @@ class ProfilesController extends Controller
             'position'          => 'required|max:255',
         ], $this->custom_messages);
 
+        //Checks if username already exists
         $old_user = User::find($id);
-
         if($request->username === $old_user->username){
             $validator->validate();
         }else{
             $username = User::where('username', $request->username)->pluck('username');
-            
             if(count($username) === 0){
                 $validator->validate();
             }else{
@@ -75,12 +77,12 @@ class ProfilesController extends Controller
         }
 
 
-        $user = User::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'PROFILE';
-        $log->description = 'Updated  user: ' . $user->name;
+        $user               = User::find($id);
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'PROFILE';
+        $log->description   = 'Updated  user: ' . $user->name;
         $log->save();
 
 
@@ -117,6 +119,7 @@ class ProfilesController extends Controller
         return redirect('/profiles/'.$user->id);
     }
 
+    //Change own password
     public function change_password($id){
         $user = User::find($id);
         if(Auth::id() !== $user->id ){    
@@ -125,6 +128,7 @@ class ProfilesController extends Controller
         return view('profiles.change_pass')->with(['user' => $user, 'old_password_error' => 0]);
     }
 
+    //Update own password
     public function update_password(Request $request, $id){
         $this->validate($request, [
             'old_password'  => 'required',
@@ -133,27 +137,20 @@ class ProfilesController extends Controller
 
         $user = User::find($id);
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'PROFILE-PASSWORD';
-        $log->description = 'Updated password of  user: ' . $user->name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'PROFILE-PASSWORD';
+        $log->description   = 'Updated password of  user: ' . $user->name;
         $log->save();
 
+        //Hash new password
         if (Hash::check($request->old_password, $user->password)) {
-
-
-           
             User::where('id',$id)->update(array(
                 'password' => Hash::make($request->password)
             ));
-
-            
-
             return redirect('/profiles/'.$id);
         }
-
-        
         
         return view('profiles.change_pass')->with(['user' => $user, 'old_password_error' => 1]);
         

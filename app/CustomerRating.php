@@ -12,7 +12,10 @@ class CustomerRating extends Model
      * @var array
      */
     protected $fillable = [
-        'five_star', 'four_star', 'three_below', 'csm_id'
+        'five_star', 
+        'four_star', 
+        'three_below', 
+        'csm_id'
     ];
 
     public function customer_rating()

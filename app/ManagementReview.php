@@ -12,6 +12,13 @@ class ManagementReview extends Model
      * @var array
      */
     protected $fillable = [
-        'meeting_name', 'venue', 'date', 'minutes', 'action_plan', 'agenda_memo', 'attendance_sheet', 'description'
+        'meeting_name', 
+        'venue', 
+        'date', 
+        'minutes', 
+        'action_plan', 
+        'agenda_memo', 
+        'attendance_sheet', 
+        'description'
     ];
 }

@@ -12,7 +12,9 @@ class ManagementReviewDocument extends Model
      * @var array
      */
     protected $fillable = [
-        'file_name', 'type','manrev_id'
+        'file_name', 
+        'type',
+        'manrev_id'
     ];
 
     public function other_files()

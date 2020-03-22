@@ -13,9 +13,11 @@ use Auth;
 class FunctionalUnitsController extends Controller
 {
     public function __construct(){
+        //Checks if user is authentocated and an administrator
         $this->middleware('auth');
         $this->middleware('admin');
         
+        //Validation messages
         $this->custom_messages = [
             'required'          => 'This field is required.',
             'abbreviation.max'  => 'The input must not be greater than 255 characters.',
@@ -23,6 +25,7 @@ class FunctionalUnitsController extends Controller
         ];
     }
 
+    //get csm years
     private function get_year(&$years){
         $csm_years = CustomerSatisfactionMeasurementSummary::distinct('year')->orderBy('year', 'DESC')->pluck('year');
         foreach($csm_years as $csm_year){
@@ -30,6 +33,7 @@ class FunctionalUnitsController extends Controller
         }
     }
 
+    //Create summary for newly created functional units when there are already recorded csm
     private function create_summary($name){
         $years = [];
         $this->get_year($years);
@@ -43,8 +47,10 @@ class FunctionalUnitsController extends Controller
 
     }
 
+    //Update functional unit name
     private function update_functional_unit_name($old_name, $new_name){
 
+        //Update all functional unit in the csm summary
         $ids = CustomerSatisfactionMeasurementSummary::where('functional_unit', $old_name)->pluck('id');
         foreach($ids as $id){
             CustomerSatisfactionMeasurementSummary::where('id', $id)->update(array(
@@ -52,6 +58,7 @@ class FunctionalUnitsController extends Controller
             ));
         }
 
+        //Update all functional unit in the csm
         $ids = CustomerSatisfactionMeasurement::where('functional_unit', $old_name)->pluck('id');
         foreach($ids as $id){
             CustomerSatisfactionMeasurement::where('id', $id)->update(array(
@@ -59,7 +66,7 @@ class FunctionalUnitsController extends Controller
             ));
         }
 
-
+        //Update functional unit of the users
         $ids = User::where('functional_unit', $old_name)->pluck('id');
         foreach($ids as $id){
             User::where('id', $id)->update(array(
@@ -104,6 +111,9 @@ class FunctionalUnitsController extends Controller
             'name'              => 'required:max:255'
         ],$this->custom_messages);
 
+        //Permission array
+        //Change value from 0 to 1 if user is authorized
+        //All indeces has corresponding permission
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
         if($request->permission !== null){
             $checkbox_values = array_map('intval', $request->permission);
@@ -115,18 +125,18 @@ class FunctionalUnitsController extends Controller
         }
         $temp_permission = implode(',',$temp_permission);
 
-        $functional_unit = new FunctionalUnit;
-        $functional_unit->abbreviation = $request->abbreviation;
-        $functional_unit->name = $request->name;
-        $functional_unit->permission = $temp_permission;
+        $functional_unit                = new FunctionalUnit;
+        $functional_unit->abbreviation  = $request->abbreviation;
+        $functional_unit->name          = $request->name;
+        $functional_unit->permission    = $temp_permission;
         $functional_unit->save();
         $this->create_summary($request->name);
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'FUNCTIONAL-UNIT';
-        $log->description = 'Added new unit: ' . $request->name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'FUNCTIONAL-UNIT';
+        $log->description   = 'Added new unit: ' . $request->name;
         $log->save();
 
         return redirect('sysmg/units');
@@ -173,8 +183,10 @@ class FunctionalUnitsController extends Controller
             'name'              => 'required:max:255'
         ], $this->custom_messages);
 
+        //Permission array
+        //Change value from 0 to 1 if user is authorized
+        //All indeces has corresponding permission
         $temp_permission = ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"];
-        
         if($request->permission !== null){
             $checkbox_values = array_map('intval', $request->permission);
             foreach($checkbox_values as $value){
@@ -185,17 +197,17 @@ class FunctionalUnitsController extends Controller
         $temp_permission = implode(',',$temp_permission);
 
         $old_unit = FunctionalUnit::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'FUNCTIONAL-UNIT';
-        $log->description = 'Updated  unit: ' . $old_unit->name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'FUNCTIONAL-UNIT';
+        $log->description   = 'Updated  unit: ' . $old_unit->name;
         $log->save();
 
-        $functional_unit = FunctionalUnit::find($id);
-        $functional_unit->abbreviation = $request->abbreviation;
-        $functional_unit->name = $request->name;
-        $functional_unit->permission = $temp_permission;
+        $functional_unit                = FunctionalUnit::find($id);
+        $functional_unit->abbreviation  = $request->abbreviation;
+        $functional_unit->name          = $request->name;
+        $functional_unit->permission    = $temp_permission;
         $functional_unit->save();
 
 

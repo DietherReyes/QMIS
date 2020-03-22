@@ -30,6 +30,7 @@ class SpreadsheetsController extends Controller
         $this->middleware('auth');        
     }
 
+    //Add signatories at the end of the sheet
     private function add_signatory($end, $active_sheet){
         //Signatories
             $storage_path = public_path('storage/signature_photos/');
@@ -289,15 +290,7 @@ class SpreadsheetsController extends Controller
                 NULL //adjectival rating
             ];
 
-            // $temp = [
-            //     'Total Customers / Average Rating',
-            //     $total_customer,
-            //     number_format($response_delivery / $count, 2, '.', ''),
-            //     number_format($work_quality / $count, 2, '.', ''),
-            //     number_format($personnels_quality / $count, 2, '.', ''),
-            //     number_format($overall_rating / $count, 2, '.', ''),
-            //     NULL //adjectival rating
-            // ];
+            
             
             array_push($data, $temp);
             $overall_summary->fromArray($data, NULL, 'A' . $start_data);
@@ -1266,21 +1259,22 @@ class SpreadsheetsController extends Controller
     public function generate(Request $request)
     {
         
-
+        //Storage Path
         $storage_path = public_path('storage/downloads/');
         $spreadsheet = new Spreadsheet();
         
-
+        //Create sheets
         $overall_summary = new Worksheet($spreadsheet, 'Overall Summary' . $request->year);
         $comparison = new Worksheet($spreadsheet, 'Comparison with ' . ($request->year - 1));
         $trends = new Worksheet($spreadsheet, 'Trends');
 
-
+        //Add Sheets
         $spreadsheet->addSheet($overall_summary, 0);
         $spreadsheet->addSheet($comparison, 1);
         $spreadsheet->addSheet($trends, 2);
         $spreadsheet->removeSheetByIndex(3);
         
+        //Create report
         $this->overall_summary_report($spreadsheet, $request->year);
         $this->comparison_report($spreadsheet, $request->year);
         $this->trends_report($spreadsheet, $request->year);

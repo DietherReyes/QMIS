@@ -13,6 +13,8 @@ class FunctionalUnit extends Model
      * @var array
      */
     protected $fillable = [
-        'abbreviation', 'name', 'permission'
+        'abbreviation', 
+        'name', 
+        'permission'
     ];
 }

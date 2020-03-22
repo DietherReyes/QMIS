@@ -12,7 +12,14 @@ class CustomerClassification extends Model
      * @var array
      */
     protected $fillable = [
-        'student', 'government_employee', 'internal', 'business', 'homemaker', 'entrepreneur', 'private_organization', 'csm_id'
+        'student', 
+        'government_employee', 
+        'internal', 
+        'business', 
+        'homemaker', 
+        'entrepreneur', 
+        'private_organization', 
+        'csm_id'
     ];
 
     public function customer_classification()
