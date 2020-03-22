@@ -41,7 +41,7 @@
                             <div class="col-md-2">
                                     <span class="input-group-btn filter-button">
                                             <button type="submit" class="btn btn-primary btn-md">
-                                                    <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                                    <span class="glyphicon glyphicon-search"> </span>
                                             </button>
                                             <a href="/csm/statistics/idx" class="btn btn-primary btn-md">
                                                 <span class="glyphicon glyphicon-refresh"></span> REFRESH
