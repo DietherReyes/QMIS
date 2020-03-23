@@ -24,7 +24,7 @@
                 <div class="container">
                     {!! Form::open(['action' => 'CustomerSatisfactionMeasurementsController@search_graphs', 'method' => 'POST']) !!}
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     {{Form::label('functional_unit', 'Functional Unit')}}
                                     {{Form::select('functional_unit', $data, $unit_name , ['class' => 'form-control'])}}
