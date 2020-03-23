@@ -78,7 +78,10 @@ class QualityManualDocumentationsController extends Controller
             'WI' => 'Work Instruction',
             'FM' => 'Forms Manual',
         ]; 
-        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', 'QM%')->orderBy('document_code')->orderBy('revision_number')->orderBy('page_number')->paginate(10);
+        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', 'QM%')
+                                                   ->orderBy('document_code')
+                                                   ->orderBy('revision_number', 'DESC')
+                                                   ->orderBy('page_number')->paginate(10);
         return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
     }
 
@@ -264,7 +267,7 @@ class QualityManualDocumentationsController extends Controller
         $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', $request->type.'%')
                                                    ->where('subject', 'LIKE', '%'.$request->search_term.'%')
                                                    ->orderBy('document_code')
-                                                   ->orderBy('revision_number')
+                                                   ->orderBy('revision_number', 'DESC')
                                                    ->orderBy('page_number')
                                                    ->paginate(10);
         return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
