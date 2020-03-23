@@ -12,7 +12,9 @@ class CustomerServicesOffered extends Model
      * @var array
      */
     protected $fillable = [
-        'service_name', 'count','csm_id'
+        'service_name', 
+        'count',
+        'csm_id'
     ];
 
     public function other_files()

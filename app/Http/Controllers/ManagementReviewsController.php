@@ -19,8 +19,10 @@ class ManagementReviewsController extends Controller
 
 
     public function __construct(){
+        //Chekck if user is authenticated
         $this->middleware('auth');
 
+        //Form validation Messages
         $this->custom_messages = [
             'required'                  => 'This field is required.',
             'meeting_name.max'          => 'The input must not be greater than 255 characters.',
@@ -28,11 +30,13 @@ class ManagementReviewsController extends Controller
             '*.mimes'                   => 'The file input must be a file type:pdf,doc,xls,ppt.'
         ];
 
+        //Permission indeces
         $this->view_mgrv = 6;
         $this->add_mgrv = 7;
         $this->edit_mgrv = 8;
     }
 
+    //Check permission
     private function check_permission(&$isPermitted, $user_id, $permission){
         $user = User::find(Auth::id());
         $user->permission = explode(',', $user->permission);
@@ -61,7 +65,7 @@ class ManagementReviewsController extends Controller
 
     }
 
-    // update file 
+    // update file if something new is uploaded
     private function update_file(Request $request, &$fileNameToStore, $name, $old_manrev){
 
         // Handle File Upload
@@ -107,10 +111,10 @@ class ManagementReviewsController extends Controller
             // Upload file
             $path = $file->storeAs('public/management_reviews/'.$folder_name.'/other_files', $fileNameToStore);
 
-            $man_rev_doc = new ManagementReviewDocument;
-            $man_rev_doc->file_name = $fileNameToStore;
-            $man_rev_doc->type = 'others';
-            $man_rev_doc->manrev_id = $manrev_id;
+            $man_rev_doc                = new ManagementReviewDocument;
+            $man_rev_doc->file_name     = $fileNameToStore;
+            $man_rev_doc->type          = 'others';
+            $man_rev_doc->manrev_id     = $manrev_id;
             $man_rev_doc->save();
 
         }
@@ -138,10 +142,10 @@ class ManagementReviewsController extends Controller
             // Upload file
             $path = $file->storeAs('public/management_reviews/'.$folder_name.'/slides', $fileNameToStore);
             error_log($fileNameToStore);
-            $man_rev_doc = new ManagementReviewDocument;
-            $man_rev_doc->file_name = $fileNameToStore;
-            $man_rev_doc->type = 'slides';
-            $man_rev_doc->manrev_id = $manrev_id;
+            $man_rev_doc                = new ManagementReviewDocument;
+            $man_rev_doc->file_name     = $fileNameToStore;
+            $man_rev_doc->type          = 'slides';
+            $man_rev_doc->manrev_id     = $manrev_id;
             $man_rev_doc->save();
 
         }
@@ -171,8 +175,10 @@ class ManagementReviewsController extends Controller
      */
     public function create()
     {
+        //Checks user if authorized to create a record
         $isPermitted = false;
         $this->check_permission($isPermitted, Auth::id(), $this->add_mgrv);
+        
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
@@ -189,7 +195,7 @@ class ManagementReviewsController extends Controller
     {
 
         
-        
+        //Form Validation
         $this->validate($request, [
             'meeting_name'              => 'required|max:255',
             'venue'                     => 'required|max:255',
@@ -206,10 +212,11 @@ class ManagementReviewsController extends Controller
 
         
 
-        $minutes = '';
-        $action_plan = '';
-        $agenda_memo = '';
-        $attendance_sheet = '';
+        //saving files then gets the filename
+        $minutes            = '';
+        $action_plan        = '';
+        $agenda_memo        = '';
+        $attendance_sheet   = '';
         $this->save_file($request, $minutes, 'minutes');
         $this->save_file($request, $action_plan, 'action_plan');
         $this->save_file($request, $agenda_memo, 'agenda_memo');
@@ -231,11 +238,11 @@ class ManagementReviewsController extends Controller
             $this->save_other_files($request, $manrev_id);
         }
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'MR';
-        $log->description = 'Added MR for ' . $request->meeting_name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'MR';
+        $log->description   = 'Added MR for ' . $request->meeting_name;
         $log->save();
 
         return redirect('/manrev');
@@ -254,9 +261,11 @@ class ManagementReviewsController extends Controller
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
-        $management_review = ManagementReview::find($id);
-        $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
+
+        $management_review  = ManagementReview::find($id);
+        $man_rev_docs       = ManagementReviewDocument::all()->where('manrev_id',$id);
         
+        //get all filenames of otherfiles and presentation slides
         $slides = '';
         $other_files = '';
         foreach($man_rev_docs as $file){
@@ -268,8 +277,8 @@ class ManagementReviewsController extends Controller
             
         }
     
-        $management_review->other_files = $other_files;
-        $management_review->slides = $slides;
+        $management_review->other_files     = $other_files;
+        $management_review->slides          = $slides;
         return view('management_reviews.show')->with('management_review', $management_review);
     }
 
@@ -286,9 +295,10 @@ class ManagementReviewsController extends Controller
         if(!$isPermitted){
             return view('pages.unauthorized');
         }
-        $management_review = ManagementReview::find($id);
-        $man_rev_docs = ManagementReviewDocument::all()->where('manrev_id',$id);
+        $management_review  = ManagementReview::find($id);
+        $man_rev_docs       = ManagementReviewDocument::all()->where('manrev_id',$id);
         
+        //get all filenames of otherfiles and presentation slides
         $slides = '';
         $other_files = '';
         foreach($man_rev_docs as $file){
@@ -300,8 +310,8 @@ class ManagementReviewsController extends Controller
             
         }
     
-        $management_review->other_files = $other_files;
-        $management_review->slides = $slides;
+        $management_review->other_files  = $other_files;
+        $management_review->slides       = $slides;
         return view('management_reviews.edit')->with('management_review', $management_review);
     }
 
@@ -314,6 +324,7 @@ class ManagementReviewsController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $this->validate($request, [
             'meeting_name'          => 'required|max:255',
             'venue'                 => 'required|max:255',
@@ -328,12 +339,13 @@ class ManagementReviewsController extends Controller
             'description'           => 'nullable'
         ], $this->custom_messages);
 
-        $old_manrev = ManagementReview::find($id);
 
-        $minutes = $old_manrev->minutes;
-        $action_plan = $old_manrev->action_plan;
-        $agenda_memo = $old_manrev->agenda_memo;
-        $attendance_sheet = $old_manrev->attendance_sheet;
+        //Update files
+        $old_manrev = ManagementReview::find($id);
+        $minutes            = $old_manrev->minutes;
+        $action_plan        = $old_manrev->action_plan;
+        $agenda_memo        = $old_manrev->agenda_memo;
+        $attendance_sheet   = $old_manrev->attendance_sheet;
         $this->update_file($request, $minutes, 'minutes', $old_manrev);
         $this->update_file($request, $action_plan, 'action_plan', $old_manrev);
         $this->update_file($request, $agenda_memo, 'agenda_memo', $old_manrev);
@@ -347,11 +359,11 @@ class ManagementReviewsController extends Controller
         }
 
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'MR';
-        $log->description = 'Updated MR for ' . $old_manrev->meeting_name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'MR';
+        $log->description   = 'Updated MR for ' . $old_manrev->meeting_name;
         $log->save();
         
 
@@ -374,33 +386,21 @@ class ManagementReviewsController extends Controller
             $this->save_other_files($request, $id);
         }
 
-
-        
-        
         return redirect('/manrev');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
+    //Download files
     public function download_action_plan($id){
        
         $management_review = ManagementReview::find($id);
+
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->action_plan;
         
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download action plan';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download action plan';
         $log->save();
 
         return Storage::download($path);
@@ -409,13 +409,14 @@ class ManagementReviewsController extends Controller
     public function download_attendance($id){
         
         $management_review = ManagementReview::find($id);
+
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->attendance_sheet;
         
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download attendance sheet';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download attendance sheet';
         $log->save();
         
         return Storage::download($path);
@@ -424,13 +425,14 @@ class ManagementReviewsController extends Controller
     public function download_minutes($id){
         
         $management_review = ManagementReview::find($id);
+
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->minutes;
         
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download meeting minutes';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download meeting minutes';
         $log->save();
         
         return Storage::download($path);
@@ -446,11 +448,11 @@ class ManagementReviewsController extends Controller
         $zip_name = $management_review->meeting_name.'-slides-'.time().'.zip';
         Zipper::make($storage_path.$zip_name)->add($files)->close();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download presentation slides';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download presentation slides';
         $log->save();
 
         return Storage::download('public/downloads/'.$zip_name);
@@ -459,13 +461,14 @@ class ManagementReviewsController extends Controller
     public function download_agenda_memo($id){
         
         $management_review = ManagementReview::find($id);
+
         $path = 'public/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/'.$management_review->agenda_memo;
         
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download agenda memo';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download agenda memo';
         $log->save();  
         
         return Storage::download($path);
@@ -477,6 +480,7 @@ class ManagementReviewsController extends Controller
         
         //the directory should be writable
         $management_review = ManagementReview::find($id);
+
         $directory = 'storage/management_reviews/'.$management_review->meeting_name.'-'.$management_review->date.'/*';
 
         $files = glob(public_path($directory));
@@ -484,11 +488,11 @@ class ManagementReviewsController extends Controller
         $zip_name = $management_review->meeting_name.'-'.time().'.zip';
         Zipper::make($storage_path.$zip_name)->add($files)->close();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'MR';
-        $log->description = 'Download all files';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'MR';
+        $log->description   = 'Download all files';
         $log->save();
 
         return Storage::download('public/downloads/'.$zip_name);

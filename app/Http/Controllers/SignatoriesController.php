@@ -13,9 +13,11 @@ class SignatoriesController extends Controller
 {
 
     public function __construct(){
+        //Check if user is authenticated and administrator
         $this->middleware('auth');
         $this->middleware('admin');
         
+        //Form validation messages
         $this->custom_messages = [
             'required'              => 'This field is required.',
             'image'                 => 'The input must be an image file.',
@@ -43,6 +45,7 @@ class SignatoriesController extends Controller
      */
     public function create()
     {
+        //Dropdown for positions
         $positions = [
             'ARD for Technical Operations'              => 'ARD for Technical Operations' ,
             'ARD Finance and Administrative Services'   => 'ARD Finance and Administrative Services' ,
@@ -67,7 +70,8 @@ class SignatoriesController extends Controller
         ], $this->custom_messages);
 
        
-        
+        //Save file
+
         $filenameWithExt = $request->file('signature_photo')->getClientOriginalName();
         // Get just filename
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -79,18 +83,18 @@ class SignatoriesController extends Controller
         $path = $request->file('signature_photo')->storeAs('public/signature_photos', $fileNameToStore);
         
             
-        // Create Post
-        $signatory = new Signatory;
-        $signatory->name = $request->name;
-        $signatory->position = $request->position;
+        // Create Signatory
+        $signatory                  = new Signatory;
+        $signatory->name            = $request->name;
+        $signatory->position        = $request->position;
         $signatory->signature_photo = $fileNameToStore;
         $signatory->save();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'SIGNATORIES';
-        $log->description = 'Added  new signatory Name: ' . $request->name. ' Position: ' . $request->position;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'SIGNATORIES';
+        $log->description   = 'Added  new signatory Name: ' . $request->name. ' Position: ' . $request->position;
         $log->save();
 
         return redirect('/sysmg/signatories');
@@ -122,6 +126,7 @@ class SignatoriesController extends Controller
             'Quality Core Team Leader'                  => 'Quality Core Team Leader' ,
             'Regional Director'                         => 'Regional Director'
         ];
+
         $signatory = Signatory::find($id);
         return view('signatories.edit')->with([
             'signatory'     => $signatory,
@@ -146,13 +151,15 @@ class SignatoriesController extends Controller
 
 
         $signatory = Signatory::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'SIGNATORIES';
-        $log->description = 'Updated signatory Name: ' . $signatory->name. ' Position: ' . $signatory->position;
+
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'SIGNATORIES';
+        $log->description   = 'Updated signatory Name: ' . $signatory->name. ' Position: ' . $signatory->position;
         $log->save();
 
+        //Update File
         $fileNameToStore = $signatory->signature_photo;
         // Handle File Upload
         if($request->hasFile('signature_photo')){
@@ -170,17 +177,12 @@ class SignatoriesController extends Controller
             $path = $request->file('signature_photo')->storeAs('public/signature_photos', $fileNameToStore);
         }
 
-        $signatory->name = $request->name;
-        $signatory->position = $request->position;
+        $signatory->name            = $request->name;
+        $signatory->position        = $request->position;
         $signatory->signature_photo = $fileNameToStore;
         $signatory->save();
 
-
-        
-
         return redirect('/sysmg/signatories');
-
-    
     }
 
     /**

@@ -12,6 +12,12 @@ class QualityManualDocumentation extends Model
      * @var array
      */
     protected $fillable = [
-        'document_code', 'revision_number', 'page_number', 'effectivity_date', 'section', 'subject', 'quality_manual_doc'
+        'document_code', 
+        'revision_number', 
+        'page_number', 
+        'effectivity_date', 
+        'section', 
+        'subject', 
+        'quality_manual_doc'
     ];
 }

@@ -39,7 +39,7 @@
                 <ol class="breadcrumb">
                     <li><a href="/">Home</a></li>
                     <li><a href="/manrev">Management Review</a></li>
-                    <li class="active">Add MGRV </li>
+                    <li class="active">Add MR </li>
                 </ol>
                     
                 <div style="float:right">

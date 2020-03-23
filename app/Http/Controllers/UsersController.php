@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Storage;
 class UsersController extends Controller
 {
     public function __construct(){
+
+        //Chec if user is authenticated and administrator
         $this->middleware('auth');
         $this->middleware('admin');
 
+        //Form validation messages
         $this->custom_messages = [
             'required'          => 'This field is required.',
             'image'             => 'The input must be an image file.',
@@ -126,29 +129,29 @@ class UsersController extends Controller
 
     // save new user
     private function save_user(Request $request, $role, $temp_permission ,$fileNameToStore){
-        $user = new User;
-        $user->name = $request->name;
-        $user->position = $request->position;
-        $user->functional_unit = $request->functional_unit;
-        $user->role = $role;
-        $user->permission = $temp_permission;
-        $user->username = $request->username;
-        $user->password = Hash::make($request->password);
-        $user->profile_photo = $fileNameToStore;
+        $user                   = new User;
+        $user->name             = $request->name;
+        $user->position         = $request->position;
+        $user->functional_unit  = $request->functional_unit;
+        $user->role             = $role;
+        $user->permission       = $temp_permission;
+        $user->username         = $request->username;
+        $user->password         = Hash::make($request->password);
+        $user->profile_photo    = $fileNameToStore;
         $user->save();
     }
 
 
     private function update_user(Request $request, $role, $temp_permission ,$fileNameToStore, $id){
         User::where('id',$id)->update(array(
-            'isActivated' => $request->isActivated,
-            'name' => $request->name,
-            'position' => $request->position,
-            'functional_unit' => $request->functional_unit,
-            'role' => $role,
-            'permission' => $temp_permission,
-            'username' => $request->username,
-            'profile_photo' => $fileNameToStore
+            'isActivated'       => $request->isActivated,
+            'name'              => $request->name,
+            'position'          => $request->position,
+            'functional_unit'   => $request->functional_unit,
+            'role'              => $role,
+            'permission'        => $temp_permission,
+            'username'          => $request->username,
+            'profile_photo'     => $fileNameToStore
         ));
     }
 
@@ -161,10 +164,15 @@ class UsersController extends Controller
      */
     public function create_employee()
     {
+        //get dropdown data
         $functional_units = [];
         $data = [];
         $this->get_data($data, $functional_units);
-        return view('accounts.create_employee')->with(['functional_units' => $functional_units, 'data' => $data]);
+
+        return view('accounts.create_employee')->with([
+            'functional_units'  => $functional_units, 
+            'data'              => $data
+        ]);
     }
 
      /**
@@ -174,11 +182,15 @@ class UsersController extends Controller
      */
     public function create_manager()
     {
+        //get dropdown data
         $functional_units = [];
         $data = [];
         $this->get_data($data, $functional_units);
 
-        return view('accounts.create_manager')->with(['functional_units' => $functional_units, 'data' => $data]);
+        return view('accounts.create_manager')->with([
+            'functional_units'  => $functional_units, 
+            'data'              => $data
+        ]);
     }
 
      /**
@@ -188,11 +200,15 @@ class UsersController extends Controller
      */
     public function create_admin()
     {
+        //get dropdown data
         $functional_units = [];
         $data = [];
         $this->get_data($data, $functional_units);
 
-        return view('accounts.create_admin')->with(['functional_units' => $functional_units, 'data' => $data]);
+        return view('accounts.create_admin')->with([
+            'functional_units'  => $functional_units, 
+            'data'              => $data
+        ]);
     }
 
     
@@ -205,7 +221,7 @@ class UsersController extends Controller
     public function store_employee(Request $request)
     {
 
-       
+       //Form validation
         $this->validate($request, [
             'name'              => 'required|max:255',
             'position'          => 'required|max:255',
@@ -223,11 +239,11 @@ class UsersController extends Controller
         
         $this->save_user($request, 'employee', $temp_permission, $fileNameToStore);
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'USER';
-        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'USER';
+        $log->description   = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
         $log->save();
         
         return redirect('sysmg/accounts/');
@@ -253,11 +269,11 @@ class UsersController extends Controller
         
         $this->save_user($request, 'manager', $temp_permission, $fileNameToStore);
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'USER';
-        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'USER';
+        $log->description   = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
         $log->save();
         
         return redirect('sysmg/accounts/');
@@ -279,11 +295,11 @@ class UsersController extends Controller
         $this->get_photo($request, $fileNameToStore, 'default.jpg');
         $this->save_user($request, 'admin', '1,1,1,1,1,1,1,1,1,1,1,1', $fileNameToStore);
         
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'USER';
-        $log->description = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'USER';
+        $log->description   = 'Added new user Name: ' . $request->name . ' Position: ' . $request->position;
         $log->save();
 
         return redirect('sysmg/accounts/');
@@ -319,15 +335,27 @@ class UsersController extends Controller
 
         switch ($user->role) {
             case 'employee':
-                return view('accounts.edit_employee')->with([ 'user' => $user, 'functional_units' => $functional_units, 'data' => $data]);
+                return view('accounts.edit_employee')->with([ 
+                        'user'              => $user, 
+                        'functional_units'  => $functional_units, 
+                        'data'              => $data
+                ]);
                 break;
 
             case 'manager':
-                return view('accounts.edit_manager')->with([ 'user' => $user, 'functional_units' => $functional_units, 'data' => $data]);
+                return view('accounts.edit_manager')->with([ 
+                        'user'              => $user, 
+                        'functional_units'  => $functional_units, 
+                        'data'              => $data
+                ]);
                 break;
 
             case 'admin':
-                return view('accounts.edit_admin')->with([ 'user' => $user, 'functional_units' => $functional_units, 'data' => $data]);
+                return view('accounts.edit_admin')->with([ 
+                        'user'              => $user, 
+                        'functional_units'  => $functional_units, 
+                        'data'              => $data
+                ]);
                 break;
             
         }
@@ -352,8 +380,9 @@ class UsersController extends Controller
             'profile_photo'     => 'image|nullable|max:5000'
         ], $this->custom_messages);
 
-        $old_user = User::find($id);
 
+        //Check if new username alredy exists
+        $old_user = User::find($id);
         if($request->username === $old_user->username){
             $validator->validate();
         }else{
@@ -374,12 +403,12 @@ class UsersController extends Controller
 
 
 
-        $user = User::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'USER';
-        $log->description = 'Updated user Name: ' . $user->name . ' Position: ' . $user->position;
+        $user               = User::find($id);
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'USER';
+        $log->description   = 'Updated user Name: ' . $user->name . ' Position: ' . $user->position;
         $log->save();
 
         $fileNameToStore = '';
@@ -431,41 +460,32 @@ class UsersController extends Controller
         
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-
+   
     //search user
     public function search(Request $request){
         $users = User::where('name', 'like', '%'.$request->search_term.'%')->paginate(10);
         return view('accounts.index')->with('users', $users);
     }
 
+    //Change password
     public function change_password($id){
         $user = User::find($id);
         return view('accounts.change_pass')->with('user', $user);
     }
 
+    //Updates a user password when the user forgets it
     public function update_password(Request $request, $id){
         $this->validate($request, [
             'password' => 'required|confirmed'
         ], $this->custom_messages);
 
 
-        $user = User::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'USER-PASSWORD';
-        $log->description = 'Updated password of  user: ' . $user->name;
+        $user               = User::find($id);
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'USER-PASSWORD';
+        $log->description   = 'Updated password of  user: ' . $user->name;
         $log->save();
 
 

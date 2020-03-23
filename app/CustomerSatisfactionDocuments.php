@@ -12,7 +12,8 @@ class CustomerSatisfactionDocuments extends Model
      * @var array
      */
     protected $fillable = [
-        'file_name', 'csm_id'
+        'file_name', 
+        'csm_id'
     ];
 
     public function other_files()

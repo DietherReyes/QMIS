@@ -12,7 +12,9 @@ class CustomerOtherClassification extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'count', 'csm_id'
+        'name', 
+        'count', 
+        'csm_id'
     ];
 
     public function customer_other_classification()

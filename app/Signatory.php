@@ -12,6 +12,8 @@ class Signatory extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'position', 'signature_photo'
+        'name', 
+        'position', 
+        'signature_photo'
     ];
 }

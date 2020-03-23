@@ -24,7 +24,7 @@
                 <div class="container">
                     {!! Form::open(['action' => 'CustomerSatisfactionMeasurementsController@search_graphs', 'method' => 'POST']) !!}
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     {{Form::label('functional_unit', 'Functional Unit')}}
                                     {{Form::select('functional_unit', $data, $unit_name , ['class' => 'form-control'])}}
@@ -41,7 +41,7 @@
                             <div class="col-md-2">
                                     <span class="input-group-btn filter-button">
                                             <button type="submit" class="btn btn-primary btn-md">
-                                                    <span class="glyphicon glyphicon-search"> </span> SEARCH
+                                                    <span class="glyphicon glyphicon-search"> </span>
                                             </button>
                                             <a href="/csm/statistics/idx" class="btn btn-primary btn-md">
                                                 <span class="glyphicon glyphicon-refresh"></span> REFRESH
@@ -77,7 +77,9 @@
 
                 </div>
 
+                <br>
 
+                
                 <div class="row">
 
                     <div class="col-md-6"> 

@@ -12,7 +12,11 @@ class CustomerOverallRating extends Model
      * @var array
      */
     protected $fillable = [
-        'response_delivery', 'work_quality', 'personnels_quality', 'overall_rating', 'csm_id'
+        'response_delivery', 
+        'work_quality', 
+        'personnels_quality', 
+        'overall_rating', 
+        'csm_id'
     ];
 
     public function customer_overall_rating()

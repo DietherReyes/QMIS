@@ -13,8 +13,10 @@ class QualityManualDocumentationsController extends Controller
 {
 
     public function __construct(){
+        //Checks if user is authenticated
         $this->middleware('auth');
 
+        //Form validation messages
         $this->custom_messages = [
             'required'                  => 'This field is required.',
             'numeric'                   => 'This field requires numeric input.',
@@ -23,12 +25,13 @@ class QualityManualDocumentationsController extends Controller
             'quality_manual_doc.mimes'  => 'The file input must be a file type:pdf.'
         ];
 
-
+        //Permission indeces
         $this->view_qmsd = 9;
         $this->add_qmsd = 10;
         $this->edit_qmsd = 11;
     }
 
+    //Checnk permission
     private function check_permission(&$isPermitted, $user_id, $permission){
         $user = User::find(Auth::id());
         $user->permission = explode(',', $user->permission);
@@ -68,13 +71,17 @@ class QualityManualDocumentationsController extends Controller
      */
     public function index()
     {
+        //dropdown data
         $data = [
             'QM' => 'Quality Manual',
             'PM' => 'Procedures Manual',
             'WI' => 'Work Instruction',
             'FM' => 'Forms Manual',
         ]; 
-        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', 'QM%')->orderBy('document_code')->orderBy('revision_number')->orderBy('page_number')->paginate(10);
+        $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', 'QM%')
+                                                   ->orderBy('document_code')
+                                                   ->orderBy('revision_number', 'DESC')
+                                                   ->orderBy('page_number')->paginate(10);
         return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
     }
 
@@ -91,6 +98,7 @@ class QualityManualDocumentationsController extends Controller
             return view('pages.unauthorized');
         }
 
+        //get data for section dropdown
         $sections = QualityDocumentSection::orderBy('section_name')->get();
         $data = [];
         foreach($sections as $section){
@@ -109,7 +117,7 @@ class QualityManualDocumentationsController extends Controller
      */
     public function store(Request $request)
     {
-        
+        //Form validation
         $this->validate($request, [
             'document_code'         => 'required',
             'section'               => 'required|max:255',
@@ -123,21 +131,21 @@ class QualityManualDocumentationsController extends Controller
         $quality_manual_doc = '';
         $this->save_file($request, $quality_manual_doc);
 
-        $manual = new QualityManualDocumentation;
-        $manual->document_code = strtoupper($request->document_code);
-        $manual->effectivity_date = $request->effectivity_date;
-        $manual->subject = $request->subject;
-        $manual->revision_number = $request->revision_number;
-        $manual->section = $request->section;
-        $manual->page_number = $request->page_number;
+        $manual                     = new QualityManualDocumentation;
+        $manual->document_code      = strtoupper($request->document_code);
+        $manual->effectivity_date   = $request->effectivity_date;
+        $manual->subject            = $request->subject;
+        $manual->revision_number    = $request->revision_number;
+        $manual->section            = $request->section;
+        $manual->page_number        = $request->page_number;
         $manual->quality_manual_doc = $quality_manual_doc;
         $manual->save();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'QMSD';
-        $log->description = 'Added QMSD Document Code: ' . $request->document_code . ' Section: ' . $request->section. ' Subject: ' . $request->subject;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'QMSD';
+        $log->description   = 'Added QMSD Document Code: ' . $request->document_code . ' Section: ' . $request->section. ' Subject: ' . $request->subject;
         $log->save();
         
         return redirect('/qmsd');
@@ -176,11 +184,13 @@ class QualityManualDocumentationsController extends Controller
             return view('pages.unauthorized');
         }
         $manual_doc = QualityManualDocumentation::find($id);
+
         $sections = QualityDocumentSection::orderBy('section_name')->get();
         $data = [];
         foreach($sections as $section){
             $data[$section->section_name] = $section->section_name;
         }
+
         return view('quality_manual_documentations.edit')->with(['manual_doc' => $manual_doc, 'data' => $data]);
     }
 
@@ -204,11 +214,11 @@ class QualityManualDocumentationsController extends Controller
         ], $this->custom_messages);
         
         $old_doc = QualityManualDocumentation::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'QMSD';
-        $log->description = 'Updated QMSD Document Code: ' . $old_doc->document_code . ' Section: ' . $old_doc->section. ' Subject: ' . $old_doc->subject;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'QMSD';
+        $log->description   = 'Updated QMSD Document Code: ' . $old_doc->document_code . ' Section: ' . $old_doc->section. ' Subject: ' . $old_doc->subject;
         $log->save();
 
         $quality_manual_doc = $old_doc->quality_manual_doc;
@@ -230,27 +240,16 @@ class QualityManualDocumentationsController extends Controller
         return redirect('/qmsd');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        
-    }
-
-
+    //download document
     public function manual_doc($id){
         $manual_doc = QualityManualDocumentation::find($id);
         $path = 'public/quality_manual_documentations/'.$manual_doc->quality_manual_doc;
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'DOWNLOAD';
-        $log->module = 'QMSD';
-        $log->description = 'Downloaded Manual';
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'DOWNLOAD';
+        $log->module        = 'QMSD';
+        $log->description   = 'Downloaded Manual';
         $log->save();
 
         return Storage::download($path);
@@ -268,7 +267,7 @@ class QualityManualDocumentationsController extends Controller
         $manual_docs = QualityManualDocumentation::where('document_code', 'LIKE', $request->type.'%')
                                                    ->where('subject', 'LIKE', '%'.$request->search_term.'%')
                                                    ->orderBy('document_code')
-                                                   ->orderBy('revision_number')
+                                                   ->orderBy('revision_number', 'DESC')
                                                    ->orderBy('page_number')
                                                    ->paginate(10);
         return view('quality_manual_documentations.index')->with(['manual_docs' => $manual_docs, 'data' => $data]);
@@ -301,15 +300,15 @@ class QualityManualDocumentationsController extends Controller
             'section_name' => 'required'
         ], $this->custom_messages);
 
-        $section = new QualityDocumentSection;
-        $section->section_name = $request->section_name;
+        $section                = new QualityDocumentSection;
+        $section->section_name  = $request->section_name;
         $section->save();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'QMSD-SECTION';
-        $log->description = 'Added new section: ' . $request->section_name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'QMSD-SECTION';
+        $log->description   = 'Added new section: ' . $request->section_name;
         $log->save();
 
         return redirect('/qmsd/sections/idx');
@@ -341,11 +340,12 @@ class QualityManualDocumentationsController extends Controller
         ], $this->custom_messages);
         
         $old_section = QualityDocumentSection::find($id);
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'EDIT';
-        $log->module = 'QMSD-SECTION';
-        $log->description = 'Updated section from ' . $old_section->name . 'to ' .$request->name;
+
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'EDIT';
+        $log->module        = 'QMSD-SECTION';
+        $log->description   = 'Updated section from ' . $old_section->name . 'to ' .$request->name;
         $log->save();
 
         QualityDocumentSection::where('id',$id)->update(array(
