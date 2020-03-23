@@ -12,7 +12,7 @@
             <ol class="breadcrumb">
                 <li><a href="/">Home</a></li>
                 <li><a href="/manrev">Management Review</a></li>
-                <li class="active">View Management Review </li>
+                <li class="active">View MR </li>
             </ol>
                 
             <div style="float:right">
