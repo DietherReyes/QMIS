@@ -162,6 +162,30 @@ class SpreadsheetsController extends Controller
         //End Signatories
     }
 
+    private function get_adjectival_rating(&$adjectival_rating, $overall_rating){
+
+        if($overall_rating >= 4.51 && $overall_rating <= 5){
+            $adjectival_rating = 'Outstanding';
+        }
+
+        if($overall_rating >= 3.51 && $overall_rating <= 4.5){
+            $adjectival_rating = 'Very Satisfactory';
+        }
+
+        if($overall_rating >= 2.51 && $overall_rating <= 3.5){
+            $adjectival_rating = 'Satisfactory';
+        }
+
+        if($overall_rating >= 1.51 && $overall_rating <= 2.5){
+            $adjectival_rating = 'Fair';
+        }
+
+        if($overall_rating <= 1.5){
+            $adjectival_rating = 'Poor';
+        }
+
+    }
+
 
 
     private function overall_summary_report(&$spreadsheet, $year){
@@ -278,6 +302,20 @@ class SpreadsheetsController extends Controller
                 $count++;
             }
 
+            //get adjectival rating
+                $overall_rating = 0;
+
+                foreach ($csm_summaries as $csm) {
+                    $overall_rating += $csm->overall_rating;
+                }
+
+                $overall_rating = $overall_rating/$count;
+
+                $adjectival_rating = '';
+                $this->get_adjectival_rating($adjectival_rating, $overall_rating);
+                
+            //end adjectival rating
+
             $end_data = $start_data + $count;
 
             $temp = [
@@ -287,7 +325,7 @@ class SpreadsheetsController extends Controller
                 '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
                 '=AVERAGE(E'. $start_data . ':E' . ($end_data - 1 ) .')',
                 '=AVERAGE(F'. $start_data . ':F' . ($end_data - 1 ) .')',
-                NULL //adjectival rating
+                $adjectival_rating
             ];
 
             
@@ -668,6 +706,20 @@ class SpreadsheetsController extends Controller
 
         }
 
+        //get adjectival rating
+            $overall_rating = 0;
+
+            foreach ($curr_csms as $csm) {
+                $overall_rating += $csm->overall_rating;
+            }
+            $overall_rating = $overall_rating/$count;
+
+            $curr_adj_rating = '';
+            $this->get_adjectival_rating($curr_adj_rating, $overall_rating);
+            
+        //end adjectival rating
+
+
         $prev_csms = CustomerSatisfactionMeasurementSummary::where('year', ($year - 1))->orderBy('functional_unit')->get();
         
         if(count($prev_csms) === 0){
@@ -698,6 +750,19 @@ class SpreadsheetsController extends Controller
             }
         }
 
+        //get adjectival rating
+            $overall_rating = 0;
+
+            foreach ($prev_csms as $csm) {
+                $overall_rating += $csm->overall_rating;
+            }
+            $overall_rating = $overall_rating/$count;
+
+            $prev_adj_rating = '';
+            $this->get_adjectival_rating($prev_adj_rating, $overall_rating);
+            
+        //end adjectival rating
+
         
 
         $standing = '';
@@ -718,9 +783,9 @@ class SpreadsheetsController extends Controller
         $temp = [
             'Mean Overall Rating',
             '=AVERAGE(B'. $start_data . ':B' . ($end_data - 1 ) .')',
-            NULL,
+            $curr_adj_rating,
             '=AVERAGE(D'. $start_data . ':D' . ($end_data - 1 ) .')',
-            NULL,
+            $prev_adj_rating,
             $standing
         ];
         $temp_data['mean'] = $temp;
