@@ -310,7 +310,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     private function get_customer_classifications($csm_id, &$customer_classifications, &$customer_classifications_count){
         $csm_classification = CustomerClassification::where('csm_id',$csm_id)->get()[0];
 
-        $classifications = [
+        $keys = [
             'student',               
             'government_employee',   
             'internal',              
@@ -320,10 +320,22 @@ class CustomerSatisfactionMeasurementsController extends Controller
             'entrepreneur' 
         ];
 
-        foreach($classifications as $class){
-            if($csm_classification->$class > 0){
-                array_push($customer_classifications, $class);
-                array_push($customer_classifications_count ,$csm_classification->$class);
+        $classifications = [
+            'student'               => 'Student',
+            'government_employee'   => 'Government Employee',
+            'internal'              => 'Internal',
+            'business'              => 'Business',
+            'homemaker'             => 'Homemaker',
+            'private_organization'  => 'Private Organization',
+            'entrepreneur'          => 'Entrepreneur'
+        ];
+
+        
+
+        foreach($keys as $key){
+            if($csm_classification->$key > 0){
+                array_push($customer_classifications, $classifications[$key]);
+                array_push($customer_classifications_count ,$csm_classification->$key);
             }
         }
     }
@@ -795,13 +807,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         ];
 
         $classifications = [
-            'student'               => 'Student',
-            'government_employee'   => 'Government Employee',
-            'internal'              => 'Internal',
-            'business'              => 'Business',
-            'homemaker'             => 'Homemaker',
-            'private_organization'  => 'Private Organization',
-            'entrepreneur'          => 'Entrepreneur'
+            'Student'               => 'Student',
+            'Government Employee'   => 'Government Employee',
+            'Internal'              => 'Internal',
+            'Business'              => 'Business',
+            'Homemaker'             => 'Homemaker',
+            'Private Organization'  => 'Private Organization',
+            'Entrepreneur'          => 'Entrepreneur'
         ];
 
         $addresses_input    = CustomerSatisfactionAddress::orderBy('name')->pluck('name');
