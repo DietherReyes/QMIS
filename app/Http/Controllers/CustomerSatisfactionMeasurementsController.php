@@ -365,6 +365,27 @@ class CustomerSatisfactionMeasurementsController extends Controller
             
             //code for determining adjectoval rating
 
+            $adjectival_rating = '';
+            if($overall_rating >= 4.51 && $overall_rating <= 5){
+                $adjectival_rating = 'Outstanding';
+            }
+
+            if($overall_rating >= 3.51 && $overall_rating <= 4.5){
+                $adjectival_rating = 'Very Satisfactory';
+            }
+
+            if($overall_rating >= 2.51 && $overall_rating <= 3.5){
+                $adjectival_rating = 'Satisfactory';
+            }
+
+            if($overall_rating >= 1.51 && $overall_rating <= 2.5){
+                $adjectival_rating = 'Fair';
+            }
+
+            if($overall_rating <= 1.5){
+                $adjectival_rating = 'Poor';
+            }
+
             CustomerSatisfactionMeasurementSummary::where('id',$summary->id)->update(array(
                 'total_customer'        => $total_customer,
                 'q1_overall_rating'     => $q1_overall_rating,
@@ -374,7 +395,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
                 'response_delivery'     => $response_delivery,
                 'work_quality'          => $work_quality,
                 'personnels_quality'    => $personnels_quality,
-                'overall_rating'        => $overall_rating
+                'overall_rating'        => $overall_rating,
+                'adjectival_rating'     => $adjectival_rating
             ));
 
         }
@@ -1288,14 +1310,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
 
         return view('customer_satisfaction_measurements.graphs')->with([
-            'data' => $data,
-            'years' => $years,
-            'unit_name' => $unit->name,
-            'unit_year' => $unit_year,
-            'overall_ratings_chart' => $overall_ratings_chart,
-            'customer_ratings_chart' => $customer_ratings_chart,
-            'customer_services_chart' => $customer_services_chart,
-            'customer_addresses_chart' => $customer_addresses_chart
+            'data'                      => $data,
+            'years'                     => $years,
+            'unit_name'                 => $unit->name,
+            'unit_year'                 => $unit_year,
+            'overall_ratings_chart'     => $overall_ratings_chart,
+            'customer_ratings_chart'    => $customer_ratings_chart,
+            'customer_services_chart'   => $customer_services_chart,
+            'customer_addresses_chart'  => $customer_addresses_chart
             
         ]);
     }
@@ -1332,14 +1354,14 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
 
         return view('customer_satisfaction_measurements.graphs')->with([
-            'data' => $data,
-            'years' => $years,
-            'unit_name' => $unit->name,
-            'unit_year' => $unit_year,
-            'overall_ratings_chart' => $overall_ratings_chart,
-            'customer_ratings_chart' => $customer_ratings_chart,
-            'customer_services_chart' => $customer_services_chart,
-            'customer_addresses_chart' => $customer_addresses_chart
+            'data'                      => $data,
+            'years'                     => $years,
+            'unit_name'                 => $unit->name,
+            'unit_year'                 => $unit_year,
+            'overall_ratings_chart'     => $overall_ratings_chart,
+            'customer_ratings_chart'    => $customer_ratings_chart,
+            'customer_services_chart'   => $customer_services_chart,
+            'customer_addresses_chart'  => $customer_addresses_chart
             
         ]);
     }
@@ -1462,11 +1484,11 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $address->name  = $request->name;
         $address->save();
 
-        $log = new Log;
-        $log->name = Auth::user()->name;
-        $log->action = 'ADD';
-        $log->module = 'CSM-ADDRESSES';
-        $log->description = 'Added new address: ' . $request->name;
+        $log                = new Log;
+        $log->name          = Auth::user()->name;
+        $log->action        = 'ADD';
+        $log->module        = 'CSM-ADDRESSES';
+        $log->description   = 'Added new address: ' . $request->name;
         $log->save();
 
         return redirect('/csm/addresses/idx');
