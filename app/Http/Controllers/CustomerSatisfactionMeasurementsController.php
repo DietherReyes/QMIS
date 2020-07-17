@@ -1296,7 +1296,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         //Check if at least 1 record exist
         if(count($unit_year) == 0){
             //Return insufficient records if no records in the database
-            return 'Insufficent Records';
+            return redirect('/csm/statistics/insufficient_records');
         }else{
             $unit_year = $unit_year[0];
         }
