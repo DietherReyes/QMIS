@@ -95,13 +95,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
     private function save_customer_classification($request, $csm_id){
         
         $classification = [
-            'student'               => 0,
-            'government_employee'   => 0,
-            'internal'              => 0,
-            'business'              => 0,
-            'homemaker'             => 0,
-            'private_organization'  => 0,
-            'entrepreneur'          => 0
+            'Student'               => 0,
+            'Government Employee'   => 0,
+            'Internal'              => 0,
+            'Business'              => 0,
+            'Homemaker'             => 0,
+            'Private Organization'  => 0,
+            'Entrepreneur'          => 0
         ];
 
         $input_classification = $request->classification;
@@ -114,13 +114,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         }
 
         $customer_classification = new CustomerClassification;
-        $customer_classification->student               = $classification['student'];
-        $customer_classification->government_employee   = $classification['government_employee'];
-        $customer_classification->internal              = $classification['internal'];
-        $customer_classification->business              = $classification['business'];
-        $customer_classification->homemaker             = $classification['homemaker'];
-        $customer_classification->entrepreneur          = $classification['entrepreneur'];
-        $customer_classification->private_organization  = $classification['private_organization'];
+        $customer_classification->student               = $classification['Student'];
+        $customer_classification->government_employee   = $classification['Government Employee'];
+        $customer_classification->internal              = $classification['Internal'];
+        $customer_classification->business              = $classification['Business'];
+        $customer_classification->homemaker             = $classification['Homemaker'];
+        $customer_classification->entrepreneur          = $classification['Entrepreneur'];
+        $customer_classification->private_organization  = $classification['Private Organization'];
         $customer_classification->csm_id                = $csm_id;
         $customer_classification->save();
 
@@ -135,13 +135,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         }
 
         $classification = [
-            'student'               => 0,
-            'government_employee'   => 0,
-            'internal'              => 0,
-            'business'              => 0,
-            'homemaker'             => 0,
-            'private_organization'  => 0,
-            'entrepreneur'          => 0
+            'Student'               => 0,
+            'Government Employee'   => 0,
+            'Internal'              => 0,
+            'Business'              => 0,
+            'Homemaker'             => 0,
+            'Private Organization'  => 0,
+            'Entrepreneur'          => 0
         ];
 
         $input_classification        = $request->classification;
@@ -152,13 +152,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
             $classification[$input_classification[$i]] += $input_classification_count[$i];
         }
         CustomerClassification::where('csm_id',$csm_id)->update(array(
-            'student'               => $classification['student'],
-            'government_employee'   => $classification['government_employee'],
-            'internal'              => $classification['internal'],
-            'business'              => $classification['business'],
-            'homemaker'             => $classification['homemaker'],
-            'entrepreneur'          => $classification['entrepreneur'],
-            'private_organization'  => $classification['private_organization'],
+            'student'               => $classification['Student'],
+            'government_employee'   => $classification['Government Employee'],
+            'internal'              => $classification['Internal'],
+            'business'              => $classification['Business'],
+            'homemaker'             => $classification['Homemaker'],
+            'entrepreneur'          => $classification['Entrepreneur'],
+            'private_organization'  => $classification['Private Organization'],
             'csm_id'                => $csm_id
         )); 
     }
@@ -575,13 +575,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         ];
 
         $classifications = [
-            'student'               => 'Student',
-            'government_employee'   => 'Government Employee',
-            'internal'              => 'Internal',
-            'business'              => 'Business',
-            'homemaker'             => 'Homemaker',
-            'private_organization'  => 'Private Organization',
-            'entrepreneur'          => 'Entrepreneur'
+            'Student'               => 'Student',
+            'Government Employee'   => 'Government Employee',
+            'Internal'              => 'Internal',
+            'Business'              => 'Business',
+            'Homemaker'             => 'Homemaker',
+            'Private Organization'  => 'Private Organization',
+            'Entrepreneur'          => 'Entrepreneur'
         ];
 
         $addresses_input = CustomerSatisfactionAddress::orderBy('name')->pluck('name');
