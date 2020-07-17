@@ -17,4 +17,8 @@ class PagesController extends Controller
         return view('pages.unauthorized');
     }
 
+    public function insufficient_records(){
+        return view('pages.insufficient_records');
+    }
+
 }

@@ -12,6 +12,7 @@
 */
 
 // other pages
+Route::get('/csm/statistics/insufficient_records', 'PagesController@insufficient_records');
 Route::get('/unauthorized', 'PagesController@unauthorized');
 Route::get('/', 'HomeController@home');
 
