@@ -96,7 +96,7 @@
                                   
                                     <div class="form-group">
                                         {{Form::label('functional_unit', 'Functional Unit')}}
-                                        {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control'])}}
+                                        {{Form::select('functional_unit', $data, $user->functional_unit, ['class' => 'form-control', 'onchange' => 'updatePermission(this.value,'.$functional_units.')'])}}
                                     </div> 
 
 
