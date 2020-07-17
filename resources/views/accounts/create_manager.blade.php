@@ -99,14 +99,14 @@
                           
                             <div class="form-group {{ $errors->has('functional_unit') ? ' has-error' : '' }}">
                                     {{Form::label('functional_unit', 'Functional Unit')}}
-                                    {{Form::select('functional_unit', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select functional unit'])}}
+                                    {{Form::select('functional_unit', $data, null, ['class' => 'form-control', 'placeholder' => 'Click to select functional unit', 'onchange' => 'updatePermission(this.value,'.$functional_units.')'])}}
                                     
                                     @if ($errors->has('functional_unit'))
                                         <span class="help-block">
                                             <strong>{{ $errors->first('functional_unit') }}</strong>
                                         </span>
                                     @endif
-                                </div>
+                            </div>
 
                            
 
