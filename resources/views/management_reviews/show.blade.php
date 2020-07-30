@@ -21,7 +21,7 @@
                 <a class="btn btn-primary btn-md"  href="/manrev">BACK</a>
             </div>
                 
-            <h1 class="page-header"> View MGRV </h1>
+            <h1 class="page-header"> View MR </h1>
             
 
             <div class="row">
@@ -30,14 +30,14 @@
                     
                     <ul class="list-group">
 
-                        <h5>Meeting Name</h5>
+                        <h5> <strong>Meeting Name</strong> </h5>
                         <li class="list-group-item">{{$management_review->meeting_name}}</li>
 
-                        <h5>Date</h5>
+                        <h5> <strong>Date</strong> </h5>
                         <li class="list-group-item">{{$management_review->date}}</li>
 
 
-                        <h5>Action Plan</h5>
+                        <h5> <strong>Action Plan</strong> </h5>
                         <div>
                             <div class="row">
                                 <div class="col-md-8">
@@ -50,7 +50,7 @@
                             </div>
                         </div>
 
-                        <h5>Agenda Memo</h5>
+                        <h5> <strong>Agenda Memo</strong> </h5>
                         <div>
                             <div class="row">
                                 <div class="col-md-8">
@@ -72,11 +72,11 @@
                 <div class="col-md-6">
 
                     <ul class="list-group">
-                        <h5>Venue</h5>
+                        <h5> <strong>Venue</strong> </h5>
                         <li class="list-group-item">{{$management_review->venue}}</li>
                     </ul>
 
-                    <h5>Attendance Sheet</h5>
+                    <h5> <strong>Attendance Sheet</strong> </h5>
                     <div>
                         <div class="row">
                             <div class="col-md-8">
@@ -89,7 +89,7 @@
                         </div>
                     </div>
 
-                    <h5>Minutes</h5>
+                    <h5> <strong>Minutes</strong> </h5>
                     <div>
                         <div class="row">
                             <div class="col-md-8">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
 
-                    <h5>Presentation Slide</h5>
+                    <h5> <strong>Presentation Slide</strong> </h5>
                     <div>
                         <div class="row">
                             <div class="col-md-8">
@@ -119,11 +119,11 @@
             </div>
 
             <ul class="list-group">
-                <h5 >Other Files</h5>
+                <h5> <strong>Other Files</strong> </h5>
                 <li class="list-group-item">{{$management_review->other_files}}</li>
                         
                 @if ($management_review->description !== null)
-                    <h5>Other Files Description</h5>
+                    <h5> <strong>Other Files Description</strong> </h5>
                     <li class="list-group-item">{{$management_review->description}}</li>
                 @endif
                 

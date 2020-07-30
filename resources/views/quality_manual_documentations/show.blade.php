@@ -30,13 +30,13 @@
                     
                     <ul class="list-group">
 
-                        <h5>Document Code</h5>
+                        <h5> <strong>Document Code</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->document_code}}</li>
 
-                        <h5>Subject</h5>
+                        <h5> <strong>Subject</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->subject}}</li>
 
-                        <h5>Effectivity Date</h5>
+                        <h5> <strong>Effectivity Date</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->effectivity_date}}</li>
 
                     </ul>
@@ -47,19 +47,19 @@
 
                     <ul class="list-group">
 
-                        <h5>Section</h5>
+                        <h5> <strong>Section</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->section}}</li>
 
-                        <h5>Revision Number</h5>
+                        <h5> <strong>Revision Number</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->revision_number}}</li>
 
-                        <h5>Page Number</h5>
+                        <h5> <strong>Page Number</strong> </h5>
                         <li class="list-group-item">{{$manual_doc->page_number}}</li>
                     </ul>
                 </div>
 
                 <div class="col-md-12">
-                        <h5>Quality Mandual Document</h5>
+                        <h5> <strong>Quality Manual Document</strong> </h5>
                         <div>
                             <div class="row">
                                 <div class="col-md-10">
