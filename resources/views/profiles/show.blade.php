@@ -24,15 +24,15 @@
 
                     <div class="row">
                         <div class="col-md-9">
-                            <h5>Username</h5>
+                            <h5> <strong>Username</strong> </h5>
                             <li class="list-group-item">{{$user->username}}</li>
-                            <h5>Name</h5>
+                            <h5> <strong>Name</strong> </h5>
                             <li class="list-group-item">{{$user->name}}</li>
-                            <h5>Position</h5>
+                            <h5> <strong>Position</strong> </h5>
                             <li class="list-group-item">{{$user->position}}</li>
-                            <h5>Functional Unit</h5>
+                            <h5> <strong>Functional Unit</strong> </h5>
                             <li class="list-group-item">{{$user->functional_unit}}</li>
-                            <h5>Role</h5>
+                            <h5> <strong>Role</strong> </h5>
 
                             @if ($user->role === 'admin')
                                 <li class="list-group-item">Administrator</li>
@@ -46,7 +46,7 @@
                                 <li class="list-group-item">Employee</li>    
                             @endif
 
-                            <h5>Status</h5>
+                            <h5> <strong>Status</strong> </h5>
                             @if ($user->isActivated === 1)
                                 <li class="list-group-item"> Activated Account </li>
                             @else
@@ -65,7 +65,7 @@
                         <table class="table table-striped">
                             
                             <thead>
-                                    <h3>PRIVELEGES ON MODULE</h3>
+                                    <h3> PRIVELEGES ON MODULE </h3>
                                 <tr>
                                     <th style="text-align:center"></th>
                                     <th style="text-align:center">View</th>

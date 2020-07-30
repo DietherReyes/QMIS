@@ -26,9 +26,9 @@
             <h1 class="page-header"> {{$signatory->name}} </h1>
             <div class="row">
                 <div class="col-md-8">
-                    <h5>Name</h5>
+                    <h5> <strong>Name</strong> </h5>
                     <li class="list-group-item">{{$signatory->name}}</li>
-                    <h5>Position</h5>
+                    <h5> <strong>Position</strong> </h5>
                     <li class="list-group-item">{{$signatory->position}}</li>
                     
                     

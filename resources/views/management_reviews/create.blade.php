@@ -46,7 +46,7 @@
                     <a class="btn btn-primary btn-md"  href="/manrev">BACK</a>
                 </div>
                     
-                <h1 class="page-header"> Add Management Review </h1>
+                <h1 class="page-header"> Add MR </h1>
                 {!! Form::open(['action' => 'ManagementReviewsController@store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
                     <div class="row">

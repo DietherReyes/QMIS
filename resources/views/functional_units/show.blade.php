@@ -22,9 +22,9 @@
                     <h1 class="page-header">{{$functional_unit->name}}</h1>
                     
                     <ul class="list-group">
-                        <h5>Abbreviation</h5>
+                        <h5> <strong>Abbreviation</strong> </h5>
                         <li class="list-group-item">{{$functional_unit->abbreviation}}</li>
-                        <h5>Name</h5>
+                        <h5> <strong>Name</strong> </h5>
                         <li class="list-group-item">{{$functional_unit->name}}</li>
                     </ul>
                     
