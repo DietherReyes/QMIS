@@ -16,6 +16,7 @@ class FunctionalUnitsController extends Controller
         //Checks if user is authentocated and an administrator
         $this->middleware('auth');
         $this->middleware('admin');
+        $this->middleware('account_status');
         
         //Validation messages
         $this->custom_messages = [

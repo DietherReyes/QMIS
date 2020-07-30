@@ -17,6 +17,7 @@ class ProfilesController extends Controller
 
         //Checks if user is authenticated
         $this->middleware('auth');
+        $this->middleware('account_status');
         
         //Form validation messages
         $this->custom_messages = [

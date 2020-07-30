@@ -20,6 +20,7 @@ class UsersController extends Controller
         //Chec if user is authenticated and administrator
         $this->middleware('auth');
         $this->middleware('admin');
+        $this->middleware('account_status');
 
         //Form validation messages
         $this->custom_messages = [

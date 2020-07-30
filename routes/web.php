@@ -14,7 +14,8 @@
 // other pages
 Route::get('/csm/statistics/insufficient_records', 'PagesController@insufficient_records');
 Route::get('/unauthorized', 'PagesController@unauthorized');
-Route::get('/', 'HomeController@home');
+Route::get('/deactivated', 'PagesController@deactivated');
+Route::get('/', 'PagesController@home');
 
 // profile 
 Route::get('/profiles/{id}', 'ProfilesController@show');

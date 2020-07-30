@@ -21,6 +21,7 @@ class ManagementReviewsController extends Controller
     public function __construct(){
         //Chekck if user is authenticated
         $this->middleware('auth');
+        $this->middleware('account_status');
 
         //Form validation Messages
         $this->custom_messages = [
