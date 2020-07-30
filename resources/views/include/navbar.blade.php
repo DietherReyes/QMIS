@@ -21,12 +21,14 @@
 
                     <!-- Left Side Of Navbar -->
 
-
-                    <ul class="nav navbar-nav">
-                        <li><a href="/csm">CSM</a></li>
-                        <li><a href="/manrev">MR</a></li>
-                        <li><a href="/qmsd">QMSD</a></li>  
-                    </ul>
+                        @if( Auth::user()->isActivated  === 1 )
+                            <ul class="nav navbar-nav">
+                                <li><a href="/csm">CSM</a></li>
+                                <li><a href="/manrev">MR</a></li>
+                                <li><a href="/qmsd">QMSD</a></li>  
+                            </ul>
+                        @endif
+                    
 
                     @endguest
 
