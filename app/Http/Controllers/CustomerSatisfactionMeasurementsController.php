@@ -32,6 +32,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
         //Check if the user is authenticated
         $this->middleware('auth');
+        $this->middleware('account_status');
 
         //Custom error messages for form validation
         $this->custom_messages = [
