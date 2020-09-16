@@ -27,7 +27,11 @@ class SpreadsheetsController extends Controller
 {
     
     public function __construct(){
-        $this->middleware('auth');        
+        $this->middleware('auth'); 
+        
+        $this->custom_messages = [
+            'required'          => 'This field is required.',
+        ];
     }
 
     //Add signatories at the end of the sheet
@@ -1323,6 +1327,10 @@ class SpreadsheetsController extends Controller
     
     public function generate(Request $request)
     {
+        //Validator
+        $this->validate($request, [
+            'year'     => 'required'
+        ], $this->custom_messages);
         
         //Storage Path
         $storage_path = public_path('storage/downloads/');
