@@ -62,3 +62,14 @@ Step 13: Link Storage to public
     
     Go to the public storage <QMIS/public/storage>
     Copy and paste folders from <QMIS/assets> to <QMIS/public/storage>
+
+
+Note:
+    
+    >> You should add functional units first before using the module CSM.
+
+    >> Before you add in CSM make sure you have already added addresses and Services. 
+    You can add addresses and services in the ADD button of CSM page then click the address or services tab at the upper left side of the screen.
+
+    >> Before you add in QMSD make sure you have already added the sections needed. 
+    You can add sections in the ADD button of QMSD page then click the sections tab on the upper left side of the screen.

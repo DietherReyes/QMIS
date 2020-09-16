@@ -39,7 +39,7 @@
                                             <div class="col-md-12">
                                                     <div class="form-group">
                                                         {{Form::label('year', 'Year')}}
-                                                        {{Form::select('year', $generate_year, '', ['class' => 'form-control'])}}
+                                                        {{Form::select('year', $generate_year, '', ['class' => 'form-control', 'placeholder' => 'Click to select year'])}}
                                                     </div>
                                                 </div>
 
