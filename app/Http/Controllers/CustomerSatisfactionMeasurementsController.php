@@ -1291,7 +1291,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $this->get_data($data);
         $this->get_year($years);
 
-        $unit = FunctionalUnit::orderBy('name', 'ASC')->get()[0];
+        
         $unit_year = CustomerSatisfactionMeasurement::orderBy('year', 'DESC')->pluck('year');
 
         //Check if at least 1 record exist
@@ -1301,6 +1301,8 @@ class CustomerSatisfactionMeasurementsController extends Controller
         }else{
             $unit_year = $unit_year[0];
         }
+
+        $unit = FunctionalUnit::orderBy('name', 'ASC')->get()[0];
 
         $csm_ids = CustomerSatisfactionMeasurement::where([
             ['functional_unit', $unit->name],
