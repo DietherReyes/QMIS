@@ -341,6 +341,9 @@ class QualityManualDocumentationsController extends Controller
         ], $this->custom_messages);
         
         $old_section = QualityDocumentSection::find($id);
+        QualityManualDocumentation::where('section',$old_section->section_name)->update(array(
+            'section'      => $request->section_name,
+        ));
 
         $log                = new Log;
         $log->name          = Auth::user()->name;
