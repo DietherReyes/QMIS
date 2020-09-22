@@ -1332,8 +1332,7 @@ class SpreadsheetsController extends Controller
             'year'     => 'required'
         ], $this->custom_messages);
         
-        //Storage Path
-        $storage_path = public_path('storage/downloads/');
+        
         $spreadsheet = new Spreadsheet();
         
         //Create sheets
@@ -1353,7 +1352,10 @@ class SpreadsheetsController extends Controller
         $this->trends_report($spreadsheet, $request->year);
        
         $spreadsheet->setActiveSheetIndex(0);
-
+        
+        //Storage Path
+        $storage_path = public_path('storage/downloads/');
+        Storage::makeDirectory('public/downloads');
         $writer = new Xlsx($spreadsheet);
         $writer->setIncludeCharts(true);
         $writer->save($storage_path.'CSM Report' . $request->year . '.xlsx');
