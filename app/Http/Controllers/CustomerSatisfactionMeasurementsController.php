@@ -1454,7 +1454,12 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
 
         $old_service = CustomerSatisfactionService::find($id);
-        
+
+        CustomerServicesOffered::where('service_name', $old_service->name)->update(array(
+            'service_name' => $request->name,
+        ));
+
+
         $log                = new Log;
         $log->name          = Auth::user()->name;
         $log->action        = 'EDIT';
@@ -1535,6 +1540,9 @@ class CustomerSatisfactionMeasurementsController extends Controller
         ], $this->custom_messages);
         
         $old_address = CustomerSatisfactionAddress::find($id);
+        CustomerAddress::where('address', $old_address->name)->update(array(
+            'address' => $request->name,
+        ));
         
         $log                = new Log;
         $log->name          = Auth::user()->name;
