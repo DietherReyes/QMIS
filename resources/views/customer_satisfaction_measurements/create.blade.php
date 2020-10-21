@@ -343,6 +343,14 @@
                                 </div>
                             @endif
 
+                            @if ($errors->has('error_service_count')) 
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <li>{{$errors->first('error_service_count')}}</li>
+                                    </ul>
+                                </div>
+                            @endif
+
                             
                         </div>
                         
