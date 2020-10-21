@@ -298,7 +298,7 @@ class QualityManualDocumentationsController extends Controller
 
     public function store_section(Request $request){
         $this->validate($request, [
-            'section_name' => 'required'
+            'section_name' => 'required||unique:quality_document_sections'
         ], $this->custom_messages);
 
         $section                = new QualityDocumentSection;
@@ -337,7 +337,7 @@ class QualityManualDocumentationsController extends Controller
     public function update_section(Request $request, $id)
     {
         $this->validate($request, [
-            'section_name' => 'required',
+            'section_name' => 'required||unique:quality_document_sections',
         ], $this->custom_messages);
         
         $old_section = QualityDocumentSection::find($id);
