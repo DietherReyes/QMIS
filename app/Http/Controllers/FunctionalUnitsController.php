@@ -9,6 +9,7 @@ use App\CustomerSatisfactionMeasurementSummary;
 use App\CustomerSatisfactionMeasurement;
 use App\User;
 use Auth;
+use Validator;
 
 class FunctionalUnitsController extends Controller
 {
@@ -108,8 +109,8 @@ class FunctionalUnitsController extends Controller
        
         
         $this->validate($request, [
-            'abbreviation'      => 'required|max:255',
-            'name'              => 'required:max:255'
+            'abbreviation'      => 'required|max:255|unique:functional_units',
+            'name'              => 'required|max:255|unique:functional_units'
         ],$this->custom_messages);
 
         //Permission array
@@ -179,10 +180,39 @@ class FunctionalUnitsController extends Controller
     public function update(Request $request, $id)
     {
        
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'abbreviation'      => 'required|max:255',
-            'name'              => 'required:max:255'
+            'name'              => 'required|:max:255'
         ], $this->custom_messages);
+
+        //Checks if no changes are made with the name or abbreviation
+        $old_unit = FunctionalUnit::find($id);
+        if($request->abbreviation === $old_unit->abbreviation && $request->name === $old_unit->name){
+            $validator->validate();
+        }else{
+            
+            //check if abbreviation is changed
+            $abbreviation = FunctionalUnit::where('abbreviation', $request->abbreviation)->pluck('abbreviation');
+            if($old_unit->abbreviation !== $request->abbreviation && count($abbreviation) !== 0){
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('abbreviation', 'The abbreviation has already been taken.');
+                });
+                
+            }
+
+            //check if name is changed
+            $name = FunctionalUnit::where('name', $request->name)->pluck('name');
+            if($old_unit->name !== $request->name && count($name) !== 0){
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('name', 'The name has already been taken.');
+                });
+                
+            }
+            $validator->validate();
+        }
+
+
+
 
         //Permission array
         //Change value from 0 to 1 if user is authorized
