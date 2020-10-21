@@ -1407,7 +1407,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     //Create new service
     public function store_service(Request $request){
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required||unique:customer_satisfaction_services'
         ], $this->custom_messages);
 
         $service        = new CustomerSatisfactionService;
@@ -1449,7 +1449,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     public function update_service(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|unique:customer_satisfaction_services',
         ], $this->custom_messages);
 
 
@@ -1497,7 +1497,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
     public function store_address(Request $request){
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required|unique:customer_satisfaction_addresses'
         ], $this->custom_messages);
 
         $address        = new CustomerSatisfactionAddress;
@@ -1536,7 +1536,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
     public function update_address(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|unique:customer_satisfaction_addresses',
         ], $this->custom_messages);
         
         $old_address = CustomerSatisfactionAddress::find($id);
