@@ -290,6 +290,7 @@ class SpreadsheetsController extends Controller
             $start_data = 7; //Top left coordinate of the worksheet range where we want to set these values at Column A.
             $data = [];
             $count = 0;
+            $data_count = 0;
             $csm_summaries = CustomerSatisfactionMeasurementSummary::where('year', $year)->orderBy('functional_unit', 'ASC')->get();
 
             foreach ($csm_summaries as $csm) {
@@ -303,6 +304,11 @@ class SpreadsheetsController extends Controller
                 array_push($temp, $csm->adjectival_rating);
 
                 array_push($data, $temp);
+
+                //counts the number of complete csm(meaning data from q1 to q4 is present)
+                if($csm->overall_rating > 0){
+                    $data_count++;
+                }
                 $count++;
             }
 
@@ -313,7 +319,7 @@ class SpreadsheetsController extends Controller
                     $overall_rating += $csm->overall_rating;
                 }
 
-                $overall_rating = $overall_rating/$count;
+                $overall_rating = $overall_rating/$data_count;
 
                 $adjectival_rating = '';
                 $this->get_adjectival_rating($adjectival_rating, $overall_rating);

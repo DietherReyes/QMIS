@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\FunctionalUnit;
 use App\Log;
 use App\CustomerSatisfactionMeasurementSummary;
@@ -52,6 +53,21 @@ class FunctionalUnitsController extends Controller
     //Update functional unit name
     private function update_functional_unit_name($old_name, $new_name){
 
+        //rename folders in storage
+        $years = CustomerSatisfactionMeasurement::where('functional_unit', $old_name)->distinct('year')->pluck('year');
+        foreach($years as $year){
+            $quarters = CustomerSatisfactionMeasurement::where([
+                ['functional_unit', $old_name],
+                ['year', $year]
+            ])->pluck('quarter');
+
+            foreach($quarters as $quarter){
+                $old_dir = $old_name.'-'.$year.'-Quarter'.$quarter;
+                $new_dir = $new_name.'-'.$year.'-Quarter'.$quarter;
+                Storage::move('public/customer_satisfaction_measurements/'.$old_dir , 'public/customer_satisfaction_measurements/'.$new_dir);
+            }
+        }
+
         //Update all functional unit in the csm summary
         $ids = CustomerSatisfactionMeasurementSummary::where('functional_unit', $old_name)->pluck('id');
         foreach($ids as $id){
@@ -84,7 +100,7 @@ class FunctionalUnitsController extends Controller
      */
     public function index()
     {
-        $functional_units = FunctionalUnit::orderBy('id')->paginate(10);
+        $functional_units = FunctionalUnit::orderBy('name')->paginate(10);
         return view('functional_units.index')->with('functional_units', $functional_units);
     }
 

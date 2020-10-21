@@ -36,7 +36,7 @@ class SignatoriesController extends Controller
      */
     public function index()
     {
-        $signatories = Signatory::orderBy('id')->paginate(10);
+        $signatories = Signatory::orderBy('name')->paginate(10);
         return view('signatories.index')->with('signatories', $signatories);
     }
 

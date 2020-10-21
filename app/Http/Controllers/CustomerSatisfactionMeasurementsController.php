@@ -656,8 +656,10 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $count_other_classification  = ($request->other_classification_count === null) ? 0 : array_sum($request->other_classification_count);
         $count_classification        = array_sum($request->classification_count) + $count_other_classification;
         $count_address               = array_sum($request->address_count);
+        $count_service               = array_sum($request->service_count);
         $total_gender                = $request->total_male + $request->total_female;
         $total_count                 = $request->total_customer;
+        
 
         if($total_count != $count_classification){
             
@@ -674,8 +676,16 @@ class CustomerSatisfactionMeasurementsController extends Controller
         }
 
         if($total_count != $count_address){
+            
             $validator->after(function ($validator) {
                 $validator->errors()->add('error_address_count', 'Total count of address should be equal to the total number of customers.');
+            });
+        }
+
+        if($total_count > $count_service){
+            
+            $validator->after(function ($validator) {
+                $validator->errors()->add('error_service_count', 'Total count of service should be greater than or equal to the total number of customers.');
             });
         }
         
@@ -916,6 +926,7 @@ class CustomerSatisfactionMeasurementsController extends Controller
         $count_other_classification = ($request->other_classification_count === null) ? 0 : array_sum($request->other_classification_count);
         $count_classification       = ($request->classification_count === null) ? 0 : array_sum($request->classification_count) + $count_other_classification;
         $count_address              = array_sum($request->address_count);
+        $count_service              = array_sum($request->service_count);
         $total_gender               = $request->total_male + $request->total_female;
         $total_count                = $request->total_customer;
     
@@ -936,6 +947,13 @@ class CustomerSatisfactionMeasurementsController extends Controller
         if($total_count != $count_address){
             $validator->after(function ($validator) {
                 $validator->errors()->add('error_address_count', 'Total count of address should be equal to the total number of customers.');
+            });
+        }
+
+        if($total_count > $count_service){
+            
+            $validator->after(function ($validator) {
+                $validator->errors()->add('error_service_count', 'Total count of service should be greater than or equal to the total number of customers.');
             });
         }
 
