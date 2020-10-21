@@ -7,6 +7,7 @@ use App\Signatory;
 use App\Log;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use Validator;
 
 
 class SignatoriesController extends Controller
@@ -66,7 +67,7 @@ class SignatoriesController extends Controller
     {
         $this->validate($request, [
             'name'              => 'required|max:255',
-            'position'          => 'required|max:255',
+            'position'          => 'required|unique:signatories',
             'signature_photo'   => 'required|image|max:5000'
         ], $this->custom_messages);
 
@@ -144,11 +145,35 @@ class SignatoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+       
+
+        $validator = Validator::make($request->all(), [
             'name'              => 'required|max:255',
-            'position'          => 'required|max:255',
+            'position'          => 'required',
             'signature_photo'   => 'nullable|image|max:5000'
         ], $this->custom_messages);
+
+        //Checks if the position is still the same
+        $old_signatory = Signatory::find($id);
+        if($request->position === $old_signatory->position){
+            $validator->validate();
+        }else{
+            //if not the same 
+            $position = Signatory::where('position', $request->position)->pluck('position');
+
+            //check if the position is not occupied
+            if(count($position) === 0){
+                $validator->validate();
+            }else{
+    
+                $validator->after(function ($validator) {
+                    $validator->errors()->add('position', 'The position has already been taken.');
+                });
+                $validator->validate();
+                
+            }
+        }
+
 
 
         $signatory = Signatory::find($id);
