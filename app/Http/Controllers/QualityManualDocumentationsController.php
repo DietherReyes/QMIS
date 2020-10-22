@@ -56,7 +56,7 @@ class QualityManualDocumentationsController extends Controller
             // Get just ext
             $extension = $request->file('quality_manual_doc')->getClientOriginalExtension();
             // Filename to store
-            $fileNameToStore = $filename.'.'.$extension;
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
             // Upload file
             $path = $request->file('quality_manual_doc')->storeAs('public/quality_manual_documentations/', $fileNameToStore);
         } 
