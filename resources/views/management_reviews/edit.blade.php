@@ -182,7 +182,7 @@
                     </div>
 
                     <div class="form-group">
-                        {{Form::label('other_files', 'Other Files')}}
+                        {{Form::label('other_files', 'Other Files (Optional)')}}
                         {{Form::file('other_files[]', [ 'class' => 'hidden', 'multiple' => 'multiple','id' => 'other_files' ,'onChange' => 'uploadNames(this.id, \'other_files_text\')'])}}
                         <div class="row">
                             <div class="col-md-10">
@@ -195,7 +195,7 @@
                     </div>
                     
                     <div class="form-group">
-                        {{Form::label('description', 'Other Files Description')}}
+                        {{Form::label('description', 'Other Files Description (Optional)')}}
                         {{Form::text('description', $management_review->description, ['class' => 'form-control'])}}
                     </div>
 
