@@ -69,7 +69,7 @@
 
                             <div class="form-group">
                                 {{Form::label('date', 'Date')}}
-                                {{ Form::date('date', new \DateTime(), ['class' => 'form-control']) }}
+                                {{ Form::date('date', $management_review->date, ['class' => 'form-control']) }}
                             </div>
 
                             <div class="form-group{{ $errors->has('action_plan') ? ' has-error' : '' }}">
