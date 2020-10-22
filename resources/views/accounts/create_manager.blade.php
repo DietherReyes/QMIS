@@ -149,7 +149,7 @@
                             </div>
 
                             <div class="form-group{{ $errors->has('profile_photo') ? ' has-error' : '' }}">
-                                {{Form::label('profile_photo', 'Profile Photo(.jpg)')}}
+                                {{Form::label('profile_photo', 'Profile Photo(.jpg)(Optional)')}}
                                 {{Form::file('profile_photo', [ 'class' => 'hidden', 'id' => 'profile_photo' ,'onChange' => 'uploadName(this.id, \'profile_photo_text\')'])}}
                                 <div class="row">
                                     <div class="col-md-10">

@@ -565,7 +565,7 @@
                 </div>
 
                 <div class="form-group">
-                    {{Form::label('comments', 'Comments and Suggestions')}}
+                    {{Form::label('comments', 'Comments and Suggestions (Optional)')}}
                     {{Form::textarea('comments', $csm->comments, ['class' => 'form-control'])}}
                 </div>
 
