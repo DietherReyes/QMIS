@@ -959,13 +959,23 @@ class CustomerSatisfactionMeasurementsController extends Controller
 
         //check if the csm already exist
         $old_csm = CustomerSatisfactionMeasurement::find($id);
-        if(    $request->functional_unit        !== null // 
-            && $request->year                   !== null //
-            && $request->quarter                !== null //
-            && $request->functional_unit        !== $old_csm->functional_unit 
-            && $request->year                   !== $old_csm->year 
-            && $request->quarter                !== $old_csm->quarter){
+        if( 
+            (      
+                   $request->functional_unit        !== null  //checks if values are null
+                && $request->year                   !== null  //
+                && $request->quarter                !== null
+            ) 
 
+            && 
+
+            (  
+                   $request->functional_unit        !== $old_csm->functional_unit 
+                || $request->year                   != $old_csm->year 
+                || $request->quarter                != $old_csm->quarter
+            )
+          )
+        
+        {
             $csm = CustomerSatisfactionMeasurement::where([
                 ['functional_unit', $request->functional_unit],
                 ['year', $request->year],
