@@ -44,6 +44,11 @@ Route::post('/sysmg/units/search', 'FunctionalUnitsController@search');
 Route::resource('/sysmg/signatories', 'SignatoriesController');
 Route::post('/sysmg/signatories/search', 'SignatoriesController@search');
 
+// logs
+Route::resource('/sysmg/logs', 'LogsController');
+Route::post('/sysmg/logs/search', 'LogsController@search');
+
+
 // management review
 Route::resource('/manrev', 'ManagementReviewsController');
 Route::get('/manrev/action_plan/{id}', 'ManagementReviewsController@download_action_plan');
