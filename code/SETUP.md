@@ -1,23 +1,23 @@
 # Development Set-up
 ## Prerequisites
-*Composer
-*Node Package Manager
-*PHP 7.3.10
-*MySQL 5.7.24
-*Laravel 5.4.22
-*Ubuntu 16.04 or better
-*Latest stable version of Google Chrome or Mozilla Firefox
+* Composer
+* Node Package Manager
+* PHP 7.3.10
+* MySQL 5.7.24
+* Laravel 5.4.22
+* Ubuntu 16.04 or better
+* Latest stable version of Google Chrome or Mozilla Firefox
 
-##Instructions
+## Instructions
 
 1. Clone the repository
-
-    >> git clone https://github.com/DietherReyes/QMIS.git
-
+    ```
+    git clone https://github.com/DietherReyes/QMIS.git
+    ```
 2. Go to Project Directory
-
-    >> cd <proj_directory>
-
+```
+    cd <proj_directory>
+```
 3. Install Composer Dependencies
 
     >> composer install
